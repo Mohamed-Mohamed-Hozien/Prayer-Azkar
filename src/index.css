@@ -1,0 +1,1514 @@
+/* ==========================================================================
+   Android Islamic Design System - Multi-Theme Luxury Architecture
+   Emerald & Gold, OLED Midnight, Sapphire Royal, Desert Twilight, and Clean Light
+   ========================================================================== */
+
+/* 1. Theme: Luxury Emerald & Gold (Default Dark) */
+:root, [data-theme="dark"] {
+  --bg-oled: #050d0a;
+  --bg-card: #0c1a14;
+  --bg-card-elevated: #12281f;
+  --bg-card-active: #1a382c;
+  --bg-glass: rgba(12, 26, 20, 0.88);
+  
+  --emerald-primary: #10B981;
+  --emerald-light: #34D399;
+  --emerald-dark: #059669;
+  --emerald-glow: rgba(16, 185, 129, 0.28);
+  
+  --gold-primary: #F59E0B;
+  --gold-light: #FCD34D;
+  --gold-dark: #D97706;
+  --gold-glow: rgba(245, 158, 11, 0.28);
+
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  --text-emerald: #34D399;
+  --text-gold: #FCD34D;
+
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-gold: rgba(245, 158, 11, 0.35);
+  --border-emerald: rgba(16, 185, 129, 0.35);
+
+  --font-arabic-calligraphy: 'Amiri', 'Scheherazade New', 'Noto Naskh Arabic', serif;
+  --font-arabic-ui: 'Noto Naskh Arabic', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-num: 'Outfit', -apple-system, sans-serif;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+  --bottom-nav-height: clamp(62px, 8vh, 72px);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* 2. Theme: True OLED Midnight Black */
+[data-theme="oled"] {
+  --bg-oled: #000000;
+  --bg-card: #080808;
+  --bg-card-elevated: #121212;
+  --bg-card-active: #1c1c1c;
+  --bg-glass: rgba(8, 8, 8, 0.95);
+  
+  --emerald-primary: #10B981;
+  --emerald-light: #34D399;
+  --emerald-dark: #059669;
+  --emerald-glow: rgba(16, 185, 129, 0.3);
+  
+  --gold-primary: #F59E0B;
+  --gold-light: #FCD34D;
+  --gold-dark: #D97706;
+  --gold-glow: rgba(245, 158, 11, 0.3);
+
+  --text-primary: #FFFFFF;
+  --text-secondary: #A1A1AA;
+  --text-muted: #71717A;
+  --text-emerald: #34D399;
+  --text-gold: #FCD34D;
+
+  --border-subtle: rgba(255, 255, 255, 0.12);
+  --border-gold: rgba(245, 158, 11, 0.4);
+  --border-emerald: rgba(16, 185, 129, 0.4);
+}
+
+/* 3. Theme: Royal Sapphire & Silver */
+[data-theme="sapphire"] {
+  --bg-oled: #060b14;
+  --bg-card: #0d1726;
+  --bg-card-elevated: #152238;
+  --bg-card-active: #1d304e;
+  --bg-glass: rgba(13, 23, 38, 0.9);
+  
+  --emerald-primary: #38BDF8;
+  --emerald-light: #7DD3FC;
+  --emerald-dark: #0284C7;
+  --emerald-glow: rgba(56, 189, 248, 0.28);
+  
+  --gold-primary: #94A3B8;
+  --gold-light: #CBD5E1;
+  --gold-dark: #64748B;
+  --gold-glow: rgba(148, 163, 184, 0.25);
+
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
+  --text-muted: #64748B;
+  --text-emerald: #7DD3FC;
+  --text-gold: #CBD5E1;
+
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-gold: rgba(148, 163, 184, 0.35);
+  --border-emerald: rgba(56, 189, 248, 0.35);
+}
+
+/* 4. Theme: Desert Sand & Twilight Amber */
+[data-theme="desert"] {
+  --bg-oled: #120902;
+  --bg-card: #201205;
+  --bg-card-elevated: #2f1b09;
+  --bg-card-active: #3e240c;
+  --bg-glass: rgba(32, 18, 5, 0.9);
+  
+  --emerald-primary: #F59E0B;
+  --emerald-light: #FBBF24;
+  --emerald-dark: #D97706;
+  --emerald-glow: rgba(245, 158, 11, 0.3);
+  
+  --gold-primary: #EA580C;
+  --gold-light: #FB923C;
+  --gold-dark: #C2410C;
+  --gold-glow: rgba(234, 88, 12, 0.3);
+
+  --text-primary: #FFFBEB;
+  --text-secondary: #D97706;
+  --text-muted: #92400E;
+  --text-emerald: #FBBF24;
+  --text-gold: #FB923C;
+
+  --border-subtle: rgba(251, 191, 36, 0.15);
+  --border-gold: rgba(251, 146, 60, 0.4);
+  --border-emerald: rgba(245, 158, 11, 0.4);
+}
+
+/* 5. Theme: Pure Clean Light */
+[data-theme="light"] {
+  --bg-oled: #F4F6F9;
+  --bg-card: #FFFFFF;
+  --bg-card-elevated: #EDF2F7;
+  --bg-card-active: #E2E8F0;
+  --bg-glass: rgba(255, 255, 255, 0.94);
+  
+  --emerald-primary: #059669;
+  --emerald-light: #047857;
+  --emerald-dark: #065F46;
+  --emerald-glow: rgba(5, 150, 105, 0.18);
+  
+  --gold-primary: #D97706;
+  --gold-light: #B45309;
+  --gold-dark: #92400E;
+  --gold-glow: rgba(217, 119, 6, 0.18);
+
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #64748B;
+  --text-emerald: #059669;
+  --text-gold: #D97706;
+
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --border-gold: rgba(217, 119, 6, 0.35);
+  --border-emerald: rgba(5, 150, 105, 0.35);
+}
+
+/* Reset & Base Setup */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+html, body {
+  background-color: var(--bg-oled);
+  color: var(--text-primary);
+  font-family: var(--font-arabic-ui);
+  direction: rtl;
+  text-align: right;
+  overflow-x: hidden;
+  overflow-y: auto;
+  min-height: 100%;
+  width: 100%;
+  -webkit-overflow-scrolling: touch;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+#root {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  position: relative;
+  background-color: var(--bg-oled);
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+@media (min-width: 540px) {
+  #root {
+    max-width: 480px;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+    border-left: 1px solid var(--border-subtle);
+    border-right: 1px solid var(--border-subtle);
+  }
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-top: max(var(--safe-top), 60px);
+  padding-bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + 70px);
+  position: relative;
+}
+
+/* Islamic Geometric Background Pattern */
+.app-container::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(circle at 50% 15%, var(--emerald-glow) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.6;
+}
+
+main {
+  position: relative;
+  z-index: 1;
+  padding: 8px 14px calc(var(--bottom-nav-height) + var(--safe-bottom) + 50px);
+}
+
+/* Floating Azan Player Banner */
+.floating-azan-banner {
+  position: fixed;
+  top: max(12px, var(--safe-top));
+  left: 12px;
+  right: 12px;
+  max-width: 456px;
+  margin: 0 auto;
+  background: var(--bg-glass);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-emerald);
+  border-radius: var(--radius-lg);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+  z-index: 90;
+  animation: slideDownBanner 0.3s ease;
+}
+
+@keyframes slideDownBanner {
+  from { transform: translateY(-30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Floating Mini Widget */
+.floating-mini-widget {
+  position: fixed;
+  bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + 16px);
+  left: 14px;
+  right: 14px;
+  max-width: 452px;
+  margin: 0 auto;
+  background: var(--bg-glass);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--border-emerald);
+  border-radius: var(--radius-full);
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+  z-index: 40;
+  cursor: pointer;
+  animation: floatUpMini 0.25s ease;
+}
+
+@keyframes floatUpMini {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* ==========================================================================
+   Bottom Navigation Bar (4 Tabs)
+   ========================================================================== */
+.bottom-nav-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-width: 480px;
+  margin: 0 auto;
+  height: calc(var(--bottom-nav-height) + var(--safe-bottom));
+  padding-bottom: var(--safe-bottom);
+  background: var(--bg-glass);
+  backdrop-filter: blur(18px);
+  border-top: 1px solid var(--border-subtle);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  z-index: 50;
+}
+
+.bottom-nav-item {
+  background: transparent;
+  border: none;
+  outline: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  height: 100%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.bottom-nav-item.active {
+  color: var(--emerald-light);
+}
+
+.nav-icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+}
+
+.nav-active-glow {
+  position: absolute;
+  bottom: -4px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--emerald-primary);
+  box-shadow: 0 0 8px var(--emerald-primary);
+}
+
+.nav-label-text {
+  font-size: 0.74rem;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+/* ==========================================================================
+   Prayer View Layout
+   ========================================================================== */
+.prayer-view-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.prayer-header-strip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 2px;
+}
+
+.location-pill-btn {
+  background: var(--bg-card-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: 6px 14px;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.hijri-badge {
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-full);
+  padding: 6px 12px;
+  color: var(--gold-light);
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Sunnah Fasting Reminder Banner */
+.fasting-reminder-banner {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.16), rgba(217, 119, 6, 0.08));
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  animation: fadeInBanner 0.3s ease;
+}
+
+/* Live Eqama Banner */
+.eqama-live-banner {
+  background: var(--emerald-primary);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  color: #042f22;
+  box-shadow: 0 4px 15px var(--emerald-glow);
+  animation: pulseEqama 1.5s infinite alternate ease-in-out;
+}
+
+.pulse-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #042f22;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+}
+
+/* Prayer Hero Card */
+.prayer-hero-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-emerald);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.prayer-hero-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.prayer-hero-tag {
+  font-size: 0.82rem;
+  color: var(--emerald-light);
+  font-weight: 600;
+}
+
+.prayer-hero-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  font-family: var(--font-arabic-calligraphy);
+  line-height: 1.1;
+  margin-top: 2px;
+}
+
+.prayer-hero-time {
+  font-family: var(--font-num);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--gold-light);
+}
+
+/* Countdown Display */
+.prayer-countdown-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 14px 0;
+}
+
+.prayer-countdown-digits {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.countdown-box {
+  background: var(--bg-card-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 8px 14px;
+  text-align: center;
+  min-width: 68px;
+}
+
+.countdown-val {
+  font-family: var(--font-num);
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--emerald-light);
+  display: block;
+  line-height: 1;
+}
+
+.countdown-lbl {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+  display: block;
+}
+
+.countdown-sep {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--emerald-primary);
+}
+
+.prayer-progress-track {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.prayer-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold-primary), var(--emerald-primary));
+  border-radius: var(--radius-full);
+  transition: width 0.5s ease;
+}
+
+.prayer-hero-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.hero-action-chip {
+  flex: 1;
+  background: var(--bg-card-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: 8px 12px;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Daily Prayers Timeline */
+.prayers-timeline-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+}
+
+.prayers-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.prayer-row-item {
+  background: var(--bg-card-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+}
+
+.prayer-row-item.is-next {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: var(--border-emerald);
+}
+
+.prayer-row-item.is-current {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: var(--border-gold);
+}
+
+.prayer-icon-box {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+}
+
+.prayer-icon-box.next {
+  background: var(--emerald-primary);
+  color: #042f22;
+}
+
+.prayer-name-ar {
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-family: var(--font-arabic-calligraphy);
+  color: var(--text-primary);
+  display: block;
+}
+
+.prayer-eqama-hint {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  display: block;
+}
+
+.prayer-time-val {
+  font-family: var(--font-num);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: block;
+}
+
+.next-badge {
+  font-size: 0.68rem;
+  background: var(--emerald-primary);
+  color: #042f22;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.current-badge {
+  font-size: 0.68rem;
+  background: var(--gold-primary);
+  color: #042f22;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   Qibla Compass View Styles
+   ========================================================================== */
+.compass-view-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+}
+
+.compass-header-card {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+}
+
+.compass-distance-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.compass-info-box {
+  background: var(--bg-card-elevated);
+  border-radius: var(--radius-md);
+  padding: 8px 6px;
+  text-align: center;
+}
+
+.compass-info-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  display: block;
+}
+
+.compass-info-val {
+  font-family: var(--font-num);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--emerald-light);
+  margin-top: 2px;
+  display: block;
+}
+
+.compass-status-banner {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  text-align: center;
+  color: var(--gold-light);
+  font-size: 0.88rem;
+  transition: all 0.3s ease;
+}
+
+.compass-status-banner.aligned {
+  background: var(--emerald-primary);
+  border-color: var(--emerald-primary);
+  color: #042f22;
+  box-shadow: 0 0 20px var(--emerald-glow);
+}
+
+/* 3D Islamic Compass Dial */
+.compass-dial-container {
+  position: relative;
+  width: 290px;
+  height: 290px;
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+}
+
+.compass-dial-ring {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--bg-card-elevated) 40%, var(--bg-card) 75%);
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.7), inset 0 0 20px rgba(0, 0, 0, 0.6);
+  position: relative;
+  transition: transform 0.1s cubic-bezier(0.1, 0.9, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.compass-dial-ring.aligned-glow {
+  border-color: var(--emerald-primary);
+  box-shadow: 0 0 35px var(--emerald-glow), inset 0 0 30px var(--emerald-glow);
+}
+
+.compass-dial-face {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.compass-cardinal {
+  position: absolute;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.compass-north {
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.compass-east {
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.compass-south {
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.compass-west {
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.compass-tick {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 2px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  transform-origin: 50% 145px;
+}
+
+.compass-kaaba-needle-arm {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 4px;
+  height: 145px;
+  transform-origin: 50% 145px;
+  pointer-events: none;
+}
+
+.compass-kaaba-icon-badge {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: pulseKaaba 2s infinite ease-in-out;
+}
+
+.compass-kaaba-tag {
+  font-size: 0.65rem;
+  font-weight: 800;
+  background: var(--gold-primary);
+  color: #042f22;
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-top: 2px;
+}
+
+.compass-center-pivot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--gold-light);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+  border: 2px solid #000;
+}
+
+.compass-device-pointer-arrow {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 14px solid var(--emerald-light);
+  z-index: 10;
+}
+
+.compass-calibration-card {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+}
+
+/* ==========================================================================
+   Digital Tasbeeh View Styles
+   ========================================================================== */
+.tasbeeh-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.tasbeeh-top-nav-switcher {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+  margin-bottom: 4px;
+}
+
+.athkar-nav-pill {
+  background: var(--bg-card-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: 10px;
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.athkar-nav-pill.active {
+  background: var(--emerald-primary);
+  border-color: var(--emerald-primary);
+  color: #042f22;
+  box-shadow: 0 4px 15px var(--emerald-glow);
+}
+
+.tasbeeh-stats-bar {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tasbeeh-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.tasbeeh-zikr-card {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border-emerald);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  text-align: center;
+}
+
+.tasbeeh-badge {
+  font-size: 0.7rem;
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--emerald-light);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.tasbeeh-virtue-btn {
+  background: transparent;
+  border: none;
+  color: var(--gold-light);
+  font-size: 0.76rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.tasbeeh-zikr-title {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  font-family: var(--font-arabic-calligraphy);
+  margin: 6px 0 2px;
+}
+
+.tasbeeh-zikr-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.tasbeeh-virtue-popup {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  margin-top: 10px;
+}
+
+/* Center Bead Dial */
+.tasbeeh-dial-wrapper {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  margin: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tasbeeh-ring-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+  pointer-events: none !important;
+}
+
+.tasbeeh-ring-track {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.08);
+  stroke-width: 8;
+  pointer-events: none !important;
+}
+
+.tasbeeh-ring-progress {
+  fill: none;
+  stroke: var(--emerald-primary);
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.1s ease;
+  pointer-events: none !important;
+}
+
+/* Center Bead Tap Button */
+.tasbeeh-center-bead {
+  position: relative;
+  z-index: 10;
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--bg-card-elevated) 30%, var(--bg-card) 90%);
+  border: 2px solid var(--border-emerald);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 0 25px rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  outline: none;
+  touch-action: manipulation;
+  pointer-events: auto;
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+
+.tasbeeh-center-bead.pressed {
+  transform: scale(0.94);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8), inset 0 0 35px var(--emerald-glow);
+}
+
+.tasbeeh-current-count {
+  font-family: var(--font-num);
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: var(--emerald-light);
+  line-height: 1;
+}
+
+.tasbeeh-target-label {
+  font-size: 0.78rem;
+  color: var(--gold-light);
+  margin-top: 4px;
+  font-weight: 600;
+}
+
+.tasbeeh-tap-hint {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.tasbeeh-controls-row {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+}
+
+.tasbeeh-target-pills {
+  display: flex;
+  gap: 4px;
+}
+
+.tasbeeh-target-pill {
+  background: var(--bg-card-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: 4px 10px;
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+  font-family: var(--font-num);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tasbeeh-target-pill.active {
+  background: var(--emerald-primary);
+  color: #042f22;
+  border-color: var(--emerald-primary);
+}
+
+.tasbeeh-presets-section {
+  width: 100%;
+  margin-top: 6px;
+}
+
+.tasbeeh-presets-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tasbeeh-preset-chip {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+}
+
+.tasbeeh-preset-chip.active {
+  border-color: var(--border-emerald);
+  background: rgba(16, 185, 129, 0.08);
+}
+
+/* ==========================================================================
+   Settings & Customizer Sub-Tabs
+   ========================================================================== */
+.settings-container {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.settings-subtabs-nav {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+}
+
+.settings-subtabs-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.settings-subtab-chip {
+  background: var(--bg-card-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: 8px 14px;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.settings-subtab-chip.active {
+  background: var(--emerald-primary);
+  border-color: var(--emerald-primary);
+  color: #042f22;
+  box-shadow: 0 4px 12px var(--emerald-glow);
+}
+
+.settings-tab-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.settings-section-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.settings-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Calculation Methods Cards */
+.calc-methods-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.calc-method-card {
+  background: var(--bg-card-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.calc-method-card.selected {
+  border-color: var(--border-emerald);
+  background: rgba(16, 185, 129, 0.1);
+}
+
+/* Reciters Cards */
+.audio-reciters-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.audio-reciter-card {
+  background: var(--bg-card-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.audio-reciter-card.selected {
+  border-color: var(--border-emerald);
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.audio-preview-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: 4px 10px;
+  color: var(--emerald-light);
+  font-size: 0.74rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.audio-preview-btn.playing {
+  background: #ef4444;
+  color: #fff;
+  border-color: #ef4444;
+}
+
+/* Themes Grid */
+.themes-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.theme-card {
+  border-radius: var(--radius-md);
+  border: 2px solid transparent;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.theme-card.selected {
+  border-color: var(--emerald-primary);
+  box-shadow: 0 4px 20px var(--emerald-glow);
+}
+
+/* Reusable Helpers */
+.radio-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--text-muted);
+  position: relative;
+}
+
+.radio-dot.active {
+  border-color: var(--emerald-primary);
+  background: var(--emerald-primary);
+}
+
+.subtab-pill {
+  background: var(--bg-card-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 6px 12px;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.subtab-pill.active {
+  background: var(--emerald-primary);
+  color: #042f22;
+  border-color: var(--emerald-primary);
+  font-weight: 700;
+}
+
+.banner-btn {
+  background: var(--bg-card-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: 6px 14px;
+  color: var(--text-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.icon-circle-btn {
+  background: var(--bg-card-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.icon-circle-btn.active {
+  color: var(--emerald-light);
+  border-color: var(--border-emerald);
+}
+
+/* Athkar View Helpers */
+.athkar-view-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.athkar-header-nav {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.athkar-categories-scroll {
+  display: flex;
+  gap: 6px;
+  padding-bottom: 4px;
+}
+
+.category-chip {
+  background: var(--bg-card-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: 8px 14px;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.category-chip.active {
+  background: var(--emerald-primary);
+  border-color: var(--emerald-primary);
+  color: #042f22;
+  font-weight: 700;
+}
+
+.mode-switch-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mode-pill-toggle {
+  display: flex;
+  background: var(--bg-card-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: 2px;
+}
+
+.mode-toggle-btn {
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-full);
+  padding: 6px 12px;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.mode-toggle-btn.active {
+  background: var(--bg-card);
+  color: var(--emerald-light);
+  font-weight: 700;
+}
+
+/* Focus Mode & List Mode Cards */
+.athkar-focus-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-emerald);
+  border-radius: var(--radius-lg);
+  padding: 22px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 280px;
+  justify-content: space-between;
+}
+
+.athkar-arabic-text {
+  font-family: var(--font-arabic-calligraphy);
+  font-size: clamp(1.2rem, 5vw, 1.45rem);
+  line-height: 1.9;
+  color: var(--text-primary);
+  text-align: justify;
+}
+
+.athkar-tap-counter-btn {
+  background: var(--emerald-primary);
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  color: #042f22;
+  font-size: 1.15rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 6px 20px var(--emerald-glow);
+}
+
+.athkar-tap-counter-btn.completed {
+  background: var(--gold-primary);
+  box-shadow: 0 6px 20px var(--gold-glow);
+}
+
+/* Modal Sheet */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  z-index: 99;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: fadeInModal 0.25s ease;
+}
+
+@keyframes fadeInModal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-sheet {
+  width: 100%;
+  max-width: 100%;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border-emerald);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: 16px 16px calc(var(--safe-bottom) + 16px);
+  max-height: 85vh;
+  overflow-y: auto;
+  animation: slideUpSheet 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (min-width: 540px) {
+  .modal-sheet {
+    max-width: 480px;
+  }
+}
+
+@keyframes slideUpSheet {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.modal-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.modal-title {
+  font-size: clamp(1rem, 4vw, 1.15rem);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.modal-close-btn {
+  background: var(--bg-card-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
