@@ -1,0 +1,50 @@
+{
+  "name": "مواقيت الصلاة والأذكار والإقامة",
+  "short_name": "صلاتي وأذكاري",
+  "description": "تطبيق مواقيت الصلاة والأذان والإقامة والأذكار يعمل بالكامل بدون إنترنت",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#08090C",
+  "theme_color": "#08090C",
+  "dir": "rtl",
+  "lang": "ar",
+  "categories": ["lifestyle", "utilities"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "مواقيت الصلاة",
+      "short_name": "الصلاة",
+      "description": "عرض مواقيت الصلاة والعد التنازلي",
+      "url": "/?tab=prayer",
+      "icons": [{ "src": "/icons/icon-192.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "أذكار الصباح والمساء",
+      "short_name": "الأذكار",
+      "description": "قراءة وتسبيح الأذكار",
+      "url": "/?tab=athkar",
+      "icons": [{ "src": "/icons/icon-192.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "ودجت الصلاة",
+      "short_name": "الودجت",
+      "description": "عرض ودجت الشاشة الرئيسية",
+      "url": "/?tab=widget",
+      "icons": [{ "src": "/icons/icon-192.svg", "sizes": "192x192" }]
+    }
+  ]
+}

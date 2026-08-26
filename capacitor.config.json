@@ -1,0 +1,18 @@
+{
+  "appId": "com.prayertimes.athkar",
+  "appName": "صلاتي وأذكاري",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_icon_config_sample",
+      "iconColor": "#10B981",
+      "sound": "azan"
+    },
+    "StatusBar": {
+      "backgroundColor": "#08090C"
+    }
+  }
+}

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <linearGradient id="bgGradM" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A" />
+      <stop offset="50%" stop-color="#064E3B" />
+      <stop offset="100%" stop-color="#022C22" />
+    </linearGradient>
+    <linearGradient id="goldGradM" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCD34D" />
+      <stop offset="50%" stop-color="#F59E0B" />
+      <stop offset="100%" stop-color="#D97706" />
+    </linearGradient>
+    <linearGradient id="emeraldGradM" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34D399" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+  </defs>
+  <rect width="192" height="192" rx="42" fill="url(#bgGradM)" />
+  <g transform="translate(24, 28)">
+    <path d="M 72 8 A 14 14 0 1 1 54 26 A 11 11 0 1 0 72 8 Z" fill="url(#goldGradM)" />
+    <path d="M 36 84 C 36 44 64 36 72 28 C 80 36 108 44 108 84 Z" fill="url(#emeraldGradM)" />
+    <path d="M 12 110 L 16 52 L 20 44 L 24 52 L 28 110 Z" fill="url(#goldGradM)" />
+    <path d="M 116 110 L 120 52 L 124 44 L 128 52 L 132 110 Z" fill="url(#goldGradM)" />
+    <rect x="24" y="84" width="96" height="34" rx="4" fill="#047857" />
+    <path d="M 58 118 C 58 100 66 94 72 90 C 78 94 86 100 86 118 Z" fill="#064E3B" stroke="url(#goldGradM)" stroke-width="1.5" />
+    <rect x="8" y="118" width="128" height="6" rx="3" fill="url(#goldGradM)" />
+  </g>
+</svg>
