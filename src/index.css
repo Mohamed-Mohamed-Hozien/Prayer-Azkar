@@ -39,9 +39,11 @@
   --radius-md: 14px;
   --radius-lg: 20px;
   --radius-full: 9999px;
-  --bottom-nav-height: clamp(62px, 8vh, 72px);
+  --bottom-nav-height: clamp(60px, 7.5vh, 72px);
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
 }
 
 /* 2. Theme: True OLED Midnight Black */
@@ -202,14 +204,22 @@ body {
   background-color: var(--bg-oled);
   min-height: 100vh;
   min-height: 100dvh;
+  transition: max-width 0.3s ease;
 }
 
-@media (min-width: 540px) {
+/* Fluid responsive container for tablets and foldables */
+@media (min-width: 640px) {
   #root {
-    max-width: 480px;
-    box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+    max-width: min(94vw, 860px);
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.75);
     border-left: 1px solid var(--border-subtle);
     border-right: 1px solid var(--border-subtle);
+  }
+}
+
+@media (min-width: 1024px) {
+  #root {
+    max-width: 980px;
   }
 }
 
@@ -219,8 +229,10 @@ body {
   flex: 1;
   min-height: 100vh;
   min-height: 100dvh;
-  padding-top: max(var(--safe-top), 60px);
-  padding-bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + 70px);
+  padding-top: max(var(--safe-top), clamp(10px, 2.5vh, 20px));
+  padding-bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + 30px);
+  padding-left: var(--safe-left);
+  padding-right: var(--safe-right);
   position: relative;
 }
 
@@ -241,7 +253,8 @@ body {
 main {
   position: relative;
   z-index: 1;
-  padding: 8px 14px calc(var(--bottom-nav-height) + var(--safe-bottom) + 50px);
+  padding: clamp(6px, 1.8vw, 16px) clamp(10px, 2.5vw, 20px) calc(var(--bottom-nav-height) + var(--safe-bottom) + 30px);
+  width: 100%;
 }
 
 /* Floating Azan Player Banner */
@@ -250,10 +263,11 @@ main {
   top: max(12px, var(--safe-top));
   left: 12px;
   right: 12px;
-  max-width: 456px;
+  max-width: min(92vw, 560px);
   margin: 0 auto;
   background: var(--bg-glass);
   backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-emerald);
   border-radius: var(--radius-lg);
   padding: 12px 16px;
@@ -276,10 +290,11 @@ main {
   bottom: calc(var(--bottom-nav-height) + var(--safe-bottom) + 16px);
   left: 14px;
   right: 14px;
-  max-width: 452px;
+  max-width: min(92vw, 540px);
   margin: 0 auto;
   background: var(--bg-glass);
   backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border: 1px solid var(--border-emerald);
   border-radius: var(--radius-full);
   padding: 8px 16px;
@@ -305,17 +320,37 @@ main {
   bottom: 0;
   left: 0;
   right: 0;
-  max-width: 480px;
+  width: 100%;
+  max-width: 100%;
   margin: 0 auto;
   height: calc(var(--bottom-nav-height) + var(--safe-bottom));
   padding-bottom: var(--safe-bottom);
+  padding-left: var(--safe-left);
+  padding-right: var(--safe-right);
   background: var(--bg-glass);
   backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   border-top: 1px solid var(--border-subtle);
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   align-items: center;
   z-index: 50;
+  transition: max-width 0.3s ease;
+}
+
+@media (min-width: 640px) {
+  .bottom-nav-bar {
+    max-width: min(94vw, 860px);
+    border-left: 1px solid var(--border-subtle);
+    border-right: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .bottom-nav-bar {
+    max-width: 980px;
+  }
 }
 
 .bottom-nav-item {
@@ -368,6 +403,26 @@ main {
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+/* Tablet 2-column layout for Hero + Timeline */
+@media (min-width: 768px) {
+  .prayer-view-wrapper {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    grid-template-areas:
+      "header header"
+      "fasting fasting"
+      "eqama eqama"
+      "hero timeline";
+    gap: 16px;
+    align-items: stretch;
+  }
+  .prayer-header-strip { grid-area: header; }
+  .fasting-reminder-banner { grid-area: fasting; }
+  .eqama-live-banner { grid-area: eqama; }
+  .prayer-hero-card { grid-area: hero; display: flex; flex-direction: column; justify-content: space-between; margin: 0; }
+  .prayers-timeline-card { grid-area: timeline; margin: 0; height: 100%; display: flex; flex-direction: column; justify-content: space-between; }
 }
 
 .prayer-header-strip {
@@ -491,14 +546,14 @@ main {
   background: var(--bg-card-elevated);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
-  padding: 8px 14px;
+  padding: 8px clamp(8px, 2.5vw, 16px);
   text-align: center;
-  min-width: 68px;
+  min-width: clamp(54px, 16vw, 76px);
 }
 
 .countdown-val {
   font-family: var(--font-num);
-  font-size: 1.6rem;
+  font-size: clamp(1.3rem, 4.5vw, 1.8rem);
   font-weight: 800;
   color: var(--emerald-light);
   display: block;
@@ -717,8 +772,8 @@ main {
 /* 3D Islamic Compass Dial */
 .compass-dial-container {
   position: relative;
-  width: 290px;
-  height: 290px;
+  width: clamp(250px, 60vw, 330px);
+  height: clamp(250px, 60vw, 330px);
   margin: 10px 0;
   display: flex;
   align-items: center;
@@ -970,8 +1025,8 @@ main {
 /* Center Bead Dial */
 .tasbeeh-dial-wrapper {
   position: relative;
-  width: 220px;
-  height: 220px;
+  width: clamp(190px, 46vw, 250px);
+  height: clamp(190px, 46vw, 250px);
   margin: 10px 0;
   display: flex;
   align-items: center;
@@ -1008,8 +1063,8 @@ main {
 .tasbeeh-center-bead {
   position: relative;
   z-index: 10;
-  width: 170px;
-  height: 170px;
+  width: clamp(145px, 35vw, 190px);
+  height: clamp(145px, 35vw, 190px);
   border-radius: 50%;
   background: radial-gradient(circle, var(--bg-card-elevated) 30%, var(--bg-card) 90%);
   border: 2px solid var(--border-emerald);
@@ -1032,7 +1087,7 @@ main {
 
 .tasbeeh-current-count {
   font-family: var(--font-num);
-  font-size: 2.8rem;
+  font-size: clamp(2.2rem, 7vw, 3rem);
   font-weight: 900;
   color: var(--emerald-light);
   line-height: 1;
@@ -1091,9 +1146,16 @@ main {
 }
 
 .tasbeeh-presets-grid {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 6px;
+}
+
+@media (min-width: 580px) {
+  .tasbeeh-presets-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 8px;
+  }
 }
 
 .tasbeeh-preset-chip {
@@ -1184,11 +1246,19 @@ main {
 
 /* Calculation Methods Cards */
 .calc-methods-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 6px;
   max-height: 280px;
   overflow-y: auto;
+}
+
+@media (min-width: 580px) {
+  .calc-methods-list {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 8px;
+    max-height: 380px;
+  }
 }
 
 .calc-method-card {
@@ -1207,9 +1277,16 @@ main {
 
 /* Reciters Cards */
 .audio-reciters-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 6px;
+}
+
+@media (min-width: 580px) {
+  .audio-reciters-list {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 8px;
+  }
 }
 
 .audio-reciter-card {
@@ -1250,9 +1327,15 @@ main {
 
 /* Themes Grid */
 .themes-grid {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 8px;
+}
+
+@media (min-width: 580px) {
+  .themes-grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
 }
 
 .theme-card {
@@ -1406,7 +1489,7 @@ main {
   background: var(--bg-card);
   border: 1px solid var(--border-emerald);
   border-radius: var(--radius-lg);
-  padding: 22px 18px;
+  padding: clamp(18px, 4vw, 28px) clamp(16px, 3.5vw, 24px);
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -1416,7 +1499,7 @@ main {
 
 .athkar-arabic-text {
   font-family: var(--font-arabic-calligraphy);
-  font-size: clamp(1.2rem, 5vw, 1.45rem);
+  font-size: clamp(1.15rem, 4vw, 1.45rem);
   line-height: 1.9;
   color: var(--text-primary);
   text-align: justify;
@@ -1438,9 +1521,59 @@ main {
   box-shadow: 0 6px 20px var(--emerald-glow);
 }
 
-.athkar-tap-counter-btn.completed {
+.athkar-tap-counter-btn.completed,
+.athkar-tap-counter-btn.done {
   background: var(--gold-primary);
   box-shadow: 0 6px 20px var(--gold-glow);
+}
+
+/* List Mode Cards */
+.athkar-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+@media (min-width: 640px) {
+  .athkar-list-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 14px;
+    align-items: stretch;
+  }
+}
+
+.athkar-list-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+}
+
+.athkar-list-card.completed {
+  border-color: var(--border-emerald);
+  background: rgba(16, 185, 129, 0.04);
+}
+
+.athkar-card-arabic {
+  font-family: var(--font-arabic-calligraphy);
+  font-size: clamp(1.1rem, 3.5vw, 1.35rem);
+  line-height: 1.85;
+  color: var(--text-primary);
+  text-align: justify;
+}
+
+.athkar-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 4px;
 }
 
 /* Modal Sheet */
@@ -1452,6 +1585,7 @@ main {
   bottom: 0;
   background: rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   z-index: 99;
   display: flex;
   align-items: flex-end;
@@ -1472,14 +1606,28 @@ main {
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   padding: 16px 16px calc(var(--safe-bottom) + 16px);
   max-height: 85vh;
+  max-height: 85dvh;
   overflow-y: auto;
   animation: slideUpSheet 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@media (min-width: 540px) {
-  .modal-sheet {
-    max-width: 480px;
+@media (min-width: 600px) {
+  .modal-overlay {
+    align-items: center;
+    padding: 24px;
   }
+  .modal-sheet {
+    max-width: 580px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-emerald);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.85);
+    animation: zoomInModal 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+@keyframes zoomInModal {
+  from { transform: scale(0.92); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 
 @keyframes slideUpSheet {
