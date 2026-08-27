@@ -4,7 +4,7 @@
 
 Deliver a luxury Islamic aesthetic with flawless RTL alignment, fluid adaptability across all screen sizes (small phones, large phones, foldables, tablets), and lag-free Android touch interactions.
 
-## 📌 Non-Negotiable Rules:
+## 📌 Non-Negotiable Rules
 
 1. **Styling Paradigm**:
    - Use **Vanilla CSS** with design tokens defined in `src/index.css`.
@@ -26,6 +26,7 @@ Deliver a luxury Islamic aesthetic with flawless RTL alignment, fluid adaptabili
 
 5. **Verification Step**:
    - Run the RTL linter:
+
      ```bash
      node .agents/skills/rtl-arabic-ux-linter/scripts/lint-arabic-rtl.mjs
      ```

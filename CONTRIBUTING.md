@@ -7,14 +7,16 @@
 
 ## 📋 جدول المحتويات (Table of Contents)
 
-1. [قواعد السلوك والمبادئ الأساسية](#-المبادئ-الأساسية-للمشروع)
-2. [إعداد بيئة التطوير (Development Setup)](#-إعداد-بيئة-التطوير-development-setup)
-3. [دورة حياة المساهمة (Contribution Workflow)](#-دورة-حياة-المساهمة-contribution-workflow)
-4. [معايير الكود والتصميم (Coding Standards)](#-معايير-الكود-والتصميم)
-5. [أدوات التحقق والاختبار (Verification Tools)](#-أدوات-التحقق-والاختبار)
-6. [صيغة رسائل الـ Commit والـ PR](#-صيغة-رسائل-الـ-commit-والـ-pr)
+1. [المبادئ الأساسية للمشروع](#principles)
+2. [إعداد بيئة التطوير (Development Setup)](#setup)
+3. [دورة حياة المساهمة (Contribution Workflow)](#workflow)
+4. [أدوات التحقق والاختبار (Verification Tools)](#verification)
+5. [معايير الكود والتصميم (Coding Standards)](#standards)
+6. [صيغة رسائل الـ Commit والـ PR](#commits)
 
 ---
+
+<a id="principles"></a>
 
 ## 🌟 المبادئ الأساسية للمشروع
 
@@ -24,6 +26,8 @@
 - **التصميم المتجاوب (Responsive & RTL):** الواجهة عربية أصيلة تدعم الاتجاه من اليمين لليسار (RTL) وتتكيف تلقائياً مع مختلف شاشات الأندرويد (الهواتف الصغيرة، الكبيرة، والأجهزة اللوحية Tablets).
 
 ---
+
+<a id="setup"></a>
 
 ## 🛠️ إعداد بيئة التطوير (Development Setup)
 
@@ -51,6 +55,8 @@ npm run dev
 
 ---
 
+<a id="workflow"></a>
+
 ## 🔄 دورة حياة المساهمة (Contribution Workflow)
 
 1. **ابحث عن المشاكل المفتوحة أو أنشئ Issue جديدة:**
@@ -77,6 +83,8 @@ npm run dev
 
 ---
 
+<a id="verification"></a>
+
 ## 🧪 أدوات التحقق والاختبار (Verification Tools)
 
 يحتوي المشروع على 4 سكربتات فحص وتحقق آلية يجب تشغيلها والتأكد من نجاحها قبل إرسال أي PR:
@@ -100,6 +108,8 @@ node .agents/skills/audio-asset-optimizer/scripts/compress-audio.mjs
 
 ---
 
+<a id="standards"></a>
+
 ## 📐 معايير الكود والتصميم
 
 - **React Components:** نستخدم React 19 الوظيفي (Functional Components + Hooks).
@@ -108,6 +118,8 @@ node .agents/skills/audio-asset-optimizer/scripts/compress-audio.mjs
 - **الأيقونات:** نستخدم مكتبة `lucide-react`.
 
 ---
+
+<a id="commits"></a>
 
 ## 🏷️ صيغة رسائل الـ Commit (Conventional Commits)
 

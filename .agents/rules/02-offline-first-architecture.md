@@ -4,7 +4,7 @@
 
 Guarantee that the application runs completely standalone on Android devices without requiring any internet connection or backend server.
 
-## 📌 Non-Negotiable Rules:
+## 📌 Non-Negotiable Rules
 
 1. **Zero External Network Dependencies**:
    - Never add HTTP/REST API calls for prayer times, Athkar, or audio.
@@ -22,6 +22,7 @@ Guarantee that the application runs completely standalone on Android devices wit
 4. **Service Worker Offline Caching**:
    - Maintain `sw.js` with network-first / cache-fallback strategy for all core assets (`index.html`, icons, scripts, audio).
    - Test offline cache coverage before releasing updates:
+
      ```bash
      node .agents/skills/mobile-sensors-testing/scripts/simulate-sensors.mjs
      ```

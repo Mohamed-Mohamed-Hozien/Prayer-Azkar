@@ -4,7 +4,7 @@
 
 Maintain 100% authentic, verified, and accurately vowelled (Tashkeel) Islamic texts, Hadith citations, and astronomical calculation formulas.
 
-## 📌 Non-Negotiable Rules:
+## 📌 Non-Negotiable Rules
 
 1. **Full Tashkeel Preservation**:
    - All Athkar in `src/data/athkarData.js` and `src/components/DigitalTasbeeh.jsx` must include full Arabic diacritics (تَشْكِيل كَامِل).
@@ -20,7 +20,9 @@ Maintain 100% authentic, verified, and accurately vowelled (Tashkeel) Islamic te
 
 4. **Verification Step**:
    - Whenever any Islamic data is edited, run:
+
      ```bash
      node .agents/skills/islamic-data-verifier/scripts/verify-calculations.mjs
      ```
+
    - All 12 methods, 10 Tasbeeh presets, and 6 Athkar categories must pass.

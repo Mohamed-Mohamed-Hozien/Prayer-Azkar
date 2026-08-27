@@ -19,7 +19,7 @@
 
 ## 🗂️ 2. Detailed Project Structure
 
-```
+```text
 ├── android/                             # Native Android Studio Project
 │   ├── app/src/main/
 │   │   ├── AndroidManifest.xml          # Permissions (Notifications, WakeLock, Location, Foreground)

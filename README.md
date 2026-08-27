@@ -3,8 +3,8 @@
 [![CI - Build & Verification](https://github.com/Mohamed-Mohamed-Hozien/Prayer-Azkar/actions/workflows/ci.yml/badge.svg)](https://github.com/Mohamed-Mohamed-Hozien/Prayer-Azkar/actions/workflows/ci.yml)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-gold.svg)](LICENSE)
-[![Offline First](https://img.shields.io/badge/100%25-Offline--First-emerald.svg)](#)
-[![Android Ready](https://img.shields.io/badge/Android-Capacitor%208-blue.svg)](#)
+[![Offline First](https://img.shields.io/badge/100%25-Offline--First-emerald.svg)](ARCHITECTURE.md)
+[![Android Ready](https://img.shields.io/badge/Android-Capacitor%208-blue.svg)](https://github.com/Mohamed-Mohamed-Hozien/Prayer-Azkar)
 
 تطبيق إسلامي شامل، خفيف، بدون إعلانات، ومفتوح المصدر (Open Source) يعمل بدون إنترنت بنسبة 100%، مبني باستخدام **React 19 + Vite 6 + Capacitor 8 + Android Native** ومتجاوب بالكامل مع جميع الهواتف والأجهزة اللوحية (Tablets).
 
