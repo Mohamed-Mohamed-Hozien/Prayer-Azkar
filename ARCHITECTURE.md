@@ -7,6 +7,7 @@
 ## 📌 1. Project Overview & Tech Stack
 
 **"صلاتي وأذكاري"** is a high-performance, 100% offline-capable Islamic Super App built with:
+
 - **Frontend Core**: React 19 + Vite (ES Modules)
 - **Native Android Wrapper**: Capacitor 8 (`@capacitor/android`, `@capacitor/local-notifications`, `@capacitor/haptics`, `@capacitor/status-bar`)
 - **Astronomical Calculation Engine**: `adhan` v4.4.3 (12 Global Calculation Methods + Hanafi/Shafi'i Madhabs)
@@ -74,6 +75,7 @@
 ## ⚡ 3. Key Subsystems & How They Work
 
 ### 🕌 1. Prayer Calculation Engine (`prayerEngine.js` & `TimingSettings.jsx`)
+
 - Computes exact astronomical times using the `adhan` library based on user coordinates (`Coordinates(lat, lng)`).
 - **12 Global Calculation Methods Supported**:
   1. `Egyptian`: Egyptian General Authority of Survey (Fajr 19.5°, Isha 17.5°)
@@ -93,6 +95,7 @@
 - **Hijri Date Calibration**: Allows shifting the calculated Hijri day by `-2` to `+2` days to match local moonsighting.
 
 ### 🧭 2. Qibla Compass Sensor Fusion (`compassEngine.js` & `QiblaCompassView.jsx`)
+
 - Calculates great-circle forward azimuth to the Kaaba (`21.422487, 39.826206`) and distance in kilometers.
 - Listens to `DeviceOrientationEvent` (`alpha` and iOS `webkitCompassHeading`).
 - Applies a low-pass filter with circular interpolation to eliminate sensor jitter.
@@ -100,6 +103,7 @@
 - **Automatic Fallback**: If sensors are uncalibrated, disabled, or on desktop, provides a smooth interactive draggable touch/mouse dial.
 
 ### 📿 3. Smart Digital Tasbeeh (`DigitalTasbeeh.jsx`)
+
 - **Center Circular Bead Tap Counter**: Tactile bead tapping with `pointer-events: none` on the background SVG progress ring to guarantee responsive touches without double-counting.
 - **Target Goals**: 33, 99, 100, 1000, and Free / Infinity mode.
 - **Celebration Confetti**: Triggers `canvas-confetti` and vibration upon completing the target.
@@ -107,6 +111,7 @@
 - **Persistent Daily Totals**: Saves daily tally and session progress in `storageEngine.js`.
 
 ### 🎙️ 4. Audio Engine & Arabic Speech Synthesis (`audioEngine.js` & `AudioSettings.jsx`)
+
 - **Multi-Muadhin Library**:
   - Makkah Al-Mukarramah
   - Madinah Al-Munawwarah
@@ -118,10 +123,11 @@
   - Fajr-specific Azans
 - **Custom Local MP3 Upload**: Users can pick any MP3/WAV file from their device; it is stored as a binary Blob in **IndexedDB** (`prayer_custom_audio_db`) for full offline playback.
 - **Voiced 5-Minute Pre-Iqamah Arabic Announcement**: Uses the native browser **Web Speech API** (`SpeechSynthesisUtterance`) in Arabic (`ar-SA`) to announce:
-  > *"اقتربت صلاة [الظهر]، متبقي ٥ دقائق على الإقامة. تقبل الله طاعتكم."*
+  > _"اقتربت صلاة [الظهر]، متبقي ٥ دقائق على الإقامة. تقبل الله طاعتكم."_
 - **Offline Synthesizers**: Web Audio API oscillator sequence fallback for alarms, double-beep mosque tones, and tasbeeh clicks.
 
 ### 📱 5. Native Android Home Screen Widget & Pinned Notifications
+
 - **Bridge Architecture**:
   1. JavaScript calls `notificationEngine.updateLockscreenWidget(..., fullState)` on every 1-second tick or settings update.
   2. `notificationEngine` invokes `window.AndroidWidgetBridge.updateWidgetData(jsonString)`.
@@ -130,6 +136,7 @@
 - **Pinned Ongoing Notification**: Configured with `ongoing: true` in `@capacitor/local-notifications` so it functions as a sticky lockscreen/status bar widget that cannot be swiped away accidentally.
 
 ### 🎨 6. Multi-Theme Design System (`index.css` & `SettingsView.jsx`)
+
 - 5 Handcrafted Theme Palettes via `data-theme` attribute:
   1. `dark` (الزمردي والذهبي الفاخر - Luxury Emerald & Gold)
   2. `oled` (الأسود الليلي الداكن - 100% True OLED Pure Black)

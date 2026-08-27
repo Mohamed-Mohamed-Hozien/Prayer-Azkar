@@ -1,9 +1,11 @@
 # 🕌 Rule 01: Islamic Data Integrity & Authentic Text Standards
 
 ## 🎯 Purpose
+
 Maintain 100% authentic, verified, and accurately vowelled (Tashkeel) Islamic texts, Hadith citations, and astronomical calculation formulas.
 
 ## 📌 Non-Negotiable Rules:
+
 1. **Full Tashkeel Preservation**:
    - All Athkar in `src/data/athkarData.js` and `src/components/DigitalTasbeeh.jsx` must include full Arabic diacritics (تَشْكِيل كَامِل).
    - Never strip or remove Tashkeel when modifying or adding Athkar texts.

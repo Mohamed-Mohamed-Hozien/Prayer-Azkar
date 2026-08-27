@@ -1,11 +1,12 @@
 ## 📝 وصف التغييرات / Description of Changes
 
-<!-- 
+<!--
 اذكر باختصار ما تم تغييره والهدف من هذا الـ PR.
 Please provide a brief summary of the changes introduced by this PR and the problem it solves.
 -->
 
 ### 🔗 المشكلة المرتبطة / Related Issue
+
 Fixes #<!-- اكتب رقم الـ Issue هنا إن وجد / Issue number if applicable -->
 
 ---
@@ -42,6 +43,6 @@ Fixes #<!-- اكتب رقم الـ Issue هنا إن وجد / Issue number if ap
 
 <!-- إن كان التعديل بصرياً، يرجى إرفاق صور للمقارنة على الموبايل أو التابلت -->
 
-| قبل التعديل (Before) | بعد التعديل (After) |
-|:---:|:---:|
+| قبل التعديل (Before)  |  بعد التعديل (After)  |
+| :-------------------: | :-------------------: |
 | <!-- أضف صورة هنا --> | <!-- أضف صورة هنا --> |

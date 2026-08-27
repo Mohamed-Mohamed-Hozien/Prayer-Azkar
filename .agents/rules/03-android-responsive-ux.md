@@ -1,9 +1,11 @@
 # 📱 Rule 03: Android Responsive UX, RTL, & Styling Standards
 
 ## 🎯 Purpose
+
 Deliver a luxury Islamic aesthetic with flawless RTL alignment, fluid adaptability across all screen sizes (small phones, large phones, foldables, tablets), and lag-free Android touch interactions.
 
 ## 📌 Non-Negotiable Rules:
+
 1. **Styling Paradigm**:
    - Use **Vanilla CSS** with design tokens defined in `src/index.css`.
    - Do NOT install or introduce TailwindCSS or bulky utility frameworks unless explicitly requested.

@@ -1,9 +1,11 @@
 # 🔄 Rule 04: Git & Contributor Workflow Standards
 
 ## 🎯 Purpose
+
 Maintain clean, atomic, and well-documented git commits, branch lifecycles, and Pull Request verifications.
 
 ## 📌 Non-Negotiable Rules:
+
 1. **Conventional Commits**:
    - Format: `<type>(<scope>): <short description>`
    - Allowed types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`, `ci`.
