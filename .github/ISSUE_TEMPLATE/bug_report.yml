@@ -1,0 +1,49 @@
+name: "🐛 الإبلاغ عن مشكلة / Bug Report"
+description: "الإبلاغ عن مشكلة برمجية أو خطأ في التطبيق / Report a reproducible bug or unexpected behavior"
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        شكراً لمساهمتك في تحسين تطبيق **صلاتي وأذكاري**! يرجى تقديم تفاصيل واضحة لنتمكن من إعادة إنتاج المشكلة وحلها.
+  - type: textarea
+    id: description
+    attributes:
+      label: "وصف المشكلة / Bug Description"
+      description: "اشرح بوضوح ما يحدث وما كنت تتوقع حدوثه."
+      placeholder: "عند الضغط على زر ... يحدث ..."
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction-steps
+    attributes:
+      label: "خطوات إعادة الإنتاج / Steps to Reproduce"
+      description: "كيف يمكن للمطور تكرار المشكلة خطوة بخطوة؟"
+      value: |
+        1. افتح صفحة '...'
+        2. اضغط على '...'
+        3. لاحظ حدوث '...'
+    validations:
+      required: true
+  - type: dropdown
+    id: device-type
+    attributes:
+      label: "نوع الجهاز وبيئة التشغيل / Environment & Device"
+      options:
+        - "هاتف أندرويد (Android Phone)"
+        - "تابلت أندرويد (Android Tablet)"
+        - "متصفح الويب (Chrome / Firefox / Edge)"
+        - "محاكي الأندرويد (Android Studio Emulator)"
+    validations:
+      required: true
+  - type: input
+    id: android-version
+    attributes:
+      label: "إصدار الأندرويد أو المتصفح / Android Version or Browser"
+      placeholder: "e.g., Android 14, Samsung Galaxy S23, Chrome 124"
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: "لقطات شاشة أو تسجيل فيديو / Screenshots or Screen Recording"
+      description: "اسحب وأفلت الصور هنا إن كانت المشكلة بصرية."

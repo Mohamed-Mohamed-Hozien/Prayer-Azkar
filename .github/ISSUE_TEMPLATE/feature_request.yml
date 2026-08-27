@@ -1,0 +1,29 @@
+name: "✨ اقتراح ميزة جديدة / Feature Request"
+description: "اقتراح فكرة أو ميزة جديدة للتطبيق / Suggest a new idea or enhancement for Prayer-Azkar"
+title: "[Feature]: "
+labels: ["enhancement", "feature-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        نرحب بجميع الأفكار والمقترحات التي تضيف قيمة للمستخدم المسلم مع الحفاظ على كفاءة التطبيق وبساطته والعمل بدون إنترنت (100% Offline).
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: "وصف الميزة المقترحة / Feature Description"
+      description: "اشرح الفكرة والهدف منها وكيف يستفيد منها المستخدم."
+      placeholder: "أقترح إضافة ..."
+    validations:
+      required: true
+  - type: textarea
+    id: use-case
+    attributes:
+      label: "سيناريو الاستخدام / Use Case & Problem Solved"
+      description: "ما المشكلة التي تحلها هذه الميزة؟"
+    validations:
+      required: true
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: "تفاصيل أو مراجع إضافية / Additional Context & Mockups"
+      description: "أي تصاميم مقترحة أو تطبيقات مشابهة أو مصادر مفيدة."

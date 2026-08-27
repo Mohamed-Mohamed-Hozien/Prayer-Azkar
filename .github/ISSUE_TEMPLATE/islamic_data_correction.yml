@@ -1,0 +1,42 @@
+name: "🕌 تصحيح ذكر أو حديث أو معادلة مواقيت / Islamic Data Correction"
+description: "الإبلاغ عن خطأ لغوي أو تشكيل أو تخريج حديث أو فرق في مواقيت الصلاة / Report Athkar typo, Hadith citation issue, or Prayer calculation correction"
+title: "[Data Correction]: "
+labels: ["islamic-data", "verification-needed"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        نولي دقة نصوص الأذكار والأحاديث النبوية الشريفة وحسابات المواقيت أقصى درجات العناية والأمانة العلمية. يرجى توثيق أي تصحيح بالمصادر الشرعية المعتمدة.
+  - type: dropdown
+    id: correction-category
+    attributes:
+      label: "نوع التصحيح / Correction Category"
+      options:
+        - "نص ذكر أو دعاء (Athkar Text / Tashkeel)"
+        - "تخريج أو حكم حديث نبوي (Hadith Reference / Sanad)"
+        - "معادلة أو زاوية حساب مواقيت الصلاة (Prayer Calculation Method / Angle)"
+        - "حسابات التقويم الهجري والمناسبات (Hijri Calendar & Fasting Rule)"
+    validations:
+      required: true
+  - type: textarea
+    id: current-text
+    attributes:
+      label: "النص أو القيمة الحالية في التطبيق / Current Content in App"
+      placeholder: "النص كما يظهر حالياً في التطبيق..."
+    validations:
+      required: true
+  - type: textarea
+    id: suggested-correction
+    attributes:
+      label: "التصحيح المقترح مع التشكيل / Proposed Correction with Tashkeel"
+      placeholder: "النص الصحيح بالتشكيل التام..."
+    validations:
+      required: true
+  - type: textarea
+    id: authentic-source
+    attributes:
+      label: "المصدر الشرعي المعتمد / Authentic Source & Reference"
+      description: "اذكر الكتاب ورقم الحديث أو الفتوى أو الهيئة الفلكية المعتمدة (مثل: صحيح البخاري رقم 6407، الهيئة المصرية العامة للمساحة)."
+      placeholder: "صحيح البخاري، كتاب الدعوات، باب..."
+    validations:
+      required: true

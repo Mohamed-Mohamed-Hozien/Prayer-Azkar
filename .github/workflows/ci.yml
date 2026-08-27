@@ -1,0 +1,40 @@
+name: "CI - Build & Verification"
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  verify:
+    name: "Build, Lint & Islamic Data Verification"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Verify Production Web Build (Vite)
+        run: npm run build
+
+      - name: 🕌 Run Islamic Data & Calculations Verifier
+        run: node .agents/skills/islamic-data-verifier/scripts/verify-calculations.mjs
+
+      - name: 🧭 Run Mobile Sensors & Offline Cache Tests
+        run: node .agents/skills/mobile-sensors-testing/scripts/simulate-sensors.mjs
+
+      - name: 🎨 Run Arabic RTL & Typography UX Linter
+        run: node .agents/skills/rtl-arabic-ux-linter/scripts/lint-arabic-rtl.mjs
+
+      - name: 🔊 Run Audio Asset Footprint Audit
+        run: node .agents/skills/audio-asset-optimizer/scripts/compress-audio.mjs
