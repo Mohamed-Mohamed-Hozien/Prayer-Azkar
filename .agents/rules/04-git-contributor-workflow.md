@@ -4,7 +4,7 @@
 
 Maintain clean, atomic, and well-documented git commits, branch lifecycles, and Pull Request verifications.
 
-## 📌 Non-Negotiable Rules:
+## 📌 Non-Negotiable Rules
 
 1. **Conventional Commits**:
    - Format: `<type>(<scope>): <short description>`
@@ -13,6 +13,7 @@ Maintain clean, atomic, and well-documented git commits, branch lifecycles, and 
 
 2. **Pre-Commit Verification**:
    - Before committing or creating a PR, always run:
+
      ```bash
      npm run build
      node .agents/skills/islamic-data-verifier/scripts/verify-calculations.mjs
@@ -22,6 +23,7 @@ Maintain clean, atomic, and well-documented git commits, branch lifecycles, and 
 
 3. **Android Native Synchronization**:
    - Whenever web assets or configs change and are meant for release, sync with Capacitor:
+
      ```bash
      npx cap sync android
      ```

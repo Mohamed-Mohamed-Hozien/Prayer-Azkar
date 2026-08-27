@@ -12,7 +12,7 @@
 
 ## 📁 Complete Directory Map
 
-```
+```text
 Prayer-Azkar/
 ├── .agents/                              # AI Agent customizations
 │   └── skills/                           # 4 workspace skills
@@ -218,7 +218,7 @@ graph TB
 
 ### Skill 1: Mobile Sensors & Offline Testing
 
-```
+```text
 ✅ Cairo, Egypt:   136° (Expected ~136°)
 ✅ Makkah, KSA:    0° (At Kaaba)
 ✅ London, UK:     119° (Expected ~119°)
@@ -230,7 +230,7 @@ graph TB
 
 ### Skill 2: Audio Asset Optimizer
 
-```
+```text
 📦 Current Audio Bundle: 24.74 MB
 🎯 Optimized Estimate:    7.48 MB (96kbps VBR)
 🚀 Potential Savings:    ~17.26 MB (APK → ~12.7 MB)
@@ -238,7 +238,7 @@ graph TB
 
 ### Skill 3: Islamic Data Verifier
 
-```
+```text
 ✅ 12/12 Calculation Methods Verified
 ✅ 10/10 Tasbeeh Presets Verified
 ✅  6/6  Athkar Categories Verified
@@ -246,7 +246,7 @@ graph TB
 
 ### Skill 4: RTL Arabic UX Linter
 
-```
+```text
 ✅ HTML lang="ar" dir="rtl" present
 ✅ viewport-fit=cover for notch handling
 ✅ --safe-top/--safe-bottom CSS variables declared
