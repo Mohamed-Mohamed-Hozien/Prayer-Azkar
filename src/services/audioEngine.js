@@ -195,7 +195,7 @@ class AudioEngine {
   }
 
   /**
-   * Plays Voiced 5-Minute Pre-Iqamah Arabic Announcement
+   * Plays a melodic ringtone chime for the 5-Minute Pre-Iqamah reminder
    */
   playPreIqamahVoiceAnnouncement(prayerName = 'الصلاة', minutesLeft = 5) {
     this.stopAll();
@@ -208,40 +208,41 @@ class AudioEngine {
     this.currentPrayerName = prayerName;
     this.notifyState();
 
-    const arabicText = `اقتربت صلاة ${prayerName}، متبقي ${minutesLeft} دقائق على الإقامة. تقبل الله طاعتكم.`;
+    // Play a pleasant ascending ringtone chime instead of TTS voice
+    const ctx = this.audioCtx;
+    if (!ctx) { this.isPlaying = false; this.notifyState(); return; }
 
-    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      try {
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(arabicText);
-        utterance.lang = 'ar-SA';
-        utterance.rate = 0.95;
-        utterance.volume = this.volume;
+    const notes = [523.25, 659.25, 783.99, 880, 1046.50]; // C5 E5 G5 A5 C6
+    const now = ctx.currentTime;
 
-        // Try to pick an Arabic voice if available
-        const voices = window.speechSynthesis.getVoices();
-        const arVoice = voices.find((v) => v.lang.startsWith('ar'));
-        if (arVoice) {
-          utterance.voice = arVoice;
-        }
+    notes.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
 
-        utterance.onend = () => {
-          this.isPlaying = false;
-          this.notifyState();
-        };
-        utterance.onerror = () => {
-          this.playIqamahVoiceSynth();
-        };
+      const startTime = now + idx * 0.28;
+      const duration = 0.55;
 
-        window.speechSynthesis.speak(utterance);
-        return;
-      } catch (e) {
-        console.warn('Speech synthesis error:', e);
-      }
-    }
+      osc.frequency.setValueAtTime(freq, startTime);
+      gain.gain.setValueAtTime(0, startTime);
+      gain.gain.linearRampToValueAtTime(this.volume * 0.55, startTime + 0.05);
+      gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
 
-    // Fallback to synthesized Iqamah notes
-    this.playIqamahVoiceSynth();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(startTime);
+      osc.stop(startTime + duration);
+    });
+
+    // Follow with a double beep
+    setTimeout(() => {
+      this.playMosqueDoubleBeep();
+    }, notes.length * 280 + 300);
+
+    setTimeout(() => {
+      this.isPlaying = false;
+      this.notifyState();
+    }, notes.length * 280 + 1200);
   }
 
   /**
@@ -269,21 +270,8 @@ class AudioEngine {
     } else if (soundType === 'tone') {
       this.playHarmonicChimeSequence();
     } else {
-      // Voiced "Qad Qamat As-Salah"
-      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-        const text = `حان الآن وقت إقامة صلاة ${prayerName}. استووا واعتدلوا.`;
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'ar-SA';
-        utterance.rate = 0.9;
-        utterance.volume = this.volume;
-        utterance.onend = () => {
-          this.isPlaying = false;
-          this.notifyState();
-        };
-        window.speechSynthesis.speak(utterance);
-      } else {
-        this.playIqamahVoiceSynth();
-      }
+      // Melodic ringtone chime for Iqamah alert
+      this.playIqamahVoiceSynth();
     }
   }
 

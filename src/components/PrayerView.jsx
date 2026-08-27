@@ -39,6 +39,12 @@ export const PrayerView = ({
   const prayers = todayTimes.prayers;
   const hijriStr = getHijriDate(new Date(), settings.hijriOffset || 0);
   const fastingInfo = getSunnahFastingInfo(new Date(), settings.hijriOffset || 0);
+  const gregorianStr = new Date().toLocaleDateString('ar-EG', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
 
   return (
     <div className="prayer-view-wrapper">
@@ -56,9 +62,12 @@ export const PrayerView = ({
           <span style={{ fontSize: '0.75rem', opacity: 0.7 }}>({settings.location.countryAr})</span>
         </button>
 
-        <div className="hijri-badge">
-          <Calendar size={14} color="var(--gold-light)" />
-          <span>{hijriStr}</span>
+        <div className="hijri-badge" style={{ flexDirection: 'column', alignItems: 'flex-end', gap: '2px', padding: '6px 12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Calendar size={14} color="var(--gold-light)" />
+            <span>{hijriStr}</span>
+          </div>
+          <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', opacity: 0.8 }}>{gregorianStr}</span>
         </div>
       </div>
 

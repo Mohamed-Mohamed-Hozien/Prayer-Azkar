@@ -49,6 +49,17 @@ export const DigitalTasbeeh = () => {
     saveStoredTasbeeh(tasbeehState);
   }, [tasbeehState]);
 
+  // Auto-reset daily total at midnight (new day detection)
+  useEffect(() => {
+    const today = new Date().toDateString();
+    setTasbeehState(prev => {
+      if (prev.lastResetDate !== today) {
+        return { ...prev, dailyTotal: 0, lastResetDate: today };
+      }
+      return prev;
+    });
+  }, []);
+
   const triggerCompletionCelebration = () => {
     try {
       hapticEngine.azanAlert();
@@ -153,6 +164,15 @@ export const DigitalTasbeeh = () => {
     }));
   };
 
+  const handleResetDailyTotal = () => {
+    try { hapticEngine.tap(); } catch (e) {}
+    setTasbeehState((prev) => ({
+      ...prev,
+      dailyTotal: 0,
+      lastResetDate: new Date().toDateString()
+    }));
+  };
+
   // Compute circular progress
   const target = tasbeehState.target;
   const strokeDashoffset = 565 - (565 * (target > 0 ? Math.min(1, (tasbeehState.currentCount || 0) / target) : 1));
@@ -167,6 +187,14 @@ export const DigitalTasbeeh = () => {
           <strong style={{ fontFamily: 'var(--font-num)', color: 'var(--gold-light)', fontSize: '1.1rem' }}>
             {tasbeehState.dailyTotal || 0}
           </strong>
+          <button
+            className="icon-circle-btn"
+            onClick={handleResetDailyTotal}
+            title="تصفير مجموع اليوم"
+            style={{ padding: '3px', marginInlineStart: '6px' }}
+          >
+            <RotateCcw size={12} />
+          </button>
         </div>
 
         <div style={{ display: 'flex', gap: '8px' }}>
@@ -269,17 +297,16 @@ export const DigitalTasbeeh = () => {
               {t === 0 ? 'حر ∞' : t}
             </button>
           ))}
+          <button
+            className="tasbeeh-target-pill"
+            onClick={handleReset}
+            title="تصفير العداد الحالي"
+            style={{ background: 'rgba(239, 68, 68, 0.15)', borderColor: 'rgba(239, 68, 68, 0.3)', color: '#f87171', display: 'flex', alignItems: 'center', gap: '4px' }}
+          >
+            <RotateCcw size={12} />
+            تصفير
+          </button>
         </div>
-
-        <button
-          className="banner-btn"
-          onClick={handleReset}
-          style={{ padding: '6px 12px', fontSize: '0.8rem', gap: '4px' }}
-          title="تصفير العداد الحالي"
-        >
-          <RotateCcw size={14} />
-          <span>تصفير</span>
-        </button>
       </div>
 
       {/* Auto Advance Toggle */}

@@ -44,7 +44,7 @@ export const DEFAULT_SETTINGS = {
   // Audio settings
   reciter: 'makkah', // makkah, madinah, alafasy, abdulbasit, alhussary, alqatami, alaqsa, fajr
   fajrReciter: 'fajr', // Fajr-specific Azan
-  eqamaSound: 'voice', // voice, double_beep, tone
+  eqamaSound: 'double_beep', // double_beep, tone, voice
   volume: 0.9,
   
   // Voiced Pre-Iqamah 5-minute reminder
@@ -175,6 +175,7 @@ export const DEFAULT_TASBEEH_STATE = {
   currentCount: 0,
   target: 33,
   dailyTotal: 0,
+  lastResetDate: '',
   history: {}
 };
 
