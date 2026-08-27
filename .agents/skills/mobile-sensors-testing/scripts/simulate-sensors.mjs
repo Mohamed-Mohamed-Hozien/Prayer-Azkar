@@ -31,6 +31,7 @@ console.log('🧭 Testing Great-Circle Qibla Bearing Calculations:');
 for (const loc of TEST_LOCATIONS) {
   const calc = calculateKaabaBearing(loc.lat, loc.lng);
   const isMakkah = Math.abs(loc.lat - KAABA.lat) < 0.01 && Math.abs(loc.lng - KAABA.lng) < 0.01;
+  const diff = Math.abs(calc - loc.expectedBearing);
   const isMatch = isMakkah || diff <= 2;
   if (isMatch) {
     console.log(`  ✅ ${loc.city}: Calculated ${isMakkah ? '0° (At Kaaba)' : calc + '°'} (Expected ~${loc.expectedBearing}°)`);
