@@ -127,85 +127,87 @@ graph TB
 
 ### Core Engine Modules
 
-| Engine | File | Responsibility |
-|:---|:---|:---|
-| **Prayer Calculator** | `prayerEngine.js` | 12 astronomical methods via `adhan` library, Qibla bearing, Hijri date, countdown |
-| **Audio Playback** | `audioEngine.js` | 9 built-in reciters, custom IndexedDB uploads, Web Audio synth fallback, Speech API |
-| **Compass Fusion** | `compassEngine.js` | `DeviceOrientation` + `webkitCompassHeading`, low-pass filter, ±3° alignment |
-| **Haptic Feedback** | `hapticEngine.js` | Capacitor `@capacitor/haptics` + `navigator.vibrate()` fallback |
-| **Notifications** | `notificationEngine.js` | `@capacitor/local-notifications`, `MediaSession`, `AndroidWidgetBridge` |
-| **Persistence** | `storageEngine.js` | `localStorage` (settings, tasbeeh, progress), `IndexedDB` (custom audio blobs) |
-| **Wake Lock** | `wakeLockEngine.js` | `navigator.wakeLock` for keeping screen on during compass/tasbeeh |
+| Engine                | File                    | Responsibility                                                                      |
+| :-------------------- | :---------------------- | :---------------------------------------------------------------------------------- |
+| **Prayer Calculator** | `prayerEngine.js`       | 12 astronomical methods via `adhan` library, Qibla bearing, Hijri date, countdown   |
+| **Audio Playback**    | `audioEngine.js`        | 9 built-in reciters, custom IndexedDB uploads, Web Audio synth fallback, Speech API |
+| **Compass Fusion**    | `compassEngine.js`      | `DeviceOrientation` + `webkitCompassHeading`, low-pass filter, ±3° alignment        |
+| **Haptic Feedback**   | `hapticEngine.js`       | Capacitor `@capacitor/haptics` + `navigator.vibrate()` fallback                     |
+| **Notifications**     | `notificationEngine.js` | `@capacitor/local-notifications`, `MediaSession`, `AndroidWidgetBridge`             |
+| **Persistence**       | `storageEngine.js`      | `localStorage` (settings, tasbeeh, progress), `IndexedDB` (custom audio blobs)      |
+| **Wake Lock**         | `wakeLockEngine.js`     | `navigator.wakeLock` for keeping screen on during compass/tasbeeh                   |
 
 ### 4 Main App Tabs (Bottom Navigation)
 
-| Tab | Component | Features |
-|:---|:---|:---|
-| 🕌 **الصلاة** | `PrayerView.jsx` | Next prayer hero, live countdown, 6-prayer timeline, Iqamah window, Sunnah fasting banner |
-| 🧭 **القبلة** | `QiblaCompassView.jsx` | 3D compass rose, golden Kaaba needle, sensor/manual mode, distance to Kaaba |
-| 📿 **الأذكار** | `AthkarView.jsx` | 6 categories (morning/evening/afterPrayer/sleep/tasbeeh/custom), focus & list modes, smart tasbeeh |
-| ⚙️ **الإعدادات** | `SettingsView.jsx` | 4 sub-tabs: timings, audio, location, widget customizer |
+| Tab              | Component              | Features                                                                                           |
+| :--------------- | :--------------------- | :------------------------------------------------------------------------------------------------- |
+| 🕌 **الصلاة**    | `PrayerView.jsx`       | Next prayer hero, live countdown, 6-prayer timeline, Iqamah window, Sunnah fasting banner          |
+| 🧭 **القبلة**    | `QiblaCompassView.jsx` | 3D compass rose, golden Kaaba needle, sensor/manual mode, distance to Kaaba                        |
+| 📿 **الأذكار**   | `AthkarView.jsx`       | 6 categories (morning/evening/afterPrayer/sleep/tasbeeh/custom), focus & list modes, smart tasbeeh |
+| ⚙️ **الإعدادات** | `SettingsView.jsx`     | 4 sub-tabs: timings, audio, location, widget customizer                                            |
 
 ---
 
 ## 📐 Prayer Calculation Methods (12 Methods)
 
-| # | ID | Authority | Fajr Angle | Isha Angle/Offset |
-|:---|:---|:---|:---:|:---:|
-| 1 | `Egyptian` | الهيئة المصرية العامة | 19.5° | 17.5° |
-| 2 | `UmmAlQura` | جامعة أم القرى | 18.5° | +90 min |
-| 3 | `MuslimWorldLeague` | رابطة العالم الإسلامي | 18° | 17° |
-| 4 | `NorthAmerica` | ISNA | 15° | 15° |
-| 5 | `Dubai` | دائرة الشؤون الإسلامية - دبي | 18.2° | 18.2° |
-| 6 | `Kuwait` | وزارة الأوقاف - الكويت | 18° | 17.5° |
-| 7 | `Qatar` | وزارة الأوقاف - قطر | 18° | +90 min |
-| 8 | `Karachi` | جامعة العلوم الإسلامية | 18° | 18° |
-| 9 | `Singapore` | MUIS | 20° | 18° |
-| 10 | `Turkey` | Diyanet (Custom) | 18° | 17° |
-| 11 | `France` | UOIF (Custom) | 12° | 12° |
-| 12 | `MoonsightingCommittee` | لجنة رؤية الهلال | 18° | 18° |
+| #   | ID                      | Authority                    | Fajr Angle | Isha Angle/Offset |
+| :-- | :---------------------- | :--------------------------- | :--------: | :---------------: |
+| 1   | `Egyptian`              | الهيئة المصرية العامة        |   19.5°    |       17.5°       |
+| 2   | `UmmAlQura`             | جامعة أم القرى               |   18.5°    |      +90 min      |
+| 3   | `MuslimWorldLeague`     | رابطة العالم الإسلامي        |    18°     |        17°        |
+| 4   | `NorthAmerica`          | ISNA                         |    15°     |        15°        |
+| 5   | `Dubai`                 | دائرة الشؤون الإسلامية - دبي |   18.2°    |       18.2°       |
+| 6   | `Kuwait`                | وزارة الأوقاف - الكويت       |    18°     |       17.5°       |
+| 7   | `Qatar`                 | وزارة الأوقاف - قطر          |    18°     |      +90 min      |
+| 8   | `Karachi`               | جامعة العلوم الإسلامية       |    18°     |        18°        |
+| 9   | `Singapore`             | MUIS                         |    20°     |        18°        |
+| 10  | `Turkey`                | Diyanet (Custom)             |    18°     |        17°        |
+| 11  | `France`                | UOIF (Custom)                |    12°     |        12°        |
+| 12  | `MoonsightingCommittee` | لجنة رؤية الهلال             |    18°     |        18°        |
 
 ---
 
 ## 📿 Tasbeeh Presets (10 Authentic Athkar)
 
-| # | ID | Arabic Text | Default Target | Hadith Virtue |
-|:---|:---|:---|:---:|:---|
-| 1 | `subhanallah` | سُبْحَانَ اللهِ | 33 | تغرس لك نخلة في الجنة |
-| 2 | `alhamdulillah` | الحَمْدُ لِلَّهِ | 33 | تملأ الميزان بالخير |
-| 3 | `allahuakbar` | اللهُ أَكْبَرُ | 33 | أفضل ما يُفتتح به الذكر |
-| 4 | `lailahaillallah` | لَا إِلَهَ إِلَّا اللهُ | 100 | أفضل الذكر وخير ما قال النبيون |
-| 5 | `astaghfirullah` | أَسْتَغْفِرُ اللهَ | 100 | تفريج الهموم وجلب الرزق |
-| 6 | `lahawla` | لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللهِ | 33 | كنز من كنوز الجنة |
-| 7 | `salawat` | اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ | 100 | صلى الله عليه بها عشراً |
-| 8 | `subhanallah_bihamdihi` | سُبْحَانَ اللهِ وَبِحَمْدِهِ العَظِيمِ | 100 | حبيبتان إلى الرحمن |
-| 9 | `hasbiyallah` | حَسْبُنَا اللهُ وَنِعْمَ الوَكِيلُ | 33 | قالها إبراهيم حين ألقي في النار |
-| 10 | `yunus_dua` | لَا إِلَهَ إِلَّا أَنْتَ سُبْحَانَكَ | 33 | لم يدعُ بها مسلم إلا استُجيب له |
+| #   | ID                      | Arabic Text                             | Default Target | Hadith Virtue                   |
+| :-- | :---------------------- | :-------------------------------------- | :------------: | :------------------------------ |
+| 1   | `subhanallah`           | سُبْحَانَ اللهِ                         |       33       | تغرس لك نخلة في الجنة           |
+| 2   | `alhamdulillah`         | الحَمْدُ لِلَّهِ                        |       33       | تملأ الميزان بالخير             |
+| 3   | `allahuakbar`           | اللهُ أَكْبَرُ                          |       33       | أفضل ما يُفتتح به الذكر         |
+| 4   | `lailahaillallah`       | لَا إِلَهَ إِلَّا اللهُ                 |      100       | أفضل الذكر وخير ما قال النبيون  |
+| 5   | `astaghfirullah`        | أَسْتَغْفِرُ اللهَ                      |      100       | تفريج الهموم وجلب الرزق         |
+| 6   | `lahawla`               | لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللهِ |       33       | كنز من كنوز الجنة               |
+| 7   | `salawat`               | اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ        |      100       | صلى الله عليه بها عشراً         |
+| 8   | `subhanallah_bihamdihi` | سُبْحَانَ اللهِ وَبِحَمْدِهِ العَظِيمِ  |      100       | حبيبتان إلى الرحمن              |
+| 9   | `hasbiyallah`           | حَسْبُنَا اللهُ وَنِعْمَ الوَكِيلُ      |       33       | قالها إبراهيم حين ألقي في النار |
+| 10  | `yunus_dua`             | لَا إِلَهَ إِلَّا أَنْتَ سُبْحَانَكَ    |       33       | لم يدعُ بها مسلم إلا استُجيب له |
 
 ---
 
 ## 🔊 Audio Assets (8 Files, 24.74 MB Total)
 
-| File | Size | Reciter / Type |
-|:---|:---:|:---|
-| `azan-makkah.mp3` | 3.26 MB | أذان الحرم المكي |
-| `azan-madinah.mp3` | 3.26 MB | أذان المسجد النبوي |
-| `azan-alaqsa.mp3` | 5.13 MB | أذان المسجد الأقصى |
-| `azan-alafasy.mp3` | 2.86 MB | مشاري العفاسي |
+| File                  |  Size   | Reciter / Type       |
+| :-------------------- | :-----: | :------------------- |
+| `azan-makkah.mp3`     | 3.26 MB | أذان الحرم المكي     |
+| `azan-madinah.mp3`    | 3.26 MB | أذان المسجد النبوي   |
+| `azan-alaqsa.mp3`     | 5.13 MB | أذان المسجد الأقصى   |
+| `azan-alafasy.mp3`    | 2.86 MB | مشاري العفاسي        |
 | `azan-abdulbasit.mp3` | 3.63 MB | عبد الباسط عبد الصمد |
-| `azan-fajr.mp3` | 3.26 MB | أذان الفجر المكي |
-| `takbeer.mp3` | 3.26 MB | تكبيرات |
-| `iqamah-beep.wav` | 0.08 MB | نغمة إقامة |
+| `azan-fajr.mp3`       | 3.26 MB | أذان الفجر المكي     |
+| `takbeer.mp3`         | 3.26 MB | تكبيرات              |
+| `iqamah-beep.wav`     | 0.08 MB | نغمة إقامة           |
 
 ---
 
 ## 🤖 Android Native Bridge
 
 ### `MainActivity.java`
+
 - Extends `BridgeActivity` (Capacitor).
 - Injects `AndroidWidgetBridge` as `@JavascriptInterface` on the WebView.
 
 ### `PrayerWidgetProvider.java`
+
 - Reads `SharedPreferences("prayer_widget_prefs")`.
 - Updates `RemoteViews(R.layout.prayer_widget_4x2)` with all 5 prayer times.
 - Called from JS via `window.AndroidWidgetBridge.updateWidgetData(json)`.
@@ -215,6 +217,7 @@ graph TB
 ## 🧪 Skill Verification Results (All 4 Passed ✅)
 
 ### Skill 1: Mobile Sensors & Offline Testing
+
 ```
 ✅ Cairo, Egypt:   136° (Expected ~136°)
 ✅ Makkah, KSA:    0° (At Kaaba)
@@ -226,6 +229,7 @@ graph TB
 ```
 
 ### Skill 2: Audio Asset Optimizer
+
 ```
 📦 Current Audio Bundle: 24.74 MB
 🎯 Optimized Estimate:    7.48 MB (96kbps VBR)
@@ -233,6 +237,7 @@ graph TB
 ```
 
 ### Skill 3: Islamic Data Verifier
+
 ```
 ✅ 12/12 Calculation Methods Verified
 ✅ 10/10 Tasbeeh Presets Verified
@@ -240,6 +245,7 @@ graph TB
 ```
 
 ### Skill 4: RTL Arabic UX Linter
+
 ```
 ✅ HTML lang="ar" dir="rtl" present
 ✅ viewport-fit=cover for notch handling
@@ -253,17 +259,17 @@ graph TB
 
 ## 📦 Dependencies
 
-| Package | Version | Purpose |
-|:---|:---|:---|
-| `react` | ^19.0.0 | UI framework |
-| `react-dom` | ^19.0.0 | DOM renderer |
-| `adhan` | ^4.4.3 | Astronomical prayer time calculations |
-| `lucide-react` | ^1.16.0 | Icon library (60+ icons used) |
-| `canvas-confetti` | ^1.9.4 | Tasbeeh completion celebration |
-| `@capacitor/core` | ^8.5.0 | Native bridge framework |
-| `@capacitor/android` | ^8.5.0 | Android native platform |
-| `@capacitor/haptics` | ^8.0.2 | Native vibration feedback |
-| `@capacitor/local-notifications` | ^8.3.1 | Android notification system |
-| `@capacitor/status-bar` | ^8.0.3 | Status bar color control |
-| `vite` | ^6.2.0 | Build tool & dev server |
-| `@vitejs/plugin-react` | ^4.3.4 | React JSX transforms |
+| Package                          | Version | Purpose                               |
+| :------------------------------- | :------ | :------------------------------------ |
+| `react`                          | ^19.0.0 | UI framework                          |
+| `react-dom`                      | ^19.0.0 | DOM renderer                          |
+| `adhan`                          | ^4.4.3  | Astronomical prayer time calculations |
+| `lucide-react`                   | ^1.16.0 | Icon library (60+ icons used)         |
+| `canvas-confetti`                | ^1.9.4  | Tasbeeh completion celebration        |
+| `@capacitor/core`                | ^8.5.0  | Native bridge framework               |
+| `@capacitor/android`             | ^8.5.0  | Android native platform               |
+| `@capacitor/haptics`             | ^8.0.2  | Native vibration feedback             |
+| `@capacitor/local-notifications` | ^8.3.1  | Android notification system           |
+| `@capacitor/status-bar`          | ^8.0.3  | Status bar color control              |
+| `vite`                           | ^6.2.0  | Build tool & dev server               |
+| `@vitejs/plugin-react`           | ^4.3.4  | React JSX transforms                  |

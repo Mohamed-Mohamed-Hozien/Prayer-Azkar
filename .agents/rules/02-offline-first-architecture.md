@@ -1,9 +1,11 @@
 # 📦 Rule 02: 100% Offline-First Architecture Standards
 
 ## 🎯 Purpose
+
 Guarantee that the application runs completely standalone on Android devices without requiring any internet connection or backend server.
 
 ## 📌 Non-Negotiable Rules:
+
 1. **Zero External Network Dependencies**:
    - Never add HTTP/REST API calls for prayer times, Athkar, or audio.
    - All calculations must execute client-side via `adhan.js` and local mathematical formulas.

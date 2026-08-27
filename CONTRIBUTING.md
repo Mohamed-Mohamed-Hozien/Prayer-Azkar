@@ -6,6 +6,7 @@
 ---
 
 ## 📋 جدول المحتويات (Table of Contents)
+
 1. [قواعد السلوك والمبادئ الأساسية](#-المبادئ-الأساسية-للمشروع)
 2. [إعداد بيئة التطوير (Development Setup)](#-إعداد-بيئة-التطوير-development-setup)
 3. [دورة حياة المساهمة (Contribution Workflow)](#-دورة-حياة-المساهمة-contribution-workflow)
@@ -27,11 +28,13 @@
 ## 🛠️ إعداد بيئة التطوير (Development Setup)
 
 ### المتطلبات الأساسية (Prerequisites)
+
 - **Node.js**: الإصدار 18 أو أحدث (يوصى بـ v20+).
 - **npm**: الإصدار 9 أو أحدث.
 - **Android Studio** (اختياري، لتجربة التطبيق كـ APK على المحاكي أو جهاز حقيقي).
 
-### خطوات البدء:
+### خطوات البدء
+
 ```bash
 # 1. عمل Fork للمستودع ثم استنساخه
 git clone https://github.com/<YOUR_USERNAME>/Prayer-Azkar.git
@@ -53,19 +56,23 @@ npm run dev
 1. **ابحث عن المشاكل المفتوحة أو أنشئ Issue جديدة:**
    - قبل البدء في كتابة كود ميزة كبيرة، يفضل فتح Issue لمناقشة الفكرة مع صاحب المشروع.
 2. **أنشئ فرعاً جديداً (Branch):**
+
    ```bash
    git checkout -b feat/add-fasting-tracker
    # أو
    git checkout -b fix/tasbeeh-touch-debounce
    ```
+
 3. **قم بإجراء التعديلات المطلوبة واختبارها محلياً.**
 4. **تأكد من نجاح جميع أدوات الفحص والاختبار** (انظر القسم أدناه).
 5. **قم بعمل Commit و Push:**
+
    ```bash
    git add .
    git commit -m "feat(athkar): add evening athkar audio support"
    git push origin feat/add-fasting-tracker
    ```
+
 6. **افتح Pull Request (PR)** عبر GitHub واملأ القالب المخصص (`PR Template`).
 
 ---
@@ -116,4 +123,5 @@ node .agents/skills/audio-asset-optimizer/scripts/compress-audio.mjs
 ---
 
 ## ❓ بحاجة لمساعدة؟
+
 إذا واجهتك أي صعوبة في الإعداد أو لديك استفسار، لا تتردد في فتح [Discussion](https://github.com/Mohamed-Mohamed-Hozien/Prayer-Azkar/discussions) أو التواصل عبر الـ Issues. جزاكم الله خيراً على مساهمتكم!

@@ -6,6 +6,7 @@
 ---
 
 ## 🏛️ Project Identity & Architecture
+
 - **Repository**: `Mohamed-Mohamed-Hozien/Prayer-Azkar`
 - **Application**: صلاتي وأذكاري (Islamic Prayer Times & Athkar)
 - **Target Platform**: Android Standalone APK (Capacitor 8) + Responsive PWA
@@ -45,16 +46,17 @@ Before writing or editing code, strictly adhere to the 4 workspace rulesets:
 
 Whenever making changes, run the corresponding verification script:
 
-| Skill | Script | Purpose |
-|:---|:---|:---|
-| 🕌 **`islamic-data-verifier`** | `node .agents/skills/islamic-data-verifier/scripts/verify-calculations.mjs` | Verifies 12 calculation methods, 10 Tasbeeh presets, 6 Athkar categories |
-| 🧭 **`mobile-sensors-testing`** | `node .agents/skills/mobile-sensors-testing/scripts/simulate-sensors.mjs` | Tests Qibla bearing math, sensor alignment (±3°), and Service Worker cache |
-| 🎨 **`rtl-arabic-ux-linter`** | `node .agents/skills/rtl-arabic-ux-linter/scripts/lint-arabic-rtl.mjs` | Lints RTL consistency, typography, notch clearance, and tap touch-action |
-| 🔊 **`audio-asset-optimizer`** | `node .agents/skills/audio-asset-optimizer/scripts/compress-audio.mjs` | Audits audio file sizes and bitrate footprint |
+| Skill                           | Script                                                                      | Purpose                                                                    |
+| :------------------------------ | :-------------------------------------------------------------------------- | :------------------------------------------------------------------------- |
+| 🕌 **`islamic-data-verifier`**  | `node .agents/skills/islamic-data-verifier/scripts/verify-calculations.mjs` | Verifies 12 calculation methods, 10 Tasbeeh presets, 6 Athkar categories   |
+| 🧭 **`mobile-sensors-testing`** | `node .agents/skills/mobile-sensors-testing/scripts/simulate-sensors.mjs`   | Tests Qibla bearing math, sensor alignment (±3°), and Service Worker cache |
+| 🎨 **`rtl-arabic-ux-linter`**   | `node .agents/skills/rtl-arabic-ux-linter/scripts/lint-arabic-rtl.mjs`      | Lints RTL consistency, typography, notch clearance, and tap touch-action   |
+| 🔊 **`audio-asset-optimizer`**  | `node .agents/skills/audio-asset-optimizer/scripts/compress-audio.mjs`      | Audits audio file sizes and bitrate footprint                              |
 
 ---
 
 ## 📁 Key Source Directory Map
+
 - `src/services/prayerEngine.js` — Astronomical calculations via `adhan.js`.
 - `src/services/audioEngine.js` — Audio playback, Web Audio synthesis, ringtone chimes.
 - `src/services/compassEngine.js` — `DeviceOrientation` sensor fusion.
