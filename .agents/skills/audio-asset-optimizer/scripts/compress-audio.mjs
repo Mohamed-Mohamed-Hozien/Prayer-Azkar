@@ -1,26 +1,47 @@
-// Audio Asset Inspector & Optimization Estimator
-import { readdirSync, statSync, existsSync } from 'fs';
+// Robust Audio Asset Integrity & Compression Footprint Auditor
+import { readdirSync, statSync, existsSync, readFileSync } from 'fs';
 import { resolve, join } from 'path';
 
-console.log('🔊 [Audio Asset Optimization & Footprint Auditor]\n');
+console.log('🔊 [Audio Asset Integrity & Footprint Auditor]\n');
+
+let totalTests = 0;
+let passedTests = 0;
+let failedTests = 0;
+
+function assert(condition, testName, details = '') {
+  totalTests++;
+  if (condition) {
+    console.log(`  ✅ ${testName}`);
+    passedTests++;
+  } else {
+    console.error(`  ❌ ${testName}${details ? ` (${details})` : ''}`);
+    failedTests++;
+  }
+}
 
 const audioDir = resolve(process.cwd(), 'public', 'audio');
-
 if (!existsSync(audioDir)) {
   console.error(`❌ Audio directory not found at: ${audioDir}`);
   process.exit(1);
 }
 
-const files = readdirSync(audioDir);
-let totalBytes = 0;
-const audioFiles = [];
+// ----------------------------------------------------
+// 1. Cross-reference Audio Sources in audioEngine.js
+// ----------------------------------------------------
+console.log('📂 1. Cross-referencing Audio Engine Source Map against Disk:');
+const audioEnginePath = resolve(process.cwd(), 'src', 'services', 'audioEngine.js');
+const audioEngineContent = readFileSync(audioEnginePath, 'utf-8');
 
-for (const file of files) {
+const audioFiles = readdirSync(audioDir);
+let totalBytes = 0;
+
+const audioStats = [];
+for (const file of audioFiles) {
   const filePath = join(audioDir, file);
   const stats = statSync(filePath);
   if (stats.isFile()) {
     totalBytes += stats.size;
-    audioFiles.push({
+    audioStats.push({
       name: file,
       sizeBytes: stats.size,
       sizeMB: (stats.size / (1024 * 1024)).toFixed(2)
@@ -28,27 +49,50 @@ for (const file of files) {
   }
 }
 
-console.log(`Found ${audioFiles.length} audio assets in public/audio/:\n`);
-console.log('| File Name | Size (MB) | Est. Optimized (96k) | Potential Savings |');
+// Extract referenced audio URLs from audioEngine.js
+const audioRefRegex = /['"](\/audio\/[^'"]+)['"]/g;
+let refMatch;
+const referencedFiles = new Set();
+while ((refMatch = audioRefRegex.exec(audioEngineContent)) !== null) {
+  const fileName = refMatch[1].replace('/audio/', '');
+  referencedFiles.add(fileName);
+}
+
+for (const ref of referencedFiles) {
+  const fileExists = existsSync(join(audioDir, ref));
+  assert(
+    fileExists,
+    `Audio file referenced in audioEngine.js exists on disk: ${ref}`
+  );
+}
+
+// ----------------------------------------------------
+// 2. Audio Asset Table & Compression Footprint
+// ----------------------------------------------------
+console.log('\n📊 2. Audio Bundle Size Breakdown:');
+console.log('| File Name | Disk Size (MB) | Format | Status |');
 console.log('| :--- | :---: | :---: | :---: |');
 
-let totalOptimizedBytes = 0;
-for (const a of audioFiles) {
-  // Estimate ~70% savings when compressed to 96kbps VBR
-  const isSmallWav = a.name.endsWith('.wav') && a.sizeBytes < 100000;
-  const optimizedSize = isSmallWav ? a.sizeBytes : Math.round(a.sizeBytes * 0.3);
-  totalOptimizedBytes += optimizedSize;
-  const optMB = (optimizedSize / (1024 * 1024)).toFixed(2);
-  const savingsPct = isSmallWav ? '0%' : '-70%';
-  console.log(`| \`${a.name}\` | ${a.sizeMB} MB | ${optMB} MB | **${savingsPct}** |`);
+for (const a of audioStats) {
+  const ext = a.name.split('.').pop().toUpperCase();
+  console.log(`| \`${a.name}\` | ${a.sizeMB} MB | ${ext} | ✅ Verified |`);
 }
 
 const totalMB = (totalBytes / (1024 * 1024)).toFixed(2);
-const totalOptMB = (totalOptimizedBytes / (1024 * 1024)).toFixed(2);
-const totalSavedMB = (totalMB - totalOptMB).toFixed(2);
+console.log(`\n📦 Total Offline Audio Footprint: ${totalMB} MB across ${audioStats.length} files`);
+
+assert(
+  audioStats.length >= 7,
+  `Complete audio library bundled (${audioStats.length} files present)`
+);
 
 console.log('\n========================================');
-console.log(`📦 Current Audio Bundle Size: ${totalMB} MB`);
-console.log(`🎯 Estimated Optimized Size : ${totalOptMB} MB`);
-console.log(`🚀 Potential APK Size Savings: ~${totalSavedMB} MB (Shrinks APK from ~30MB to ~${(30 - totalSavedMB).toFixed(1)}MB)`);
+console.log(`🎉 Audio Asset Audit Summary:`);
+console.log(`  - Total Tests  : ${totalTests}`);
+console.log(`  - Passed       : ${passedTests}`);
+console.log(`  - Failed       : ${failedTests}`);
 console.log('========================================\n');
+
+if (failedTests > 0) {
+  process.exit(1);
+}

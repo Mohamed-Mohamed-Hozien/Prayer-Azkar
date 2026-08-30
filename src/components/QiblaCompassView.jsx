@@ -26,7 +26,7 @@ export const QiblaCompassView = ({ settings, onOpenLocationModal }) => {
 
   const [manualHeading, setManualHeading] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
-  const [hasTriggeredAlignmentHaptic, setHasTriggeredAlignmentHaptic] = useState(false);
+  const hasTriggeredAlignmentHapticRef = useRef(false);
   const dialRef = useRef(null);
 
   const { location } = settings;
@@ -41,12 +41,12 @@ export const QiblaCompassView = ({ settings, onOpenLocationModal }) => {
       setCompassData(data);
 
       if (data.isAligned) {
-        if (!hasTriggeredAlignmentHaptic) {
+        if (!hasTriggeredAlignmentHapticRef.current) {
           hapticEngine.azanAlert();
-          setHasTriggeredAlignmentHaptic(true);
+          hasTriggeredAlignmentHapticRef.current = true;
         }
       } else {
-        setHasTriggeredAlignmentHaptic(false);
+        hasTriggeredAlignmentHapticRef.current = false;
       }
     });
 

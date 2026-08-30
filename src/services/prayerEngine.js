@@ -181,12 +181,18 @@ export const getActivePrayerState = (now, settings) => {
   const seconds = totalSecs % 60;
 
   // Check if we are currently in an active Iqamah window
-  // (i.e. between Azan and Eqama for a prayer that has an Iqamah)
+  // (i.e. between Azan and Eqama for a today's prayer that has an Iqamah)
   let isEqamaWindow = false;
   let eqamaCountdownSecs = 0;
   let activeEqamaPrayer = null;
 
-  if (currentPrayer && currentPrayer.hasIqamah && currentPrayer.eqamaTime) {
+  if (
+    currentPrayer &&
+    !currentPrayer.isYesterday &&
+    !currentPrayer.isTomorrow &&
+    currentPrayer.hasIqamah &&
+    currentPrayer.eqamaTime
+  ) {
     const eqamaDiffMs = currentPrayer.eqamaTime.getTime() - nowMs;
     if (nowMs >= currentPrayer.time.getTime() && eqamaDiffMs >= 0) {
       isEqamaWindow = true;
@@ -262,8 +268,17 @@ export const getHijriDate = (date = new Date(), offsetDays = 0) => {
  */
 export const getQiblaBearing = (lat, lng) => {
   try {
+    const KAABA_LAT = 21.422487;
+    const KAABA_LNG = 39.826206;
+    if (Math.abs(lat - KAABA_LAT) < 0.0002 && Math.abs(lng - KAABA_LNG) < 0.0002) {
+      return 0; // Directly at Kaaba
+    }
     const coordinates = new Coordinates(lat, lng);
-    return Math.round(Qibla(coordinates));
+    const bearing = Qibla(coordinates);
+    if (isNaN(bearing) || bearing === null || typeof bearing === 'undefined') {
+      return 0;
+    }
+    return (Math.round(bearing) % 360 + 360) % 360;
   } catch (e) {
     return 135;
   }

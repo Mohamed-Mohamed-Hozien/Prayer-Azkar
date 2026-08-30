@@ -46,8 +46,8 @@ export const getHijriComponents = (date = new Date(), offsetDays = 0) => {
  * Checks for Sunnah Fasting days (Mondays, Thursdays, White Days, Arafah, Ashura)
  */
 export const getSunnahFastingInfo = (date = new Date(), offsetDays = 0) => {
-  const { day, month, monthName } = getHijriComponents(date, offsetDays);
-  const dayOfWeek = date.getDay(); // 0 = Sun, 1 = Mon, 2 = Tue, 3 = Wed, 4 = Thu, 5 = Fri, 6 = Sat
+  const { day, month, monthName, adjustedDate } = getHijriComponents(date, offsetDays);
+  const dayOfWeek = (adjustedDate || date).getDay(); // 0 = Sun, 1 = Mon, 2 = Tue, 3 = Wed, 4 = Thu, 5 = Fri, 6 = Sat
 
   const fastingReasons = [];
   let isSunnahFastingToday = false;

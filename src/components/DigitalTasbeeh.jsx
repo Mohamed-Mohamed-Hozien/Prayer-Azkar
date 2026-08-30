@@ -99,9 +99,12 @@ export const DigitalTasbeeh = () => {
       }
     } catch (err) {}
 
+    const today = new Date().toDateString();
     setTasbeehState((prev) => {
+      const isNewDay = prev.lastResetDate !== today;
+      const baseDailyTotal = isNewDay ? 0 : (prev.dailyTotal || 0);
       const newCount = (prev.currentCount || 0) + 1;
-      const newDailyTotal = (prev.dailyTotal || 0) + 1;
+      const newDailyTotal = baseDailyTotal + 1;
       const target = prev.target;
 
       // Check target reached
@@ -127,7 +130,8 @@ export const DigitalTasbeeh = () => {
       return {
         ...prev,
         currentCount: newCount,
-        dailyTotal: newDailyTotal
+        dailyTotal: newDailyTotal,
+        lastResetDate: today
       };
     });
   };
