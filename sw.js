@@ -1,12 +1,21 @@
-// Service Worker for Prayer & Athkar PWA - Network First with Auto-Update
-const CACHE_NAME = 'prayer-athkar-v2-latest';
+// Service Worker for Prayer & Athkar PWA - 100% Offline-First Architecture
+const CACHE_NAME = 'prayer-athkar-v3-offline';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
   '/manifest.json',
   '/icons/mosque-icon.svg',
   '/icons/icon-192.svg',
-  '/icons/icon-512.svg'
+  '/icons/icon-512.svg',
+  '/fonts/fonts.css',
+  '/audio/azan-makkah.mp3',
+  '/audio/azan-madinah.mp3',
+  '/audio/azan-alafasy.mp3',
+  '/audio/azan-abdulbasit.mp3',
+  '/audio/azan-alaqsa.mp3',
+  '/audio/azan-fajr.mp3',
+  '/audio/takbeer.mp3',
+  '/audio/iqamah-beep.wav'
 ];
 
 self.addEventListener('install', (event) => {

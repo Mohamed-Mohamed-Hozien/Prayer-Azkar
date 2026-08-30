@@ -3,6 +3,39 @@ import { LocalNotifications } from '@capacitor/local-notifications';
 
 const ONGOING_NOTIFICATION_ID = 1001;
 
+const TAG_ID_MAP = {
+  'azan-fajr': 2001,
+  'eqama-fajr': 2002,
+  'pre-fajr': 2003,
+  'pre-eqama-fajr': 2004,
+  'azan-dhuhr': 2011,
+  'eqama-dhuhr': 2012,
+  'pre-dhuhr': 2013,
+  'pre-eqama-dhuhr': 2014,
+  'azan-asr': 2021,
+  'eqama-asr': 2022,
+  'pre-asr': 2023,
+  'pre-eqama-asr': 2024,
+  'azan-maghrib': 2031,
+  'eqama-maghrib': 2032,
+  'pre-maghrib': 2033,
+  'pre-eqama-maghrib': 2034,
+  'azan-isha': 2041,
+  'eqama-isha': 2042,
+  'pre-isha': 2043,
+  'pre-eqama-isha': 2044
+};
+
+const getNotificationId = (tag) => {
+  if (TAG_ID_MAP[tag]) return TAG_ID_MAP[tag];
+  let hash = 0;
+  for (let i = 0; i < tag.length; i++) {
+    hash = (hash << 5) - hash + tag.charCodeAt(i);
+    hash |= 0;
+  }
+  return 2100 + (Math.abs(hash) % 800);
+};
+
 class NotificationEngine {
   constructor() {
     this.permissionGranted = false;
@@ -37,15 +70,17 @@ class NotificationEngine {
 
   /**
    * Dispatches a native Android local notification or browser notification
+   * Uses deterministic IDs to update existing notifications rather than cluttering drawer
    */
   async sendNotification(title, body, tag = 'prayer-alert') {
+    const notificationId = getNotificationId(tag);
     try {
       await LocalNotifications.schedule({
         notifications: [
           {
             title,
             body,
-            id: Math.floor(Math.random() * 100000) + 2000,
+            id: notificationId,
             sound: 'azan',
             smallIcon: 'ic_stat_icon_config_sample'
           }
@@ -55,7 +90,7 @@ class NotificationEngine {
       if (!this.permissionGranted) return;
       try {
         if ('Notification' in window) {
-          new Notification(title, { body, icon: '/icons/icon-192.svg' });
+          new Notification(title, { body, icon: '/icons/icon-192.svg', tag });
         }
       } catch (err) {}
     }

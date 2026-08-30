@@ -18,7 +18,8 @@ class CompassEngine {
     this.listeners = new Set();
     this.handleOrientation = this.handleOrientation.bind(this);
     this.lastHeading = 0;
-    this.smoothFactor = 0.15; // Low-pass filter smoothing
+    this.smoothFactor = 0.15;
+    this.attachedEventType = null;
   }
 
   /**
@@ -32,35 +33,39 @@ class CompassEngine {
       try {
         const response = await DeviceOrientationEvent.requestPermission();
         if (response === 'granted') {
-          this.attachListener();
+          this.attachListener('deviceorientation');
           return true;
         }
       } catch (e) {
         console.warn('iOS orientation permission error:', e);
       }
     } else if ('ondeviceorientationabsolute' in window) {
-      window.addEventListener('deviceorientationabsolute', this.handleOrientation, true);
-      this.isSensorSupported = true;
+      this.attachListener('deviceorientationabsolute');
       return true;
     } else if ('ondeviceorientation' in window) {
-      this.attachListener();
+      this.attachListener('deviceorientation');
       return true;
     }
 
     return false;
   }
 
-  attachListener() {
-    window.addEventListener('deviceorientation', this.handleOrientation, true);
+  attachListener(type = 'deviceorientation') {
+    if (typeof window === 'undefined') return;
+    this.detachListener();
+    window.addEventListener(type, this.handleOrientation, true);
+    this.attachedEventType = type;
     this.isSensorSupported = true;
   }
 
   detachListener() {
     if (typeof window === 'undefined') return;
-    window.removeEventListener('deviceorientation', this.handleOrientation, true);
-    if ('ondeviceorientationabsolute' in window) {
-      window.removeEventListener('deviceorientationabsolute', this.handleOrientation, true);
+    if (this.attachedEventType) {
+      window.removeEventListener(this.attachedEventType, this.handleOrientation, true);
+      this.attachedEventType = null;
     }
+    window.removeEventListener('deviceorientation', this.handleOrientation, true);
+    window.removeEventListener('deviceorientationabsolute', this.handleOrientation, true);
   }
 
   handleOrientation(event) {

@@ -88,7 +88,6 @@ export const DEFAULT_SETTINGS = {
   timeFormat: '12h', // '12h' | '24h'
   hapticEnabled: true,
   wakeLockEnabled: true,
-  audioUnmuted: false,
   showLockscreenWidget: true,
 
   // Widget Customization inside Settings

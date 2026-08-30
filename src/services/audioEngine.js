@@ -22,12 +22,13 @@ class AudioEngine {
       madinah: '/audio/azan-madinah.mp3',
       alafasy: '/audio/azan-alafasy.mp3',
       abdulbasit: '/audio/azan-abdulbasit.mp3',
+      // TODO: Replace placeholders with dedicated authentic studio recordings
       alhussary: '/audio/azan-makkah.mp3',
       alqatami: '/audio/azan-alafasy.mp3',
       alaqsa: '/audio/azan-alaqsa.mp3',
       fajr: '/audio/azan-fajr.mp3',
       fajr_alafasy: '/audio/azan-fajr.mp3',
-      takbeer: '/audio/azan-makkah.mp3',
+      takbeer: '/audio/takbeer.mp3',
       eqama_beep: '/audio/iqamah-beep.wav'
     };
 

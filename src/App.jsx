@@ -6,7 +6,9 @@ import {
   getStoredCustomAthkar,
   saveStoredCustomAthkar,
   getStoredAthkarProgress,
-  saveStoredAthkarProgress
+  saveStoredAthkarProgress,
+  getStoredTasbeeh,
+  saveStoredTasbeeh
 } from './services/storageEngine';
 import { audioEngine } from './services/audioEngine';
 import { hapticEngine } from './services/hapticEngine';
@@ -43,6 +45,7 @@ export function App() {
   const firedEqamasRef = useRef(new Set());
   const firedRemindersRef = useRef(new Set());
   const firedPreEqamaVoiceRef = useRef(new Set());
+  const lastDayRef = useRef(new Date().toDateString());
 
   // Initialize Haptic and WakeLock on mount & Sync Theme
   useEffect(() => {
@@ -101,6 +104,27 @@ export function App() {
   useEffect(() => {
     const timer = setInterval(() => {
       const currentTime = new Date();
+      const todayStr = currentTime.toDateString();
+
+      // Midnight Transition Handler: Reset daily fired sets and daily tasbeeh count
+      if (lastDayRef.current !== todayStr) {
+        lastDayRef.current = todayStr;
+        firedAzansRef.current.clear();
+        firedEqamasRef.current.clear();
+        firedRemindersRef.current.clear();
+        firedPreEqamaVoiceRef.current.clear();
+
+        // Auto-reset daily tasbeeh in storage
+        const currentTasbeeh = getStoredTasbeeh();
+        if (currentTasbeeh.lastResetDate !== todayStr) {
+          saveStoredTasbeeh({
+            ...currentTasbeeh,
+            dailyTotal: 0,
+            lastResetDate: todayStr
+          });
+        }
+      }
+
       setNow(currentTime);
 
       const prayerState = getActivePrayerState(currentTime, settings);
@@ -121,13 +145,13 @@ export function App() {
       // Format current timestamp string for deduplication (YYYY-MM-DD-HH-MM)
       const currentMinKey = `${currentTime.getFullYear()}-${currentTime.getMonth()}-${currentTime.getDate()}-${currentTime.getHours()}-${currentTime.getMinutes()}`;
 
-      // 2. Check for Azan Timings
+      // 2. Check for Azan Timings (30s tolerance window + minute deduplication)
       todayTimes.prayers.forEach((p) => {
         if (!p.time) return;
         const prayerMinKey = `${currentMinKey}-${p.id}-azan`;
 
         const timeDiffMs = Math.abs(currentTime.getTime() - p.time.getTime());
-        if (timeDiffMs < 1000 && !firedAzansRef.current.has(prayerMinKey)) {
+        if (timeDiffMs < 30000 && !firedAzansRef.current.has(prayerMinKey)) {
           firedAzansRef.current.add(prayerMinKey);
 
           const alertMode = settings.prayerAlertModes?.[p.id] || 'full';
@@ -154,7 +178,7 @@ export function App() {
           const voiceMinKey = `${currentMinKey}-${p.id}-pre-eqama-voice`;
 
           const voiceDiffMs = Math.abs(currentTime.getTime() - voiceReminderTime.getTime());
-          if (voiceDiffMs < 1000 && !firedPreEqamaVoiceRef.current.has(voiceMinKey)) {
+          if (voiceDiffMs < 30000 && !firedPreEqamaVoiceRef.current.has(voiceMinKey)) {
             firedPreEqamaVoiceRef.current.add(voiceMinKey);
 
             audioEngine.playPreIqamahVoiceAnnouncement(p.nameAr, settings.preIqamahVoiceMinutes || 5);
@@ -175,7 +199,7 @@ export function App() {
         const eqamaMinKey = `${currentMinKey}-${p.id}-eqama`;
 
         const eqamaDiffMs = Math.abs(currentTime.getTime() - p.eqamaTime.getTime());
-        if (eqamaDiffMs < 1000 && !firedEqamasRef.current.has(eqamaMinKey)) {
+        if (eqamaDiffMs < 30000 && !firedEqamasRef.current.has(eqamaMinKey)) {
           firedEqamasRef.current.add(eqamaMinKey);
 
           if (settings.eqamaAlertEnabled?.[p.id] !== false) {
@@ -199,7 +223,7 @@ export function App() {
         const reminderMinKey = `${currentMinKey}-${p.id}-pre`;
 
         const preDiffMs = Math.abs(currentTime.getTime() - reminderTime.getTime());
-        if (preDiffMs < 1000 && !firedRemindersRef.current.has(reminderMinKey)) {
+        if (preDiffMs < 30000 && !firedRemindersRef.current.has(reminderMinKey)) {
           firedRemindersRef.current.add(reminderMinKey);
 
           audioEngine.playPreAzanReminderTone();
