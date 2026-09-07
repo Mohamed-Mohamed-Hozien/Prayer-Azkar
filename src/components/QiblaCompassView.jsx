@@ -70,6 +70,9 @@ export const QiblaCompassView = ({ settings, onOpenLocationModal }) => {
   // Touch / Mouse drag handler for manual dial fallback
   const handleDialPointerDown = (e) => {
     setIsDragging(true);
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch (err) {}
     updateManualAngle(e);
   };
 
@@ -78,7 +81,12 @@ export const QiblaCompassView = ({ settings, onOpenLocationModal }) => {
     updateManualAngle(e);
   };
 
-  const handleDialPointerUp = () => {
+  const handleDialPointerUp = (e) => {
+    try {
+      if (e?.currentTarget?.hasPointerCapture?.(e.pointerId)) {
+        e.currentTarget.releasePointerCapture(e.pointerId);
+      }
+    } catch (err) {}
     setIsDragging(false);
   };
 
@@ -171,6 +179,9 @@ export const QiblaCompassView = ({ settings, onOpenLocationModal }) => {
           ref={dialRef}
           className={`compass-dial-ring ${isDirectlyAligned ? 'aligned-glow' : ''}`}
           onPointerDown={handleDialPointerDown}
+          onPointerMove={handleDialPointerMove}
+          onPointerUp={handleDialPointerUp}
+          onPointerCancel={handleDialPointerUp}
           style={{ transform: `rotate(${-currentHeading}deg)` }}
         >
           {/* Compass Rose Dial Background */}

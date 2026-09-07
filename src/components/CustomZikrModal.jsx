@@ -13,13 +13,17 @@ export const CustomZikrModal = ({ isOpen, onClose, onSaveCustomZikr }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!text.trim()) return;
+    const trimmedText = text.trim();
+    if (!trimmedText) return;
+
+    const parsedCount = Math.max(1, Math.min(100000, Math.floor(Number(count)) || 33));
+    const trimmedReward = reward.trim().slice(0, 200);
 
     const newZikr = {
       id: `custom-${Date.now()}`,
-      text: text.trim(),
-      count: Number(count) || 33,
-      reward: reward.trim() || 'ذكر وتعبد خالص لوجه الله',
+      text: trimmedText.slice(0, 400),
+      count: parsedCount,
+      reward: trimmedReward || 'ذكر وتعبد خالص لوجه الله',
       source: 'ذكر مخصص'
     };
 
@@ -55,6 +59,7 @@ export const CustomZikrModal = ({ isOpen, onClose, onSaveCustomZikr }) => {
               placeholder="مثال: لَا إِلَهَ إِلَّا أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ"
               value={text}
               onChange={(e) => setText(e.target.value)}
+              maxLength={400}
               required
             />
           </div>
@@ -105,6 +110,7 @@ export const CustomZikrModal = ({ isOpen, onClose, onSaveCustomZikr }) => {
               placeholder="مثال: تفريج الكرب والهم"
               value={reward}
               onChange={(e) => setReward(e.target.value)}
+              maxLength={200}
             />
           </div>
 

@@ -30,6 +30,9 @@ jobs:
       - name: 🕌 Run Islamic Data & Calculations Verifier
         run: node .agents/skills/islamic-data-verifier/scripts/verify-calculations.mjs
 
+      - name: ⚙️ Run Engine State & Lifecycle Verifier
+        run: node .agents/skills/islamic-data-verifier/scripts/verify-engine-state.mjs
+
       - name: 🧭 Run Mobile Sensors & Offline Cache Tests
         run: node .agents/skills/mobile-sensors-testing/scripts/simulate-sensors.mjs
 
