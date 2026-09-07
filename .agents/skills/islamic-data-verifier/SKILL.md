@@ -18,6 +18,6 @@ This skill provides verification suites to guarantee theological and astronomica
 
 Run the calculation and Athkar verification script:
 
-```bash
+```
 node .agents/skills/islamic-data-verifier/scripts/verify-calculations.mjs
 ```

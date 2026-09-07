@@ -39,6 +39,7 @@ const getNotificationId = (tag) => {
 class NotificationEngine {
   constructor() {
     this.permissionGranted = false;
+    this.lastWidgetSyncKey = null;
     this.checkPermission();
   }
 
@@ -98,14 +99,34 @@ class NotificationEngine {
 
   /**
    * Updates Android Notification Shade, Lockscreen Live Activity, and Native Android Home Widget
+   * Throttled to 1 update/minute or state changes to protect Android battery & reduce launcher IPC
    */
-  updateLockscreenWidget(currentPrayer, nextPrayer, countdownStr, isEqamaWindow, eqamaCountdownStr, fullState = null) {
+  updateLockscreenWidget(currentPrayer, nextPrayer, countdownOrStr, isEqamaWindow, eqamaCountdownStr, fullState = null, forceSync = false) {
+    const countdownFormatted = typeof countdownOrStr === 'object' && countdownOrStr?.formatted
+      ? countdownOrStr.formatted
+      : String(countdownOrStr || '00:00:00');
+
+    // Extract HH:MM for battery-efficient widget rendering
+    const parts = countdownFormatted.split(':');
+    const widgetCountdown = parts.length >= 2 ? `${parts[0]}:${parts[1]}` : countdownFormatted;
+
+    // Throttle check: update once per minute or when prayer/iqamah state transitions
+    const now = new Date();
+    const syncMinuteKey = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}-${now.getHours()}-${now.getMinutes()}`;
+    const prayerStateKey = `${currentPrayer?.id || 'none'}-${nextPrayer?.id || 'none'}-${Boolean(isEqamaWindow)}`;
+    const fullSyncKey = `${syncMinuteKey}-${prayerStateKey}`;
+
+    if (!forceSync && this.lastWidgetSyncKey === fullSyncKey) {
+      return;
+    }
+    this.lastWidgetSyncKey = fullSyncKey;
+
     let titleText = `الصلاة القادمة: ${nextPrayer?.nameAr || 'الفجر'}`;
-    let subText = `متبقي على الأذان: ${countdownStr}`;
+    let subText = `متبقي على الأذان: ${widgetCountdown}`;
 
     if (isEqamaWindow && currentPrayer) {
       titleText = `حان وقت ${currentPrayer.nameAr} - وقت الإقامة`;
-      subText = `متبقي على الإقامة: ${eqamaCountdownStr}`;
+      subText = `متبقي على الإقامة: ${eqamaCountdownStr || 'دقائق معدودة'}`;
     }
 
     // 1. Android MediaSession Lockscreen Live Activity
@@ -121,7 +142,8 @@ class NotificationEngine {
           ]
         });
 
-        navigator.mediaSession.playbackState = 'playing';
+        const isAudioPlaying = Boolean(fullState?.audioState?.isPlaying);
+        navigator.mediaSession.playbackState = isAudioPlaying ? 'playing' : 'none';
       } catch (e) {}
     }
 
@@ -148,8 +170,8 @@ class NotificationEngine {
 
         const widgetPayload = {
           title: `صلاتي وأذكاري • ${settings?.location?.nameAr || 'القاهرة'}`,
-          nextPrayer: `${nextPrayer?.nameAr || 'الفجر'} (${countdownStr})`,
-          footer: isEqamaWindow ? `الإقامة خلال: ${eqamaCountdownStr}` : 'المس لفتح مواقيت الصلاة والأذكار',
+          nextPrayer: `${nextPrayer?.nameAr || 'الفجر'} (${widgetCountdown})`,
+          footer: isEqamaWindow ? `الإقامة خلال: ${eqamaCountdownStr || 'دقائق معدودة'}` : 'المس لفتح مواقيت الصلاة والأذكار',
           fajr: formatTime(todayTimes?.fajr),
           dhuhr: formatTime(todayTimes?.dhuhr),
           asr: formatTime(todayTimes?.asr),

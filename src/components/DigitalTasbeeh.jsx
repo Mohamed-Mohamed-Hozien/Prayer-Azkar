@@ -41,8 +41,18 @@ export const DigitalTasbeeh = () => {
   const [isPressing, setIsPressing] = useState(false);
   const [showVirtue, setShowVirtue] = useState(false);
   const lastTapTimeRef = useRef(0);
+  const autoAdvanceTimerRef = useRef(null);
 
   const activeZikr = TASBEEH_PRESETS.find((p) => p.id === tasbeehState.currentZikrId) || TASBEEH_PRESETS[0];
+
+  // Clean up timers on unmount
+  useEffect(() => {
+    return () => {
+      if (autoAdvanceTimerRef.current) {
+        clearTimeout(autoAdvanceTimerRef.current);
+      }
+    };
+  }, []);
 
   // Save to storage on update
   useEffect(() => {
@@ -100,37 +110,39 @@ export const DigitalTasbeeh = () => {
     } catch (err) {}
 
     const today = new Date().toDateString();
+    const nextCount = (tasbeehState.currentCount || 0) + 1;
+    const target = tasbeehState.target;
+
+    // Check target reached outside of state updater
+    if (target > 0 && nextCount === target) {
+      triggerCompletionCelebration();
+
+      if (autoAdvance) {
+        const currentIdx = TASBEEH_PRESETS.findIndex((p) => p.id === tasbeehState.currentZikrId);
+        const nextIdx = (currentIdx + 1) % TASBEEH_PRESETS.length;
+        const nextZikr = TASBEEH_PRESETS[nextIdx];
+
+        if (autoAdvanceTimerRef.current) {
+          clearTimeout(autoAdvanceTimerRef.current);
+        }
+        autoAdvanceTimerRef.current = setTimeout(() => {
+          setTasbeehState((current) => ({
+            ...current,
+            currentZikrId: nextZikr.id,
+            currentCount: 0,
+            target: nextZikr.defaultTarget
+          }));
+        }, 500);
+      }
+    }
+
     setTasbeehState((prev) => {
       const isNewDay = prev.lastResetDate !== today;
       const baseDailyTotal = isNewDay ? 0 : (prev.dailyTotal || 0);
-      const newCount = (prev.currentCount || 0) + 1;
-      const newDailyTotal = baseDailyTotal + 1;
-      const target = prev.target;
-
-      // Check target reached
-      if (target > 0 && newCount === target) {
-        triggerCompletionCelebration();
-
-        if (autoAdvance) {
-          const currentIdx = TASBEEH_PRESETS.findIndex((p) => p.id === prev.currentZikrId);
-          const nextIdx = (currentIdx + 1) % TASBEEH_PRESETS.length;
-          const nextZikr = TASBEEH_PRESETS[nextIdx];
-
-          setTimeout(() => {
-            setTasbeehState((current) => ({
-              ...current,
-              currentZikrId: nextZikr.id,
-              currentCount: 0,
-              target: nextZikr.defaultTarget
-            }));
-          }, 500);
-        }
-      }
-
       return {
         ...prev,
-        currentCount: newCount,
-        dailyTotal: newDailyTotal,
+        currentCount: nextCount,
+        dailyTotal: baseDailyTotal + 1,
         lastResetDate: today
       };
     });

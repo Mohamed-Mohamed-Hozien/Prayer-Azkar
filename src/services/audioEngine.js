@@ -1,7 +1,7 @@
 // Comprehensive Audio Engine: Local Offline Assets, Web Audio Synthesizer,
 // Web Speech API Arabic Voice Announcements & Custom IndexedDB Audio Player
 
-import { getCustomAzanAudios } from './storageEngine';
+import { getCustomAzanAudios } from './storageEngine.js';
 
 class AudioEngine {
   constructor() {
@@ -12,6 +12,7 @@ class AudioEngine {
     this.volume = 0.9;
     this.listeners = new Set();
     this.synthOscillators = [];
+    this.activeTimeouts = new Set();
     this.currentTrackType = null; // 'azan' | 'eqama' | 'voice' | 'reminder'
     this.currentPrayerName = '';
     this.customAudioMap = new Map(); // id -> objectUrl
@@ -125,6 +126,15 @@ class AudioEngine {
     this.notifyState();
   }
 
+  scheduleTimeout(fn, delayMs) {
+    const timerId = setTimeout(() => {
+      this.activeTimeouts.delete(timerId);
+      fn();
+    }, delayMs);
+    this.activeTimeouts.add(timerId);
+    return timerId;
+  }
+
   stopSynth() {
     this.synthOscillators.forEach((osc) => {
       try {
@@ -133,6 +143,8 @@ class AudioEngine {
       } catch (e) {}
     });
     this.synthOscillators = [];
+    this.activeTimeouts.forEach((timerId) => clearTimeout(timerId));
+    this.activeTimeouts.clear();
   }
 
   /**
@@ -168,7 +180,7 @@ class AudioEngine {
 
     // If Takbeer-only mode, stop after 18 seconds
     if (alertMode === 'takbeer') {
-      setTimeout(() => {
+      this.scheduleTimeout(() => {
         if (this.currentTrackType === 'azan' && this.currentAudio === audio) {
           this.stopAll();
         }
@@ -218,6 +230,7 @@ class AudioEngine {
 
     notes.forEach((freq, idx) => {
       const osc = ctx.createOscillator();
+      this.synthOscillators.push(osc);
       const gain = ctx.createGain();
       osc.type = 'sine';
 
@@ -236,11 +249,11 @@ class AudioEngine {
     });
 
     // Follow with a double beep
-    setTimeout(() => {
+    this.scheduleTimeout(() => {
       this.playMosqueDoubleBeep();
     }, notes.length * 280 + 300);
 
-    setTimeout(() => {
+    this.scheduleTimeout(() => {
       this.isPlaying = false;
       this.notifyState();
     }, notes.length * 280 + 1200);
@@ -285,6 +298,7 @@ class AudioEngine {
 
     const now = ctx.currentTime;
     const osc = ctx.createOscillator();
+    this.synthOscillators.push(osc);
     const gain = ctx.createGain();
 
     osc.type = 'sine';
@@ -297,7 +311,7 @@ class AudioEngine {
     osc.start(now);
     osc.stop(now + 0.5);
 
-    setTimeout(() => {
+    this.scheduleTimeout(() => {
       this.isPlaying = false;
       this.notifyState();
     }, 600);
@@ -313,13 +327,15 @@ class AudioEngine {
     gainNode.gain.setValueAtTime(this.isMuted ? 0 : this.volume * 0.8, now);
 
     const osc1 = ctx.createOscillator();
+    const osc2 = ctx.createOscillator();
+    this.synthOscillators.push(osc1, osc2);
+
     osc1.type = 'sine';
     osc1.frequency.setValueAtTime(880, now);
     osc1.connect(gainNode);
     osc1.start(now);
     osc1.stop(now + 0.18);
 
-    const osc2 = ctx.createOscillator();
     osc2.type = 'sine';
     osc2.frequency.setValueAtTime(1174.66, now + 0.25);
     osc2.connect(gainNode);
@@ -328,7 +344,7 @@ class AudioEngine {
 
     gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
 
-    setTimeout(() => {
+    this.scheduleTimeout(() => {
       this.isPlaying = false;
       this.notifyState();
     }, 700);
@@ -343,6 +359,7 @@ class AudioEngine {
 
     notes.forEach((freq, idx) => {
       const osc = ctx.createOscillator();
+      this.synthOscillators.push(osc);
       const gain = ctx.createGain();
       osc.type = 'triangle';
       osc.frequency.setValueAtTime(freq, now + idx * 0.2);
@@ -360,7 +377,7 @@ class AudioEngine {
       osc.stop(startTime + duration);
     });
 
-    setTimeout(() => {
+    this.scheduleTimeout(() => {
       this.playMosqueDoubleBeep();
     }, 900);
   }
@@ -378,6 +395,7 @@ class AudioEngine {
     chords.forEach((chord, chordIdx) => {
       chord.forEach((freq) => {
         const osc = ctx.createOscillator();
+        this.synthOscillators.push(osc);
         const gain = ctx.createGain();
         osc.type = 'sine';
         osc.frequency.setValueAtTime(freq, now + chordIdx * 0.8);
@@ -396,7 +414,7 @@ class AudioEngine {
       });
     });
 
-    setTimeout(() => {
+    this.scheduleTimeout(() => {
       this.isPlaying = false;
       this.notifyState();
     }, 3000);
@@ -408,6 +426,7 @@ class AudioEngine {
 
     const now = ctx.currentTime;
     const osc = ctx.createOscillator();
+    this.synthOscillators.push(osc);
     const gain = ctx.createGain();
 
     osc.type = 'sine';
@@ -430,6 +449,7 @@ class AudioEngine {
 
       const now = ctx.currentTime;
       const osc = ctx.createOscillator();
+      this.synthOscillators.push(osc);
       const gain = ctx.createGain();
 
       osc.type = 'sine';

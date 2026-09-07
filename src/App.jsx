@@ -138,7 +138,7 @@ export function App() {
           countdown.formatted,
           eqamaState?.isEqamaWindow,
           eqamaState?.formatted,
-          { todayTimes, settings }
+          { todayTimes, settings, audioState }
         );
       }
 
