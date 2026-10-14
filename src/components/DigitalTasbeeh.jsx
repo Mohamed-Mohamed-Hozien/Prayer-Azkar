@@ -231,138 +231,152 @@ export const DigitalTasbeeh = () => {
         </div>
       </div>
 
-      {/* Selected Zikr Card */}
-      <div className="tasbeeh-zikr-card">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span className="tasbeeh-badge">الذكر الحالي</span>
-          <button
-            className="tasbeeh-virtue-btn"
-            onClick={() => setShowVirtue(!showVirtue)}
-            title="فضل هذا الذكر"
-          >
-            <Sparkles size={13} />
-            <span>فضل الذكر</span>
-          </button>
-        </div>
-
-        <h2 className="tasbeeh-zikr-title">{activeZikr.title}</h2>
-        <p className="tasbeeh-zikr-subtitle">{activeZikr.subtitle}</p>
-
-        {showVirtue && (
-          <div className="tasbeeh-virtue-popup">
-            <span style={{ fontSize: '0.82rem', color: 'var(--gold-light)', lineHeight: '1.5', display: 'block' }}>
-              ✨ {activeZikr.virtue}
-            </span>
-          </div>
-        )}
-      </div>
-
-      {/* Interactive Center Circular Bead / Ring */}
-      <div className="tasbeeh-dial-wrapper">
-        <svg
-          className="tasbeeh-ring-svg"
-          viewBox="0 0 200 200"
-          style={{ pointerEvents: 'none' }}
-        >
-          <circle
-            className="tasbeeh-ring-track"
-            cx="100"
-            cy="100"
-            r="90"
-            style={{ pointerEvents: 'none' }}
-          />
-          <circle
-            className="tasbeeh-ring-progress"
-            cx="100"
-            cy="100"
-            r="90"
-            strokeDasharray="565"
-            strokeDashoffset={strokeDashoffset}
-            style={{ pointerEvents: 'none' }}
-          />
-        </svg>
-
-        {/* Center Circular Tap Bead */}
-        <button
-          type="button"
-          className={`tasbeeh-center-bead ${isPressing ? 'pressed' : ''}`}
-          onClick={handleTapBead}
-          aria-label="اضغط للتسبيح"
-          style={{ touchAction: 'manipulation', zIndex: 10 }}
-        >
-          <span className="tasbeeh-current-count">
-            {tasbeehState.currentCount || 0}
-          </span>
-          <span className="tasbeeh-target-label">
-            {target > 0 ? `الهدف: ${target}` : 'تسبيح حر'}
-          </span>
-          <span className="tasbeeh-tap-hint">انقر للتسبيح</span>
-        </button>
-      </div>
-
-      {/* Target Goal Selector */}
-      <div className="tasbeeh-controls-row">
-        <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>الهدف:</span>
-        <div className="tasbeeh-target-pills">
-          {TARGET_OPTIONS.map((t) => (
-            <button
-              key={t}
-              className={`tasbeeh-target-pill ${tasbeehState.target === t ? 'active' : ''}`}
-              onClick={() => handleSetTarget(t)}
-            >
-              {t === 0 ? 'حر ∞' : t}
-            </button>
-          ))}
-          <button
-            className="tasbeeh-target-pill"
-            onClick={handleReset}
-            title="تصفير العداد الحالي"
-            style={{ background: 'rgba(239, 68, 68, 0.15)', borderColor: 'rgba(239, 68, 68, 0.3)', color: '#f87171', display: 'flex', alignItems: 'center', gap: '4px' }}
-          >
-            <RotateCcw size={12} />
-            تصفير
-          </button>
-        </div>
-      </div>
-
-      {/* Auto Advance Toggle */}
-      <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 14px', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '12px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Repeat size={15} color="var(--emerald-light)" />
-          <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
-            الانتقال التلقائي للذكر التالي عند إتمام الهدف
-          </span>
-        </div>
-        <input
-          type="checkbox"
-          checked={autoAdvance}
-          onChange={(e) => setAutoAdvance(e.target.checked)}
-          style={{ accentColor: 'var(--emerald-primary)', width: '18px', height: '18px' }}
-        />
-      </div>
-
-      {/* Quick Zikr Presets List */}
-      <div className="tasbeeh-presets-section">
-        <span style={{ fontSize: '0.88rem', fontWeight: '700', color: 'var(--text-primary)', display: 'block', marginBottom: '8px' }}>
-          اختر من الأذكار المأثورة:
-        </span>
-        <div className="tasbeeh-presets-grid">
-          {TASBEEH_PRESETS.map((p) => {
-            const isSel = p.id === activeZikr.id;
-            return (
+      {/* Responsive Content Layout (Dual Pane on Wide Screens / Tablet) */}
+      <div className="tasbeeh-content-layout">
+        {/* Left / Primary Interactive Pane */}
+        <div className="tasbeeh-interactive-pane">
+          {/* Selected Zikr Card */}
+          <div className="tasbeeh-zikr-card">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span className="tasbeeh-badge">الذكر الحالي</span>
               <button
-                key={p.id}
-                className={`tasbeeh-preset-chip ${isSel ? 'active' : ''}`}
-                onClick={() => handleSelectZikr(p)}
+                className="tasbeeh-virtue-btn"
+                onClick={() => setShowVirtue(!showVirtue)}
+                title="فضل هذا الذكر"
               >
-                <div style={{ textAlign: 'right' }}>
-                  <span style={{ fontSize: '0.92rem', fontWeight: '700', display: 'block' }}>{p.title}</span>
-                  <span style={{ fontSize: '0.72rem', opacity: 0.7 }}>{p.subtitle}</span>
-                </div>
-                {isSel && <CheckCircle size={16} color="var(--emerald-light)" />}
+                <Sparkles size={13} />
+                <span>فضل الذكر</span>
               </button>
-            );
-          })}
+            </div>
+
+            <h2 className="tasbeeh-zikr-title">{activeZikr.title}</h2>
+            <p className="tasbeeh-zikr-subtitle">{activeZikr.subtitle}</p>
+
+            {showVirtue && (
+              <div className="tasbeeh-virtue-popup">
+                <span style={{ fontSize: '0.82rem', color: 'var(--gold-light)', lineHeight: '1.5', display: 'block' }}>
+                  ✨ {activeZikr.virtue}
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* Interactive Center Circular Bead / Ring */}
+          <div className="tasbeeh-dial-wrapper">
+            <svg
+              className="tasbeeh-ring-svg"
+              viewBox="0 0 200 200"
+              style={{ pointerEvents: 'none' }}
+            >
+              <circle
+                className="tasbeeh-ring-track"
+                cx="100"
+                cy="100"
+                r="90"
+                style={{ pointerEvents: 'none' }}
+              />
+              <circle
+                className="tasbeeh-ring-progress"
+                cx="100"
+                cy="100"
+                r="90"
+                strokeDasharray="565"
+                strokeDashoffset={strokeDashoffset}
+                style={{ pointerEvents: 'none' }}
+              />
+            </svg>
+
+            {/* Center Circular Tap Bead */}
+            <button
+              type="button"
+              className={`tasbeeh-center-bead ${isPressing ? 'pressed' : ''}`}
+              onClick={handleTapBead}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleTapBead(e);
+                }
+              }}
+              aria-label="اضغط للتسبيح"
+              style={{ touchAction: 'manipulation', zIndex: 10 }}
+            >
+              <span className="tasbeeh-current-count">
+                <bdi dir="ltr">{tasbeehState.currentCount || 0}</bdi>
+              </span>
+              <span className="tasbeeh-target-label">
+                {target > 0 ? `الهدف: ${target}` : 'تسبيح حر'}
+              </span>
+              <span className="tasbeeh-tap-hint">انقر للتسبيح</span>
+            </button>
+          </div>
+
+          {/* Target Goal Selector */}
+          <div className="tasbeeh-controls-row">
+            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>الهدف:</span>
+            <div className="tasbeeh-target-pills">
+              {TARGET_OPTIONS.map((t) => (
+                <button
+                  key={t}
+                  className={`tasbeeh-target-pill ${tasbeehState.target === t ? 'active' : ''}`}
+                  onClick={() => handleSetTarget(t)}
+                >
+                  {t === 0 ? 'حر ∞' : t}
+                </button>
+              ))}
+              <button
+                className="tasbeeh-target-pill"
+                onClick={handleReset}
+                title="تصفير العداد الحالي"
+                style={{ background: 'rgba(239, 68, 68, 0.15)', borderColor: 'rgba(239, 68, 68, 0.3)', color: '#f87171', display: 'flex', alignItems: 'center', gap: '4px' }}
+              >
+                <RotateCcw size={12} />
+                تصفير
+              </button>
+            </div>
+          </div>
+
+          {/* Auto Advance Toggle */}
+          <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Repeat size={15} color="var(--emerald-light)" />
+              <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
+                الانتقال التلقائي للذكر التالي عند إتمام الهدف
+              </span>
+            </div>
+            <input
+              type="checkbox"
+              checked={autoAdvance}
+              onChange={(e) => setAutoAdvance(e.target.checked)}
+              style={{ accentColor: 'var(--emerald-primary)', width: '18px', height: '18px', cursor: 'pointer' }}
+            />
+          </div>
+        </div>
+
+        {/* Right / Presets Pane */}
+        <div className="tasbeeh-presets-pane">
+          <div className="tasbeeh-presets-section">
+            <span style={{ fontSize: '0.88rem', fontWeight: '700', color: 'var(--text-primary)', display: 'block', marginBottom: '8px' }}>
+              اختر من الأذكار المأثورة:
+            </span>
+            <div className="tasbeeh-presets-grid">
+              {TASBEEH_PRESETS.map((p) => {
+                const isSel = p.id === activeZikr.id;
+                return (
+                  <button
+                    key={p.id}
+                    className={`tasbeeh-preset-chip ${isSel ? 'active' : ''}`}
+                    onClick={() => handleSelectZikr(p)}
+                  >
+                    <div style={{ textAlign: 'right' }}>
+                      <span style={{ fontSize: '0.92rem', fontWeight: '700', display: 'block' }}>{p.title}</span>
+                      <span style={{ fontSize: '0.72rem', opacity: 0.7 }}>{p.subtitle}</span>
+                    </div>
+                    {isSel && <CheckCircle size={16} color="var(--emerald-light)" />}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </div>
