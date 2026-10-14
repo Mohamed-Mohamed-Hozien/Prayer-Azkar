@@ -44,14 +44,23 @@ export const AthkarListMode = ({
         const current = progressMap[item.id] || 0;
         const isDone = current >= count;
         const remaining = Math.max(0, count - current);
+        const percent = Math.min(100, Math.round((current / count) * 100));
 
         return (
           <div
             key={item.id}
             className={`athkar-list-card ${isDone ? 'completed' : ''}`}
           >
+            {/* Visual Top Progress Bar */}
+            <div className="athkar-card-progress-track">
+              <div
+                className="athkar-card-progress-bar"
+                style={{ width: `${percent}%` }}
+              />
+            </div>
+
             {/* Arabic Text with Tashkeel */}
-            <p className="athkar-card-arabic">{item.text}</p>
+            <p className="athkar-card-arabic" lang="ar">{item.text}</p>
 
             {/* Reward Note if present */}
             {item.reward && (

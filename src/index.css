@@ -219,7 +219,7 @@ body {
 
 @media (min-width: 1024px) {
   #root {
-    max-width: 980px;
+    max-width: min(92vw, 1080px);
   }
 }
 
@@ -349,7 +349,7 @@ main {
 
 @media (min-width: 1024px) {
   .bottom-nav-bar {
-    max-width: 980px;
+    max-width: min(92vw, 1080px);
   }
 }
 
@@ -920,30 +920,36 @@ main {
   flex-direction: column;
   gap: 12px;
   align-items: center;
+  width: 100%;
 }
 
+.athkar-top-nav-switcher,
 .tasbeeh-top-nav-switcher {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
   width: 100%;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
 }
 
 .athkar-nav-pill {
+  width: 100%;
+  min-width: 0;
   background: var(--bg-card-elevated);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-full);
-  padding: 10px;
+  padding: 9px 8px;
   color: var(--text-secondary);
-  font-size: 0.88rem;
+  font-size: clamp(0.75rem, 2.7vw, 0.88rem);
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
+  touch-action: manipulation;
+  white-space: nowrap;
 }
 
 .athkar-nav-pill.active {
@@ -962,6 +968,8 @@ main {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .tasbeeh-stat-item {
@@ -972,6 +980,40 @@ main {
   color: var(--text-secondary);
 }
 
+/* Responsive Dual Pane Container on Wide Screens */
+.tasbeeh-content-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  align-items: center;
+}
+
+@media (min-width: 720px) {
+  .tasbeeh-content-layout {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 20px;
+    align-items: start;
+    width: 100%;
+  }
+}
+
+.tasbeeh-interactive-pane {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.tasbeeh-presets-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
 .tasbeeh-zikr-card {
   width: 100%;
   background: var(--bg-card);
@@ -979,14 +1021,16 @@ main {
   border-radius: var(--radius-lg);
   padding: 14px 16px;
   text-align: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  transition: border-color 0.2s ease;
 }
 
 .tasbeeh-badge {
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   background: rgba(16, 185, 129, 0.15);
   color: var(--emerald-light);
-  padding: 2px 8px;
-  border-radius: 4px;
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
   font-weight: 700;
 }
 
@@ -994,40 +1038,50 @@ main {
   background: transparent;
   border: none;
   color: var(--gold-light);
-  font-size: 0.76rem;
+  font-size: 0.78rem;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   cursor: pointer;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  transition: background 0.15s ease;
+  touch-action: manipulation;
+}
+
+.tasbeeh-virtue-btn:hover {
+  background: rgba(245, 158, 11, 0.12);
 }
 
 .tasbeeh-zikr-title {
-  font-size: 1.45rem;
+  font-size: clamp(1.3rem, 4.5vw, 1.6rem);
   font-weight: 800;
   color: var(--text-primary);
   font-family: var(--font-arabic-calligraphy);
-  margin: 6px 0 2px;
+  margin: 8px 0 3px;
+  line-height: 1.6;
 }
 
 .tasbeeh-zikr-subtitle {
-  font-size: 0.8rem;
+  font-size: clamp(0.78rem, 2.2vw, 0.85rem);
   color: var(--text-muted);
 }
 
 .tasbeeh-virtue-popup {
-  background: rgba(245, 158, 11, 0.1);
+  background: rgba(245, 158, 11, 0.08);
   border: 1px solid var(--border-gold);
   border-radius: var(--radius-md);
-  padding: 8px 12px;
+  padding: 10px 14px;
   margin-top: 10px;
+  animation: fadeInModal 0.2s ease;
 }
 
 /* Center Bead Dial */
 .tasbeeh-dial-wrapper {
   position: relative;
-  width: clamp(190px, 46vw, 250px);
-  height: clamp(190px, 46vw, 250px);
-  margin: 10px 0;
+  width: clamp(200px, 48vw, 260px);
+  height: clamp(200px, 48vw, 260px);
+  margin: 6px 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1055,20 +1109,21 @@ main {
   stroke: var(--emerald-primary);
   stroke-width: 8;
   stroke-linecap: round;
-  transition: stroke-dashoffset 0.1s ease;
+  transition: stroke-dashoffset 0.12s ease;
   pointer-events: none !important;
+  filter: drop-shadow(0 0 6px var(--emerald-glow));
 }
 
 /* Center Bead Tap Button */
 .tasbeeh-center-bead {
   position: relative;
   z-index: 10;
-  width: clamp(145px, 35vw, 190px);
-  height: clamp(145px, 35vw, 190px);
+  width: clamp(150px, 37vw, 195px);
+  height: clamp(150px, 37vw, 195px);
   border-radius: 50%;
-  background: radial-gradient(circle, var(--bg-card-elevated) 30%, var(--bg-card) 90%);
+  background: radial-gradient(circle at 35% 35%, var(--bg-card-elevated) 20%, var(--bg-card) 85%);
   border: 2px solid var(--border-emerald);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 0 25px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.65), inset 0 0 25px rgba(0, 0, 0, 0.7), 0 0 25px var(--emerald-glow);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1077,31 +1132,37 @@ main {
   outline: none;
   touch-action: manipulation;
   pointer-events: auto;
-  transition: transform 0.08s ease, box-shadow 0.08s ease;
+  transition: transform 0.08s ease, box-shadow 0.08s ease, border-color 0.15s ease;
+}
+
+.tasbeeh-center-bead:hover {
+  border-color: var(--emerald-light);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.7), inset 0 0 25px rgba(0, 0, 0, 0.7), 0 0 35px var(--emerald-glow);
 }
 
 .tasbeeh-center-bead.pressed {
-  transform: scale(0.94);
+  transform: scale(0.93);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8), inset 0 0 35px var(--emerald-glow);
+  border-color: var(--gold-light);
 }
 
 .tasbeeh-current-count {
   font-family: var(--font-num);
-  font-size: clamp(2.2rem, 7vw, 3rem);
+  font-size: clamp(2.3rem, 7.5vw, 3.2rem);
   font-weight: 900;
   color: var(--emerald-light);
   line-height: 1;
 }
 
 .tasbeeh-target-label {
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   color: var(--gold-light);
   margin-top: 4px;
   font-weight: 600;
 }
 
 .tasbeeh-tap-hint {
-  font-size: 0.65rem;
+  font-size: 0.68rem;
   color: var(--text-muted);
   margin-top: 2px;
 }
@@ -1115,43 +1176,52 @@ main {
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
   padding: 8px 12px;
+  gap: 8px;
 }
 
 .tasbeeh-target-pills {
   display: flex;
-  gap: 4px;
+  flex-wrap: wrap;
+  gap: 5px;
 }
 
 .tasbeeh-target-pill {
   background: var(--bg-card-elevated);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-full);
-  padding: 4px 10px;
+  padding: 5px 12px;
   color: var(--text-secondary);
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   font-family: var(--font-num);
   font-weight: 700;
   cursor: pointer;
+  transition: all 0.15s ease;
+  touch-action: manipulation;
+}
+
+.tasbeeh-target-pill:hover {
+  border-color: var(--emerald-primary);
+  color: var(--text-primary);
 }
 
 .tasbeeh-target-pill.active {
   background: var(--emerald-primary);
   color: #042f22;
   border-color: var(--emerald-primary);
+  box-shadow: 0 2px 10px var(--emerald-glow);
 }
 
 .tasbeeh-presets-section {
   width: 100%;
-  margin-top: 6px;
 }
 
 .tasbeeh-presets-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 6px;
+  gap: 8px;
 }
 
-@media (min-width: 580px) {
+@media (min-width: 580px) and (max-width: 719px) {
   .tasbeeh-presets-grid {
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 8px;
@@ -1169,11 +1239,39 @@ main {
   cursor: pointer;
   color: var(--text-primary);
   transition: all 0.2s ease;
+  touch-action: manipulation;
+}
+
+.tasbeeh-preset-chip:hover {
+  border-color: var(--border-emerald);
+  background: rgba(16, 185, 129, 0.04);
 }
 
 .tasbeeh-preset-chip.active {
   border-color: var(--border-emerald);
-  background: rgba(16, 185, 129, 0.08);
+  background: rgba(16, 185, 129, 0.1);
+  box-shadow: 0 2px 12px var(--emerald-glow);
+}
+
+/* Landscape Mode Adaptation for Low-Height Screens */
+@media (orientation: landscape) and (max-height: 560px) {
+  .tasbeeh-content-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+  .tasbeeh-dial-wrapper {
+    width: 175px;
+    height: 175px;
+  }
+  .tasbeeh-center-bead {
+    width: 135px;
+    height: 135px;
+  }
+  .tasbeeh-current-count {
+    font-size: 2rem;
+  }
 }
 
 /* ==========================================================================
@@ -1412,22 +1510,29 @@ main {
   border-color: var(--border-emerald);
 }
 
-/* Athkar View Helpers */
+/* Athkar View Helpers & Navigation */
 .athkar-view-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
+  width: 100%;
 }
 
 .athkar-header-nav {
   width: 100%;
   overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.athkar-header-nav::-webkit-scrollbar {
+  display: none;
 }
 
 .athkar-categories-scroll {
   display: flex;
-  gap: 6px;
-  padding-bottom: 4px;
+  gap: 8px;
+  padding: 2px 2px 6px;
 }
 
 .category-chip {
@@ -1442,6 +1547,13 @@ main {
   gap: 6px;
   cursor: pointer;
   white-space: nowrap;
+  transition: all 0.2s ease;
+  touch-action: manipulation;
+}
+
+.category-chip:hover {
+  border-color: var(--emerald-primary);
+  color: var(--text-primary);
 }
 
 .category-chip.active {
@@ -1449,12 +1561,34 @@ main {
   border-color: var(--emerald-primary);
   color: #042f22;
   font-weight: 700;
+  box-shadow: 0 3px 12px var(--emerald-glow);
+}
+
+.category-chip-badge {
+  background: rgba(255, 255, 255, 0.12);
+  font-family: var(--font-num);
+  font-size: 0.72rem;
+  padding: 1px 7px;
+  border-radius: var(--radius-full);
+  margin-inline-start: 2px;
+}
+
+.category-chip.active .category-chip-badge {
+  background: rgba(4, 47, 34, 0.25);
+  color: #042f22;
+  font-weight: 800;
+}
+
+.category-chip.completed-category {
+  border-color: var(--border-emerald);
 }
 
 .mode-switch-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .mode-pill-toggle {
@@ -1462,76 +1596,289 @@ main {
   background: var(--bg-card-elevated);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-full);
-  padding: 2px;
+  padding: 3px;
 }
 
 .mode-toggle-btn {
   background: transparent;
   border: none;
   border-radius: var(--radius-full);
-  padding: 6px 12px;
+  padding: 6px 14px;
   color: var(--text-muted);
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   cursor: pointer;
+  transition: all 0.15s ease;
+  touch-action: manipulation;
 }
 
 .mode-toggle-btn.active {
   background: var(--bg-card);
   color: var(--emerald-light);
   font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
 }
 
-/* Focus Mode & List Mode Cards */
-.athkar-focus-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-emerald);
-  border-radius: var(--radius-lg);
-  padding: clamp(18px, 4vw, 28px) clamp(16px, 3.5vw, 24px);
+/* ==========================================================================
+   Athkar Focus Mode (وضع التركيز الهادئ)
+   ========================================================================== */
+.athkar-focus-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  min-height: 280px;
-  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  height: calc(100dvh - var(--bottom-nav-height) - var(--safe-bottom) - var(--safe-top) - 140px);
+  min-height: 480px;
+  max-height: 740px;
 }
 
-.athkar-arabic-text {
+@media (max-height: 600px) {
+  .athkar-focus-wrapper {
+    height: auto;
+    min-height: 380px;
+    max-height: none;
+  }
+}
+
+.focus-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.focus-progress-badge {
+  background: var(--bg-card-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: 4px 12px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--emerald-light);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.focus-card-main {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border-emerald);
+  border-radius: var(--radius-lg);
+  padding: clamp(12px, 3vw, 18px);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4), 0 0 20px var(--emerald-glow);
+  position: relative;
+  outline: none;
+}
+
+.focus-text-scroll-area {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 4px 6px 12px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-emerald) transparent;
+}
+
+.focus-text-scroll-area::-webkit-scrollbar {
+  width: 5px;
+}
+
+.focus-text-scroll-area::-webkit-scrollbar-thumb {
+  background: var(--border-emerald);
+  border-radius: 4px;
+}
+
+.focus-arabic-text {
   font-family: var(--font-arabic-calligraphy);
-  font-size: clamp(1.15rem, 4vw, 1.45rem);
-  line-height: 1.9;
+  font-size: clamp(1.2rem, 3.8vw, 1.55rem);
+  line-height: 2.1;
   color: var(--text-primary);
   text-align: justify;
+  text-justify: auto;
+  word-spacing: 1px;
 }
 
-.athkar-tap-counter-btn {
-  background: var(--emerald-primary);
-  border: none;
-  border-radius: var(--radius-lg);
-  padding: 16px;
-  color: #042f22;
-  font-size: 1.15rem;
-  font-weight: 800;
+.focus-reward-box {
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  color: var(--gold-light);
+  font-size: 0.84rem;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.focus-source-text {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  text-align: center;
+  display: block;
+}
+
+/* Pinned Bottom Interactive Zone inside Focus Card */
+.focus-bottom-pinned-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-subtle);
+  gap: 4px;
+  width: 100%;
+}
+
+.focus-centered-dial {
+  position: relative;
+  width: 86px;
+  height: 86px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
   cursor: pointer;
-  box-shadow: 0 6px 20px var(--emerald-glow);
+  touch-action: manipulation;
+  background: radial-gradient(circle at 35% 35%, var(--bg-card-elevated) 20%, var(--bg-card) 85%);
+  border: 1.5px solid var(--border-emerald);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25), inset 0 0 15px rgba(0, 0, 0, 0.2), 0 0 12px var(--emerald-glow);
+  transition: transform 0.08s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  user-select: none;
+  margin: 2px auto;
 }
 
-.athkar-tap-counter-btn.completed,
-.athkar-tap-counter-btn.done {
-  background: var(--gold-primary);
-  box-shadow: 0 6px 20px var(--gold-glow);
+.focus-centered-dial:hover {
+  border-color: var(--emerald-light);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3), inset 0 0 15px rgba(0, 0, 0, 0.2), 0 0 18px var(--emerald-glow);
 }
 
-/* List Mode Cards */
+.focus-centered-dial:active {
+  transform: scale(0.92);
+}
+
+.focus-centered-dial.completed {
+  border-color: var(--gold-light);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25), inset 0 0 15px rgba(0, 0, 0, 0.2), 0 0 15px var(--gold-glow);
+}
+
+.focus-dial-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+  pointer-events: none;
+}
+
+.focus-dial-track {
+  stroke: rgba(16, 185, 129, 0.2);
+  pointer-events: none;
+}
+
+[data-theme="light"] .focus-dial-track {
+  stroke: rgba(5, 150, 105, 0.25);
+}
+
+.focus-dial-progress {
+  stroke: var(--emerald-primary);
+  pointer-events: none;
+  transition: stroke-dashoffset 0.15s ease;
+  filter: drop-shadow(0 0 4px var(--emerald-glow));
+}
+
+.focus-centered-dial.completed .focus-dial-progress {
+  stroke: var(--gold-primary);
+}
+
+.focus-dial-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.focus-dial-number {
+  font-family: var(--font-num);
+  font-size: 1.65rem;
+  font-weight: 900;
+  color: var(--emerald-light);
+  line-height: 1;
+}
+
+.focus-dial-label {
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+  font-weight: 600;
+}
+
+.focus-dial-tap-hint {
+  font-size: 0.72rem;
+  color: var(--emerald-light);
+  font-weight: 700;
+}
+
+.focus-controls-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.focus-nav-btn {
+  width: 100%;
+  min-height: 42px;
+  background: var(--bg-card-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 8px 14px;
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  touch-action: manipulation;
+}
+
+.focus-nav-btn:not(:disabled):hover {
+  background: var(--bg-card);
+  border-color: var(--border-emerald);
+}
+
+.focus-nav-btn:not(:disabled):active {
+  transform: scale(0.97);
+}
+
+/* ==========================================================================
+   Athkar List Mode (وضع القائمة المتجاوب)
+   ========================================================================== */
 .athkar-list-container {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  width: 100%;
 }
 
 @media (min-width: 640px) {
@@ -1547,12 +1894,29 @@ main {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
-  padding: 16px 18px;
+  padding: 18px;
   display: flex;
   flex-direction: column;
   gap: 12px;
   justify-content: space-between;
   transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.athkar-card-progress-track {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.athkar-card-progress-bar {
+  height: 100%;
+  background: var(--emerald-primary);
+  transition: width 0.25s ease;
 }
 
 .athkar-list-card.completed {
@@ -1560,10 +1924,14 @@ main {
   background: rgba(16, 185, 129, 0.04);
 }
 
+.athkar-list-card.completed .athkar-card-progress-bar {
+  background: var(--gold-primary);
+}
+
 .athkar-card-arabic {
   font-family: var(--font-arabic-calligraphy);
-  font-size: clamp(1.1rem, 3.5vw, 1.35rem);
-  line-height: 1.85;
+  font-size: clamp(1.15rem, 3.6vw, 1.4rem);
+  line-height: 2;
   color: var(--text-primary);
   text-align: justify;
 }
@@ -1573,7 +1941,37 @@ main {
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  margin-top: 4px;
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.athkar-tap-counter-btn {
+  background: var(--emerald-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 10px 18px;
+  color: #042f22;
+  font-size: 0.95rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px var(--emerald-glow);
+  transition: transform 0.1s ease, box-shadow 0.15s ease, background-color 0.2s ease;
+  touch-action: manipulation;
+}
+
+.athkar-tap-counter-btn:active {
+  transform: scale(0.96);
+}
+
+.athkar-tap-counter-btn.completed,
+.athkar-tap-counter-btn.done {
+  background: var(--gold-primary);
+  box-shadow: 0 4px 15px var(--gold-glow);
 }
 
 /* Modal Sheet */

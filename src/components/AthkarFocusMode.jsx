@@ -26,14 +26,14 @@ export const AthkarFocusMode = ({
   const remaining = Math.max(0, targetCount - currentProgress);
   const isCompleted = currentProgress >= targetCount;
 
-  // Compact circular ring dimensions
-  const radius = 28;
+  // Centered circular dial dimensions
+  const radius = 38;
   const circumference = 2 * Math.PI * radius;
   const percentCompleted = Math.min(100, (currentProgress / targetCount) * 100);
   const strokeDashoffset = circumference - (percentCompleted / 100) * circumference;
 
   const handleTap = (e) => {
-    e.stopPropagation();
+    if (e) e.stopPropagation();
     if (isCompleted) {
       hapticEngine.tap();
       return;
@@ -66,7 +66,7 @@ export const AthkarFocusMode = ({
   };
 
   const handlePrev = (e) => {
-    e.stopPropagation();
+    if (e) e.stopPropagation();
     if (currentIndex > 0) {
       onIndexChange(currentIndex - 1);
       hapticEngine.tap();
@@ -74,7 +74,7 @@ export const AthkarFocusMode = ({
   };
 
   const handleNext = (e) => {
-    e.stopPropagation();
+    if (e) e.stopPropagation();
     if (currentIndex < athkarList.length - 1) {
       onIndexChange(currentIndex + 1);
       hapticEngine.tap();
@@ -82,7 +82,7 @@ export const AthkarFocusMode = ({
   };
 
   const handleReset = (e) => {
-    e.stopPropagation();
+    if (e) e.stopPropagation();
     onResetItem(currentItem.id);
     hapticEngine.tap();
   };
@@ -90,9 +90,9 @@ export const AthkarFocusMode = ({
   return (
     <div className="athkar-focus-wrapper">
       {/* Top Progress Info Row */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginBottom: '8px' }}>
+      <div className="focus-header-row">
         <span className="focus-progress-badge">
-          الذكر {currentIndex + 1} من {athkarList.length}
+          الذكر <bdi dir="ltr">{currentIndex + 1}</bdi> من <bdi dir="ltr">{athkarList.length}</bdi>
         </span>
 
         <button
@@ -106,17 +106,11 @@ export const AthkarFocusMode = ({
         </button>
       </div>
 
-      {/* Main Interactive Focus Card (Tap-Anywhere) */}
-      <div
-        className="focus-card-main"
-        onClick={handleTap}
-        role="button"
-        tabIndex={0}
-        aria-label="اضغط في أي مكان على البطاقة للتسبيح"
-      >
-        {/* Scrollable Arabic Text Area for Perfect Compatibility with All Lengths */}
+      {/* Main Interactive Focus Card */}
+      <div className="focus-card-main">
+        {/* Scrollable Middle Area: Arabic Text with Tashkeel, Fadl, and Source */}
         <div className="focus-text-scroll-area">
-          <p className="focus-arabic-text">{currentItem.text}</p>
+          <p className="focus-arabic-text" lang="ar">{currentItem.text}</p>
 
           {/* Reward / Fadl Box */}
           {currentItem.reward && (
@@ -135,82 +129,86 @@ export const AthkarFocusMode = ({
           )}
         </div>
 
-        {/* Compact Integrated Tap Counter Badge */}
-        <div className="focus-compact-counter-bar">
-          <div className="compact-counter-ring">
-            <svg style={{ width: '68px', height: '68px', transform: 'rotate(-90deg)' }}>
+        {/* Pinned Bottom Interactive Zone: Centered Dial + Controls */}
+        <div className="focus-bottom-pinned-zone">
+          {/* Centered Circular Tasbeeh Dial */}
+          <div
+            className={`focus-centered-dial ${isCompleted ? 'completed' : ''}`}
+            onClick={handleTap}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleTap(e);
+              }
+            }}
+            aria-label="اضغط للتسبيح"
+          >
+            <svg className="focus-dial-svg" viewBox="0 0 90 90">
+              {/* Background Track Circle */}
               <circle
-                cx="34"
-                cy="34"
+                cx="45"
+                cy="45"
                 r={radius}
                 fill="none"
-                stroke="rgba(255, 255, 255, 0.08)"
-                strokeWidth="5"
+                className="focus-dial-track"
+                strokeWidth="6"
               />
+              {/* Active Progress Circle */}
               <circle
-                cx="34"
-                cy="34"
+                cx="45"
+                cy="45"
                 r={radius}
                 fill="none"
-                stroke={isCompleted ? 'var(--emerald-primary)' : 'var(--emerald-light)'}
-                strokeWidth="5"
+                className="focus-dial-progress"
+                strokeWidth="6"
                 strokeDasharray={circumference}
                 strokeDashoffset={strokeDashoffset}
                 strokeLinecap="round"
-                style={{ transition: 'stroke-dashoffset 0.2s ease' }}
               />
             </svg>
 
-            <div className="compact-counter-center">
+            {/* Dial Center Content */}
+            <div className="focus-dial-content">
               {isCompleted ? (
-                <CheckCircle2 size={24} color="var(--emerald-light)" />
+                <CheckCircle2 size={28} color="var(--emerald-light)" />
               ) : (
-                <span className="compact-counter-num">{remaining}</span>
+                <span className="focus-dial-number"><bdi dir="ltr">{remaining}</bdi></span>
               )}
+              <span className="focus-dial-label">
+                {isCompleted ? 'اكتمل الذكر' : `متبقي من ${targetCount}`}
+              </span>
             </div>
           </div>
 
-          <div className="compact-counter-meta">
-            {isCompleted ? (
-              <span style={{ color: 'var(--emerald-light)', fontWeight: '700', fontSize: '0.86rem' }}>
-                اكتمل الذكر تقبل الله
-              </span>
-            ) : (
-              <>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: 'var(--emerald-light)', fontSize: '0.84rem', fontWeight: '700' }}>
-                  <Hand size={14} />
-                  <span>المس للتسبيح (+1)</span>
-                </div>
-                <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
-                  المتبقي {remaining} من أصل {targetCount} مرات
-                </span>
-              </>
-            )}
+          <span className="focus-dial-tap-hint">
+            {isCompleted ? 'تقبل الله طاعتكم ✨' : 'المس الدائرة للتسبيح (+1)'}
+          </span>
+
+          {/* Navigation Controls Pinned at Bottom */}
+          <div className="focus-controls-row">
+            <button
+              className="focus-nav-btn"
+              onClick={handlePrev}
+              disabled={currentIndex === 0}
+              style={{ opacity: currentIndex === 0 ? 0.35 : 1 }}
+            >
+              <ChevronRight size={18} />
+              <span>السابق</span>
+            </button>
+
+            <button
+              className="focus-nav-btn"
+              onClick={handleNext}
+              disabled={currentIndex >= athkarList.length - 1}
+              style={{ opacity: currentIndex >= athkarList.length - 1 ? 0.35 : 1 }}
+            >
+              <span>التالي</span>
+              <ChevronLeft size={18} />
+            </button>
           </div>
         </div>
-      </div>
-
-      {/* Navigation Controls */}
-      <div className="focus-controls-row">
-        <button
-          className="focus-nav-btn"
-          onClick={handlePrev}
-          disabled={currentIndex === 0}
-          style={{ opacity: currentIndex === 0 ? 0.35 : 1 }}
-        >
-          <ChevronRight size={18} />
-          <span>السابق</span>
-        </button>
-
-        <button
-          className="focus-nav-btn"
-          onClick={handleNext}
-          disabled={currentIndex >= athkarList.length - 1}
-          style={{ opacity: currentIndex >= athkarList.length - 1 ? 0.35 : 1 }}
-        >
-          <span>التالي</span>
-          <ChevronLeft size={18} />
-        </button>
       </div>
     </div>
   );

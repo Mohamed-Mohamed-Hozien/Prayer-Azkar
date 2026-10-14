@@ -95,7 +95,7 @@ export const AthkarView = ({
           onClick={() => handleSectionSwitch('tasbeeh')}
         >
           <Fingerprint size={16} />
-          <span>السبحة الإلكترونية الذكية</span>
+          <span>السبحة الإلكترونية</span>
         </button>
       </div>
 
@@ -111,15 +111,28 @@ export const AthkarView = ({
               {ATHKAR_CATEGORIES.map((cat) => {
                 const IconComp = CATEGORY_ICONS[cat.icon] || Sparkles;
                 const isActive = activeCategory === cat.id;
+                const catList =
+                  cat.id === 'custom'
+                    ? customAthkar
+                    : INITIAL_ATHKAR_DATA[cat.id] || [];
+                const catCompleted = catList.filter(
+                  (item) => (athkarProgress[item.id] || 0) >= (item.count || 1)
+                ).length;
+                const isCatDone = catList.length > 0 && catCompleted >= catList.length;
 
                 return (
                   <button
                     key={cat.id}
-                    className={`category-chip ${isActive ? 'active' : ''}`}
+                    className={`category-chip ${isActive ? 'active' : ''} ${isCatDone ? 'completed-category' : ''}`}
                     onClick={() => handleCategoryChange(cat.id)}
                   >
-                    <IconComp size={16} />
+                    <IconComp size={15} />
                     <span>{cat.name}</span>
+                    {catList.length > 0 && (
+                      <span className="category-chip-badge">
+                        <bdi dir="ltr">{catCompleted}/{catList.length}</bdi>
+                      </span>
+                    )}
                   </button>
                 );
               })}
@@ -156,7 +169,7 @@ export const AthkarView = ({
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               {currentList.length > 0 && (
                 <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-                  {completedCount}/{currentList.length} مكتمل
+                  <bdi dir="ltr">{completedCount}/{currentList.length}</bdi> مكتمل
                 </span>
               )}
 
