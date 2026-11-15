@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Plus, Sparkles, Check } from 'lucide-react';
 import { hapticEngine } from '../services/hapticEngine';
 
@@ -35,7 +36,7 @@ export const CustomZikrModal = ({ isOpen, onClose, onSaveCustomZikr }) => {
     onClose();
   };
 
-  return (
+  return createPortal(
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-sheet" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header-row">
@@ -124,6 +125,7 @@ export const CustomZikrModal = ({ isOpen, onClose, onSaveCustomZikr }) => {
           </button>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

@@ -2002,9 +2002,9 @@ main {
   background: var(--bg-card);
   border-top: 1px solid var(--border-emerald);
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-  padding: 16px 16px calc(var(--safe-bottom) + 16px);
-  max-height: 85vh;
-  max-height: 85dvh;
+  padding: 16px 16px calc(var(--safe-bottom) + 36px);
+  max-height: 88vh;
+  max-height: 88dvh;
   overflow-y: auto;
   animation: slideUpSheet 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -2058,3 +2058,60 @@ main {
   justify-content: center;
   cursor: pointer;
 }
+
+/* ==========================================================================
+   Form Controls, Inputs, and Select Elements
+   ========================================================================== */
+
+.custom-select,
+input.custom-select,
+textarea.custom-select,
+select.custom-select {
+  background-color: var(--bg-card-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-family: var(--font-arabic-ui);
+  font-size: 0.95rem;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  user-select: text;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.custom-select:focus,
+input.custom-select:focus,
+textarea.custom-select:focus,
+select.custom-select:focus {
+  border-color: var(--emerald-primary);
+  box-shadow: 0 0 0 3px var(--emerald-glow);
+}
+
+.custom-select::placeholder,
+input.custom-select::placeholder,
+textarea.custom-select::placeholder {
+  color: var(--text-muted);
+  opacity: 0.85;
+}
+
+select.custom-select option {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+}
+
+.setting-item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.setting-item-name {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
