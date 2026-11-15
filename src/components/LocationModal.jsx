@@ -1,11 +1,12 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { X, MapPin } from 'lucide-react';
 import { LocationSettings } from './LocationSettings';
 
 export const LocationModal = ({ isOpen, onClose, settings, onUpdateSettings }) => {
   if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-sheet" onClick={(e) => e.stopPropagation()}>
         <div className="modal-header-row">
@@ -24,6 +25,7 @@ export const LocationModal = ({ isOpen, onClose, settings, onUpdateSettings }) =
           onCloseModal={onClose}
         />
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
