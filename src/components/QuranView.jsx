@@ -126,6 +126,56 @@ const AyahEndSymbol = ({ number }) => {
   );
 };
 
+// Helper to clean Tanzil Basmalah prefix from Ayah 1 of Surahs 2-114 if present
+const cleanAyahText = (text, surahNumber, ayahNumber) => {
+  if (!text) return '';
+  if (Number(surahNumber) !== 1 && Number(ayahNumber) === 1) {
+    return text.replace(/^[\uFEFF\u00A0\s]*بّ?ِ?سْمِ\s+ٱللَّهِ\s+ٱلرَّحْمَٰنِ\s+ٱلرَّحِيمِ\s*/u, '')
+               .replace(/^[\uFEFF\u00A0\s]*بّ?ِ?سْمِ\s+اللَّهِ\s+الرَّحْمَٰنِ\s+الرَّحِيمِ\s*/u, '')
+               .replace(/^[\uFEFF\u00A0\s]*بّ?ِ?سْمِ\s+اللهِ\s+الرَّحْمٰنِ\s+الرَّحِيمِ\s*/u, '');
+  }
+  return text;
+};
+
+// Helper to render an Ayah ensuring the end medallion NEVER wraps to a new line alone
+const renderAyahContent = (ayah, surahNumber, onCopy) => {
+  const cleanedText = cleanAyahText(ayah.text, surahNumber, ayah.numberInSurah);
+  const trimmed = cleanedText.trim();
+  const lastSpaceIdx = trimmed.lastIndexOf(' ');
+
+  let mainText = '';
+  let lastWord = trimmed;
+
+  if (lastSpaceIdx !== -1) {
+    mainText = trimmed.slice(0, lastSpaceIdx + 1);
+    lastWord = trimmed.slice(lastSpaceIdx + 1);
+  }
+
+  return (
+    <span
+      key={ayah.numberInSurah}
+      onClick={() => onCopy && onCopy(ayah)}
+      title="اضغط لنسخ الآية"
+      className="ayah-inline-segment"
+      style={{
+        cursor: 'pointer',
+        transition: 'background 0.2s',
+        borderRadius: '4px',
+        padding: '2px 2px'
+      }}
+    >
+      {mainText && <span>{mainText}</span>}
+      <span style={{ whiteSpace: 'nowrap', display: 'inline' }}>
+        <span>{lastWord}</span>
+        <span style={{ marginInlineStart: '6px', display: 'inline-flex', verticalAlign: 'middle' }}>
+          <AyahEndSymbol number={ayah.numberInSurah} />
+        </span>
+      </span>
+      {' '}
+    </span>
+  );
+};
+
 export const QuranView = () => {
   const { surahId } = useParams();
   const navigate = useNavigate();
@@ -430,7 +480,8 @@ export const QuranView = () => {
 
   const handleCopyAyah = (ayah) => {
     hapticEngine.tap();
-    const textToCopy = `${ayah.text} [${selectedSurah.nameAr}: ${ayah.numberInSurah}]`;
+    const cleanText = cleanAyahText(ayah.text, selectedSurah.id, ayah.numberInSurah);
+    const textToCopy = `${cleanText} [${selectedSurah.nameAr}: ${ayah.numberInSurah}]`;
     if (navigator.clipboard) {
       navigator.clipboard.writeText(textToCopy).then(() => {
         showToast(`تم نسخ الآية (${ayah.numberInSurah}) بنجاح`);
@@ -688,22 +739,9 @@ export const QuranView = () => {
                     color: 'var(--text-primary)'
                   }}
                 >
-                  {(surahPages[currentSurahPageIndex]?.ayahs || []).map((ayah) => (
-                    <span
-                      key={ayah.numberInSurah}
-                      onClick={() => handleCopyAyah(ayah)}
-                      title="اضغط لنسخ الآية"
-                      style={{
-                        cursor: 'pointer',
-                        transition: 'background 0.2s',
-                        borderRadius: '4px',
-                        padding: '2px 4px'
-                      }}
-                    >
-                      <span>{ayah.text} </span>
-                      <AyahEndSymbol number={ayah.numberInSurah} />
-                    </span>
-                  ))}
+                  {(surahPages[currentSurahPageIndex]?.ayahs || []).map((ayah) =>
+                    renderAyahContent(ayah, selectedSurah.id, handleCopyAyah)
+                  )}
                 </div>
 
                 {/* Bottom Mushaf Page Frame */}
@@ -791,22 +829,9 @@ export const QuranView = () => {
                           <div style={{ flex: 1, height: '1px', background: 'var(--border-color)' }} />
                         </div>
                       )}
-                      {pageData.ayahs.map((ayah) => (
-                        <span
-                          key={ayah.numberInSurah}
-                          onClick={() => handleCopyAyah(ayah)}
-                          title="اضغط لنسخ الآية"
-                          style={{
-                            cursor: 'pointer',
-                            transition: 'background 0.2s',
-                            borderRadius: '4px',
-                            padding: '2px 4px'
-                          }}
-                        >
-                          <span>{ayah.text} </span>
-                          <AyahEndSymbol number={ayah.numberInSurah} />
-                        </span>
-                      ))}
+                      {pageData.ayahs.map((ayah) =>
+                        renderAyahContent(ayah, selectedSurah.id, handleCopyAyah)
+                      )}
                     </div>
                   ))}
                 </div>
