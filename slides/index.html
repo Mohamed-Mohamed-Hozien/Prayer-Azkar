@@ -1,0 +1,2130 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>صلاتي وأذكاري | Prayer & Athkar - Presentation</title>
+    <!-- Google Fonts for Arabic Calligraphy & Latin Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js 4.4 UMD -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --bg-oled: #050d0a;
+            --bg-card: #0c1a14;
+            --bg-card-elevated: #12281f;
+            --bg-card-hover: #173327;
+            --bg-glass: rgba(12, 26, 20, 0.88);
+            
+            --emerald-primary: #10B981;
+            --emerald-light: #34D399;
+            --emerald-dark: #059669;
+            --emerald-glow: rgba(16, 185, 129, 0.28);
+            
+            --gold-primary: #F59E0B;
+            --gold-light: #FCD34D;
+            --gold-dark: #D97706;
+            --gold-glow: rgba(245, 158, 11, 0.28);
+
+            --danger: #EF4444;
+            --danger-bg: rgba(239, 68, 68, 0.12);
+
+            --text-primary: #F8FAFC;
+            --text-secondary: #94A3B8;
+            --text-muted: #64748B;
+            --text-emerald: #34D399;
+            --text-gold: #FCD34D;
+
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-gold: rgba(245, 158, 11, 0.35);
+            --border-emerald: rgba(16, 185, 129, 0.35);
+
+            --font-arabic-calligraphy: 'Amiri', serif;
+            --font-arabic-ui: 'Noto Naskh Arabic', sans-serif;
+            --font-num: 'Outfit', sans-serif;
+
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --radius-full: 9999px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-oled);
+            color: var(--text-primary);
+            font-family: var(--font-arabic-ui);
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            user-select: none;
+            position: relative;
+        }
+
+        [dir="ltr"] body {
+            font-family: var(--font-num), var(--font-arabic-ui);
+        }
+
+        /* 16:9 Deck Container */
+        .slide-deck {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: radial-gradient(circle at 50% 12%, rgba(16, 185, 129, 0.09) 0%, rgba(5, 13, 10, 0.98) 75%);
+        }
+
+        @media (min-width: 992px) {
+            .slide-deck {
+                max-width: calc(100vh * 16 / 9);
+                max-height: calc(100vw * 9 / 16);
+                margin: auto;
+                position: absolute;
+                inset: 0;
+                box-shadow: 0 0 90px rgba(0, 0, 0, 0.9), 0 0 45px rgba(16, 185, 129, 0.16);
+                border: 1px solid var(--border-subtle);
+                border-radius: var(--radius-md);
+            }
+        }
+
+        .bg-pattern {
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(rgba(245, 158, 11, 0.04) 1px, transparent 1px),
+                              radial-gradient(rgba(16, 185, 129, 0.04) 1px, transparent 1px);
+            background-size: 32px 32px;
+            background-position: 0 0, 16px 16px;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        /* Slide Sections */
+        .slide {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 42px 48px 84px 48px;
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.97) translateY(14px);
+            transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                        visibility 0.45s;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1) translateY(0);
+            z-index: 10;
+        }
+
+        .slide-content {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid var(--border-emerald);
+            border-radius: var(--radius-full);
+            color: var(--text-emerald);
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .badge-gold {
+            background: rgba(245, 158, 11, 0.12);
+            border-color: var(--border-gold);
+            color: var(--text-gold);
+        }
+
+        .badge-danger {
+            background: var(--danger-bg);
+            border-color: rgba(239, 68, 68, 0.35);
+            color: #F87171;
+        }
+
+        /* Typography */
+        h1.title-main {
+            font-family: var(--font-arabic-calligraphy);
+            font-size: clamp(2.3rem, 4.4vw, 4.2rem);
+            font-weight: 700;
+            line-height: 1.25;
+            background: linear-gradient(135deg, #FFFFFF 20%, var(--emerald-light) 65%, var(--gold-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 4px 20px rgba(16, 185, 129, 0.2);
+        }
+
+        h2.title-sub {
+            font-family: var(--font-arabic-calligraphy);
+            font-size: clamp(1.7rem, 3.1vw, 2.7rem);
+            font-weight: 700;
+            color: #FFFFFF;
+            line-height: 1.3;
+        }
+
+        .subtitle-en {
+            font-family: var(--font-num);
+            font-size: clamp(0.95rem, 1.3vw, 1.2rem);
+            color: var(--text-secondary);
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+
+        p.description {
+            font-size: clamp(0.95rem, 1.25vw, 1.15rem);
+            color: var(--text-secondary);
+            max-width: 840px;
+            line-height: 1.65;
+        }
+
+        /* Grids */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            width: 100%;
+            text-align: right;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            width: 100%;
+            text-align: right;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            width: 100%;
+            text-align: right;
+        }
+
+        [dir="ltr"] .grid-2,
+        [dir="ltr"] .grid-3,
+        [dir="ltr"] .grid-4 {
+            text-align: left;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            border-color: var(--border-emerald);
+            background: var(--bg-card-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 15px var(--emerald-glow);
+        }
+
+        .card-gold:hover {
+            border-color: var(--border-gold);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 15px var(--gold-glow);
+        }
+
+        .card-danger {
+            background: rgba(26, 12, 12, 0.7);
+            border-color: rgba(239, 68, 68, 0.25);
+        }
+
+        .card-danger:hover {
+            border-color: rgba(239, 68, 68, 0.5);
+            box-shadow: 0 10px 25px -5px rgba(239, 68, 68, 0.2);
+        }
+
+        .card-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--emerald-light);
+            margin-bottom: 2px;
+            flex-shrink: 0;
+        }
+
+        .card-icon.gold {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--gold-light);
+        }
+
+        .card-icon.danger {
+            background: var(--danger-bg);
+            color: #F87171;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #FFFFFF;
+        }
+
+        .card-title-en {
+            font-family: var(--font-num);
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-top: -6px;
+        }
+
+        .card-text {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Metric Cards */
+        .metric-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 18px 14px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-family: var(--font-num);
+            font-size: 2.1rem;
+            font-weight: 800;
+            color: var(--emerald-light);
+            line-height: 1.1;
+            margin-bottom: 4px;
+        }
+
+        .metric-value.gold {
+            color: var(--gold-light);
+        }
+
+        .metric-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .metric-sublabel {
+            font-family: var(--font-num);
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+
+        .chart-box {
+            position: relative;
+            width: 100%;
+            height: 280px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 14px 18px;
+        }
+
+        /* Header Navigation */
+        .top-bar {
+            position: absolute;
+            top: 16px;
+            left: 24px;
+            right: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .brand-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            pointer-events: auto;
+        }
+
+        .brand-badge svg {
+            color: var(--emerald-primary);
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            pointer-events: auto;
+        }
+
+        .btn-action {
+            background: rgba(12, 26, 20, 0.75);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            padding: 6px 12px;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            font-size: 0.82rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(10px);
+            transition: all 0.25s ease;
+        }
+
+        .btn-action:hover {
+            color: #FFFFFF;
+            border-color: var(--border-emerald);
+            background: rgba(16, 185, 129, 0.15);
+        }
+
+        .progress-bar-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--emerald-primary), var(--gold-primary));
+            width: 8.33%;
+            transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 0 10px var(--emerald-glow);
+        }
+
+        /* Bottom Navigation Controls */
+        .nav-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(16px);
+            padding: 8px 18px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            z-index: 100;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-subtle);
+            color: #FFFFFF;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--emerald-primary);
+            color: #050d0a;
+            border-color: var(--emerald-primary);
+            transform: scale(1.08);
+        }
+
+        /* Navigation Arrows Rotation for RTL / LTR */
+        #prevBtn svg, #nextBtn svg {
+            transition: transform 0.2s ease;
+        }
+        [dir="rtl"] #prevBtn svg,
+        [dir="rtl"] #nextBtn svg {
+            transform: scaleX(-1);
+        }
+
+        .slide-counter {
+            font-family: var(--font-num);
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .slide-counter span#current {
+            color: var(--gold-light);
+            font-weight: 800;
+        }
+
+        .feature-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            text-align: right;
+            width: 100%;
+        }
+
+        [dir="ltr"] .feature-list {
+            text-align: left;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+        }
+
+        .feature-bullet {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--emerald-primary);
+            box-shadow: 0 0 8px var(--emerald-glow);
+            margin-top: 6px;
+            flex-shrink: 0;
+        }
+
+        .feature-bullet.gold {
+            background: var(--gold-primary);
+            box-shadow: 0 0 8px var(--gold-glow);
+        }
+
+        /* Buttons */
+        .btn-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--emerald-primary), var(--emerald-dark));
+            color: #050d0a;
+            font-weight: 800;
+            font-size: 1.05rem;
+            padding: 13px 30px;
+            border-radius: var(--radius-full);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 8px 25px var(--emerald-glow);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 12px 30px rgba(16, 185, 129, 0.45);
+            background: linear-gradient(135deg, var(--emerald-light), var(--emerald-primary));
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 13px 24px;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-decoration: none;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--border-gold);
+            color: var(--gold-light);
+        }
+
+        /* Interactive Demo Mini Widgets */
+        .demo-widget-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 8px;
+            padding: 14px 22px;
+            background: rgba(12, 26, 20, 0.7);
+            border: 1px dashed var(--border-emerald);
+            border-radius: var(--radius-md);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .tasbeeh-circle-btn {
+            width: 82px;
+            height: 82px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--emerald-dark), #064e3b);
+            border: 2px solid var(--emerald-light);
+            color: #FFFFFF;
+            font-family: var(--font-num);
+            font-size: 1.8rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px var(--emerald-glow);
+            transition: all 0.15s ease;
+        }
+
+        .tasbeeh-circle-btn:active {
+            transform: scale(0.92);
+            background: var(--emerald-primary);
+            color: #050d0a;
+        }
+
+        .compass-disc {
+            width: 82px;
+            height: 82px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #0f2d22 30%, #050d0a 85%);
+            border: 2px solid var(--gold-light);
+            box-shadow: 0 0 20px var(--gold-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .compass-pointer {
+            width: 4px;
+            height: 38px;
+            background: linear-gradient(to top, var(--emerald-primary) 50%, var(--gold-light) 50%);
+            border-radius: 2px;
+        }
+
+        /* Quick Jump Grid Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal-box {
+            background: #091510;
+            border: 1px solid var(--border-gold);
+            border-radius: var(--radius-lg);
+            max-width: 900px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 28px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 14px;
+        }
+
+        .modal-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .modal-slide-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            padding: 14px;
+            cursor: pointer;
+            text-align: right;
+            transition: all 0.2s ease;
+        }
+
+        [dir="ltr"] .modal-slide-card {
+            text-align: left;
+        }
+
+        .modal-slide-card:hover {
+            border-color: var(--emerald-primary);
+            background: var(--bg-card-hover);
+            transform: translateY(-2px);
+        }
+
+        .modal-slide-card.active {
+            border-color: var(--gold-primary);
+            background: rgba(245, 158, 11, 0.12);
+        }
+
+        .modal-slide-num {
+            font-family: var(--font-num);
+            font-weight: 800;
+            color: var(--gold-light);
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+
+        .modal-slide-title {
+            font-size: 0.82rem;
+            color: var(--text-primary);
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        /* Keyboard Shortcuts Box */
+        .shortcut-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-family: var(--font-num);
+            font-size: 0.76rem;
+            color: var(--text-gold);
+            margin: 0 4px;
+        }
+
+        @media (max-width: 900px) {
+            .slide { padding: 50px 20px 75px 20px; }
+            .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); }
+            .grid-2 { grid-template-columns: 1fr; }
+            .chart-box { height: 230px; }
+            .modal-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 600px) {
+            .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            h1.title-main { font-size: 2rem; }
+            h2.title-sub { font-size: 1.5rem; }
+            .metric-value { font-size: 1.7rem; }
+            .top-actions .btn-action span.label { display: none; }
+            .modal-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Progress Line -->
+    <div class="progress-bar-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Presentation Deck (16:9 Aspect Ratio) -->
+    <div class="slide-deck">
+        <div class="bg-pattern"></div>
+
+        <!-- Top Header Navigation -->
+        <header class="top-bar">
+            <div class="brand-badge">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="m12 6 2.5 5 5 .5-4 3.5 1.5 5-5-3-5 3 1.5-5-4-3.5 5-.5z"></path>
+                </svg>
+                <span>صلاتي وأذكاري</span>
+                <span style="color: var(--text-muted); font-size: 0.85rem; font-family: var(--font-num);">| Prayer & Athkar</span>
+            </div>
+
+            <div class="top-actions">
+                <button class="btn-action" id="gridBtn" title="Slides Grid / قائمة الشرائح (G)">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                    <span class="label ar-text">الشرائح</span>
+                    <span class="label en-text">Grid</span>
+                </button>
+
+                <button class="btn-action" id="helpBtn" title="Shortcuts / اختصارات لوحة المفاتيح (?)">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                    <span class="label">?</span>
+                </button>
+
+                <button class="btn-action" id="langToggleBtn" title="Switch Language / تبديل اللغة (L)">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                    </svg>
+                    <span class="label" id="langLabel">English</span>
+                </button>
+
+                <button class="btn-action" id="fullscreenBtn" title="Fullscreen / ملء الشاشة (F)">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+                    </svg>
+                    <span class="label">F</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- ========================================================================= -->
+        <!-- SLIDE 1: Title Hook                                                       -->
+        <!-- ========================================================================= -->
+        <section class="slide active" id="slide-1">
+            <div class="slide-content">
+                <div class="badge badge-gold">
+                    <span class="ar-text">🕌 الإصدار المعتمد 2026 • 100% Offline-First</span>
+                    <span class="en-text">🕌 Official Release 2026 • 100% Offline-First</span>
+                </div>
+                
+                <h1 class="title-main">
+                    <span class="ar-text">صلاتي وأذكاري</span>
+                    <span class="en-text">Prayer & Athkar</span>
+                </h1>
+                
+                <p class="subtitle-en">
+                    <span class="ar-text">رفيقك الإسلامي اليومي.. دقيق، خصوصي، وبدون إنترنت بنسبة 100%</span>
+                    <span class="en-text">Your Daily Islamic Companion: 100% Offline, Ad-Free & Privacy-First</span>
+                </p>
+
+                <p class="description">
+                    <span class="ar-text">تطبيق إسلامي متطور مبني بأحدث تقنيات الويب والأندرويد (React 19 + Capacitor 8 + Adhan Engine). يقدم مواقيت الصلاة الفلكية بدقة متناهية، الأذكار النبوية بالتشكيل الكامل، والسبحة الذكية دون أي اتصال بخوادم خارجية أو إعلانات تجارية.</span>
+                    <span class="en-text">A modern Islamic companion built on React 19 + Capacitor 8. Offering high-precision astronomical prayer times, verified Athkar with full Tashkeel, and a tactile digital Tasbeeh—completely free of ads and external telemetry.</span>
+                </p>
+
+                <div class="grid-4" style="margin-top: 6px;">
+                    <div class="metric-card">
+                        <div class="metric-value">100%</div>
+                        <div class="metric-label ar-text">أوفلاين بالكامل</div>
+                        <div class="metric-label en-text">100% Offline</div>
+                        <div class="metric-sublabel">Zero External APIs</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value gold">0</div>
+                        <div class="metric-label ar-text">إعلانات تجارية</div>
+                        <div class="metric-label en-text">Zero Ads</div>
+                        <div class="metric-sublabel">Pure Worship Focus</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">12</div>
+                        <div class="metric-label ar-text">طريقة حسابية عالمية</div>
+                        <div class="metric-label en-text">Global Methods</div>
+                        <div class="metric-sublabel">MWL, Egypt, Makkah...</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value gold">&lt; 3MB</div>
+                        <div class="metric-label ar-text">حجم الحزمة الخفيف</div>
+                        <div class="metric-label en-text">Ultra-Light Bundle</div>
+                        <div class="metric-sublabel">Instant Launch & Zero Drain</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- SLIDE 2: The Problem (PAS)                                                -->
+        <!-- ========================================================================= -->
+        <section class="slide" id="slide-2">
+            <div class="slide-content">
+                <div class="badge badge-danger">
+                    <span class="ar-text">⚠️ المشكلة الراهنة في التطبيقات الشائعة (The Pain Points)</span>
+                    <span class="en-text">⚠️ Current Flaws in Mainstream Prayer Apps</span>
+                </div>
+
+                <h2 class="title-sub">
+                    <span class="ar-text">كيف تحولت تطبيقات الصلاة إلى منصات إعلانية وتتبع؟</span>
+                    <span class="en-text">How Did Prayer Apps Turn Into Tracking & Ad Platforms?</span>
+                </h2>
+
+                <p class="description">
+                    <span class="ar-text">يعاني أكثر من 1.9 مليار مسلم حول العالم من مشكلات حرجة في أشهر تطبيقات المواقيت التجارية:</span>
+                    <span class="en-text">Over 1.9 billion Muslims worldwide face critical privacy and user-experience issues with popular commercial prayer apps:</span>
+                </p>
+
+                <div class="grid-3">
+                    <div class="card card-danger">
+                        <div class="card-icon danger">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="2" width="20" height="20" rx="5"></rect>
+                                <path d="m15 9-6 6m0-6 6 6"></path>
+                            </svg>
+                        </div>
+                        <div class="card-title ar-text">إعلانات مزعجة تقطع الخشوع</div>
+                        <div class="card-title en-text">Intrusive Ads During Worship</div>
+                        <div class="card-title-en">Commercial Ads & Popups</div>
+                        <div class="card-text ar-text">فيديوهات إجبارية ولافتات إعلانية تظهر فور فتح التطبيق أو أثناء قراءة أذكار الصباح والمساء.</div>
+                        <div class="card-text en-text">Forced video ads and commercial popups appearing immediately upon launching or reciting daily Athkar.</div>
+                    </div>
+
+                    <div class="card card-danger">
+                        <div class="card-icon danger">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                        </div>
+                        <div class="card-title ar-text">تتبع الموقع وبيع البيانات</div>
+                        <div class="card-title en-text">Location Tracking & Harvesting</div>
+                        <div class="card-title-en">Privacy & Telemetry Leakage</div>
+                        <div class="card-text ar-text">تسريب إحداثيات GPS لوسطاء الإعلانات وتحويل عبادة المسلم إلى سلعة تسويقية.</div>
+                        <div class="card-text en-text">Harvesting precise GPS coordinates and selling user analytics to third-party ad brokers without consent.</div>
+                    </div>
+
+                    <div class="card card-danger">
+                        <div class="card-icon danger">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 1l22 22"></path>
+                                <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"></path>
+                                <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"></path>
+                                <path d="M10.71 5.05A16 16 0 0 1 22.58 9"></path>
+                                <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"></path>
+                                <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+                                <line x1="12" y1="20" x2="12.01" y2="20"></line>
+                            </svg>
+                        </div>
+                        <div class="card-title ar-text">التعطل التام بدون إنترنت</div>
+                        <div class="card-title en-text">Failure Without Internet</div>
+                        <div class="card-title-en">High Latency & Battery Drain</div>
+                        <div class="card-text ar-text">الاعتماد الدائم على خوادم بعيدة؛ مما يسبب بطء التشغيل، استنزاف البطارية، وتوقف التنبيهات في السفر.</div>
+                        <div class="card-text en-text">Heavy reliance on remote APIs leading to slow startup, constant background battery drain, and offline failure.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- SLIDE 3: The Solution (BAB)                                               -->
+        <!-- ========================================================================= -->
+        <section class="slide" id="slide-3">
+            <div class="slide-content">
+                <div class="badge badge-gold">
+                    <span class="ar-text">💡 فلسفة الحل (The Solution Blueprint)</span>
+                    <span class="en-text">💡 The Solution Blueprint & Philosophy</span>
+                </div>
+
+                <h2 class="title-sub">
+                    <span class="ar-text">صلاتي وأذكاري: عودة إلى البساطة والنقاء</span>
+                    <span class="en-text">Prayer & Athkar: A Return to Pure Simplicity</span>
+                </h2>
+
+                <p class="description">
+                    <span class="ar-text">صُمم التطبيق من الصفر على ركيزة "الاستقلالية التامة" (Offline-First Zero-API Architecture)، ليعمل معك في أي مكان وزمان دون اتصال.</span>
+                    <span class="en-text">Engineered from the ground up on complete offline autonomy, ensuring your worship tools function flawlessly anywhere on Earth.</span>
+                </p>
+
+                <div class="grid-4">
+                    <div class="card">
+                        <div class="card-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="2" y1="12" x2="22" y2="12"></line>
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                            </svg>
+                        </div>
+                        <div class="card-title ar-text">معادلات فلكية مدمجة</div>
+                        <div class="card-title en-text">Embedded Astro Engine</div>
+                        <div class="card-text ar-text">حساب زوايا الشمس وميل الأرض لحظياً على جهازك بواسطة محرك adhan.js دون طلب API واحد.</div>
+                        <div class="card-text en-text">Calculates solar zenith and declination angles locally on-device with zero external API calls.</div>
+                    </div>
+
+                    <div class="card card-gold">
+                        <div class="card-icon gold">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                <path d="m9 12 2 2 4-4"></path>
+                            </svg>
+                        </div>
+                        <div class="card-title ar-text">خصوصية مطلقة 100%</div>
+                        <div class="card-title en-text">Absolute Privacy Guarantee</div>
+                        <div class="card-text ar-text">لا نجمع بياناتك ولا نسجل موقعك الجغرافي. بياناتك تبقى مشفرة في ذاكرة هاتفك فقط.</div>
+                        <div class="card-text en-text">Zero analytics, zero tracking identifiers. All settings and preferences stay strictly on your device.</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                            </svg>
+                        </div>
+                        <div class="card-title ar-text">بدون إعلانات للأبد</div>
+                        <div class="card-title en-text">100% Ad-Free Forever</div>
+                        <div class="card-text ar-text">صدقة جارية ومفتوح المصدر خالصاً لوجه الله، لا اشتراكات ولا نوافذ مدفوعة ولا إعلانات.</div>
+                        <div class="card-text en-text">Free and open source as a continuous charity (Sadaqah Jariyah)—no paywalls, no subscriptions.</div>
+                    </div>
+
+                    <div class="card card-gold">
+                        <div class="card-icon gold">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                            </svg>
+                        </div>
+                        <div class="card-title ar-text">سرعة إطلاق 0ms</div>
+                        <div class="card-title en-text">Instant 0ms Launch</div>
+                        <div class="card-text ar-text">حجم خفيف جداً يفتح في لمح البصر مع حفظ فوري لجميع العدادات والأذكار عبر LocalStorage.</div>
+                        <div class="card-text en-text">Instant startup time with persistent state syncing via ultra-fast local storage engines.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- SLIDE 4: Interactive Radar Benchmark                                      -->
+        <!-- ========================================================================= -->
+        <section class="slide" id="slide-4">
+            <div class="slide-content">
+                <div class="badge">
+                    <span class="ar-text">📊 تحليل مقارن تفاعلي (Comparative Benchmark)</span>
+                    <span class="en-text">📊 Interactive Benchmark: Us vs Commercial Apps</span>
+                </div>
+
+                <h2 class="title-sub">
+                    <span class="ar-text">رادار المقارنة: صلاتي وأذكاري مقابل التطبيقات التجارية</span>
+                    <span class="en-text">Radar Benchmark: Prayer & Athkar vs Commercial Apps</span>
+                </h2>
+
+                <div class="grid-2" style="align-items: center; margin-top: 4px;">
+                    <div class="chart-box">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <div class="feature-bullet"></div>
+                            <div>
+                                <strong style="color: var(--emerald-light);" class="ar-text">استقلالية الأوفلاين (100% مقابل 40%):</strong>
+                                <strong style="color: var(--emerald-light);" class="en-text">Offline Independence (100% vs 40%):</strong>
+                                <span class="ar-text" style="color: var(--text-secondary); font-size: 0.9rem;"> تعمل كافة الميزات (المواقيت، القبلة، الأذكار، والتسبيح) بلا شبكة.</span>
+                                <span class="en-text" style="color: var(--text-secondary); font-size: 0.9rem;"> All features function smoothly in airplane mode or remote travel.</span>
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-bullet gold"></div>
+                            <div>
+                                <strong style="color: var(--gold-light);" class="ar-text">الخصوصية والأمان (100% مقابل 20%):</strong>
+                                <strong style="color: var(--gold-light);" class="en-text">Privacy Protection (100% vs 20%):</strong>
+                                <span class="ar-text" style="color: var(--text-secondary); font-size: 0.9rem;"> صفر تتبع وموقعك الجغرافي محفوظ داخل ذاكرة جهازك فقط.</span>
+                                <span class="en-text" style="color: var(--text-secondary); font-size: 0.9rem;"> Zero telemetry servers and zero user tracking IDs.</span>
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-bullet"></div>
+                            <div>
+                                <strong style="color: var(--emerald-light);" class="ar-text">توفير البطارية والذاكرة (95% مقابل 45%):</strong>
+                                <strong style="color: var(--emerald-light);" class="en-text">Battery Efficiency (95% vs 45%):</strong>
+                                <span class="ar-text" style="color: var(--text-secondary); font-size: 0.9rem;"> معمارية موفرة للطاقة مع خلفية OLED سوداء حقيقية لا تستهلك بكسلات الشاشة.</span>
+                                <span class="en-text" style="color: var(--text-secondary); font-size: 0.9rem;"> OLED-optimized dark theme with zero background polling drain.</span>
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-bullet gold"></div>
+                            <div>
+                                <strong style="color: var(--gold-light);" class="ar-text">النقاء من الإعلانات (100% مقابل 15%):</strong>
+                                <strong style="color: var(--gold-light);" class="en-text">Zero Commercial Ads (100% vs 15%):</strong>
+                                <span class="ar-text" style="color: var(--text-secondary); font-size: 0.9rem;"> لا إعلانات بانر، ولا نوافذ منبثقة، ولا فيديوهات مزعجة.</span>
+                                <span class="en-text" style="color: var(--text-secondary); font-size: 0.9rem;"> Zero popups, video ads, or commercial disruptions.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- SLIDE 5: Feature 1 - Prayer Engine                                        -->
+        <!-- ========================================================================= -->
+        <section class="slide" id="slide-5">
+            <div class="slide-content">
+                <div class="badge">
+                    <span class="ar-text">🕌 الميزة 1: محرك المواقيت الفلكي (Astronomical Engine)</span>
+                    <span class="en-text">🕌 Feature 1: Astronomical Prayer Engine</span>
+                </div>
+
+                <h2 class="title-sub">
+                    <span class="ar-text">دقة فلكية عالمية بحسابات محلية 100%</span>
+                    <span class="en-text">Global Precision with 100% Local Math</span>
+                </h2>
+
+                <p class="description">
+                    <span class="ar-text">مدعوم بمكتبة adhan.js الرائدة لحساب أوقات الصلاة بدقة الثواني استناداً إلى إحداثيات خطوط الطول والعرض.</span>
+                    <span class="en-text">Powered by the proven adhan.js astronomical library to compute exact solar prayer times based on latitude and longitude coordinates.</span>
+                </p>
+
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                        </div>
+                        <div class="card-title ar-text">12 طريقة حسابية عالمية</div>
+                        <div class="card-title en-text">12 Global Prayer Methods</div>
+                        <div class="card-text ar-text">أم القرى (مكة المكرمة)، الهيئة المصرية، رابطة العالم الإسلامي، ISNA أمريكا، جامعة كراتشي، الكويت، قطر، سنغافورة، طهران، والجعفري.</div>
+                        <div class="card-text en-text">Umm al-Qura, Egyptian General Authority, Muslim World League, ISNA North America, Karachi, Gulf, Singapore, Tehran, and Jafari.</div>
+                    </div>
+
+                    <div class="card card-gold">
+                        <div class="card-icon gold">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                            </svg>
+                        </div>
+                        <div class="card-title ar-text">ضبط فقهي وميقات العصر</div>
+                        <div class="card-title en-text">Jurisprudence (Madhab) Logic</div>
+                        <div class="card-text ar-text">تبديل فوري لحساب صلاة العصر بين المذهب الشافعي/الجمهور (ظل المثل) والمذهب الحنفي (ظل المثلين) مع حساب الشروق والثلث الأخير.</div>
+                        <div class="card-text en-text">Support for Standard (Shafi'i/Hanbali/Maliki) and Hanafi Asr shadows, plus Midnight and Last Third calculations.</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                            </svg>
+                        </div>
+                        <div class="card-title ar-text">معايرة يدوية دقيقة للمواقيت</div>
+                        <div class="card-title en-text">Manual Fine-Tuning Offsets</div>
+                        <div class="card-text ar-text">إمكانية تقديم أو تأخير أي صلاة بدقائق محددة (± Minutes) لمطابقة أذان المسجد المحلي أو التقويم الرسمي لمدينتك بدقة متناهية.</div>
+                        <div class="card-text en-text">Custom minute offsets for individual prayer times to match local mosque timetables with sub-minute precision.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- SLIDE 6: Feature 2 - Athkar Library                                       -->
+        <!-- ========================================================================= -->
+        <section class="slide" id="slide-6">
+            <div class="slide-content">
+                <div class="badge badge-gold">
+                    <span class="ar-text">📖 الميزة 2: موسوعة الأذكار الموثقة (Authentic Athkar)</span>
+                    <span class="en-text">📖 Feature 2: Authentic Athkar Library</span>
+                </div>
+
+                <h2 class="title-sub">
+                    <span class="ar-text">تشكيل عربي كامل وأسانيد نبوية صحيحة</span>
+                    <span class="en-text">Full Arabic Tashkeel & Verified Hadith Citations</span>
+                </h2>
+
+                <p class="description">
+                    <span class="ar-text">مكتبة أذكار شاملة ومدققة لغوياً، مبنية وفق أصح كتب السنة الشريفة لضمان صحة العبادة وسهولة القراءة.</span>
+                    <span class="en-text">A comprehensive, rigorously vetted Athkar archive with full diacritical marks and authentic prophetic references.</span>
+                </p>
+
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="card-title ar-text">6 تصنيفات رئيسية شاملة</div>
+                        <div class="card-title en-text">6 Core Athkar Categories</div>
+                        <div class="card-text ar-text">أذكار الصباح والمساء، أذكار بعد الصلاة المفروضة، أذكار النوم، الاستيقاظ، وأدعية مختارة من جوامع الكلم.</div>
+                        <div class="card-text en-text">Morning, Evening, Post-Prayer, Before Sleep, Waking Up, and daily verified Quranic & prophetic supplications.</div>
+                    </div>
+
+                    <div class="card card-gold">
+                        <div class="card-icon gold">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <circle cx="12" cy="12" r="4"></circle>
+                            </svg>
+                        </div>
+                        <div class="card-title ar-text">وضع التركيز (Focus Mode)</div>
+                        <div class="card-title en-text">Distraction-Free Focus Mode</div>
+                        <div class="card-text ar-text">واجهة ملء الشاشة لعرض كل ذكر منفرداً بخط كبير وواضح مع عداد لمسي ينتقل تلقائياً للذكر التالي عند الاكتمال.</div>
+                        <div class="card-text en-text">Card-by-card fullscreen presentation with large typography and automatic progression upon target completion.</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="card-title ar-text">بيان الفضل والسند الصحيح</div>
+                        <div class="card-title en-text">Virtues & Hadith Citations</div>
+                        <div class="card-text ar-text">عرض فضل كل ذكر وثوابه مع ذكر المخرج والمصدر المعتمد (صحيح البخاري، مسلم، أبو داود، والترمذي).</div>
+                        <div class="card-text en-text">Each Zikr highlights its authentic spiritual virtue and canonical source (Sahih al-Bukhari, Muslim, at-Tirmidhi).</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- SLIDE 7: Feature 3 - Tactile Tasbeeh + Interactive Demo                   -->
+        <!-- ========================================================================= -->
+        <section class="slide" id="slide-7">
+            <div class="slide-content">
+                <div class="badge">
+                    <span class="ar-text">📿 الميزة 3: السبحة الذكية التفاعلية (Digital Tasbeeh)</span>
+                    <span class="en-text">📿 Feature 3: Tactile Digital Tasbeeh</span>
+                </div>
+
+                <h2 class="title-sub">
+                    <span class="ar-text">تسبيح لمسي بمحاكاة حقيقية واحتفال بالإنجاز</span>
+                    <span class="en-text">Tactile Haptics & Milestone Celebrations</span>
+                </h2>
+
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                            </svg>
+                        </div>
+                        <div class="card-title ar-text">10 أذكار مثبتة + تخصيص حر</div>
+                        <div class="card-title en-text">10 Presets + Custom Creator</div>
+                        <div class="card-text ar-text">تسبيحات يومية جاهزة مع إمكانية إنشاء أذكار مخصصة وتحديد الأهداف الرقمية وحفظها في IndexedDB.</div>
+                        <div class="card-text en-text">10 ready-to-use presets plus custom Zikr creation with targets stored in IndexedDB.</div>
+                    </div>
+
+                    <div class="card card-gold">
+                        <div class="card-icon gold">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                            </svg>
+                        </div>
+                        <div class="card-title ar-text">محرك اهتزاز متعدد المستويات</div>
+                        <div class="card-title en-text">Multi-Tier Haptic Engine</div>
+                        <div class="card-text ar-text">اهتزاز خفيف عند كل نقرة، نبضة مزدوجة في منتصف الهدف، واهتزاز طويل ومميز عند اكتمال الورد.</div>
+                        <div class="card-text en-text">Subtle vibration on count, double pulse halfway, and triumphant haptic buzz on target completion.</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 14 14"></polyline>
+                            </svg>
+                        </div>
+                        <div class="card-title ar-text">حلقة تقدم واحتفال Confetti</div>
+                        <div class="card-title en-text">Visual Rings & Confetti FX</div>
+                        <div class="card-text ar-text">حلقة دائرية مضيئة توضح النسبة المئوية، مع إطلاق مؤثرات Confetti مبهجة عند إتمام الهدف.</div>
+                        <div class="card-text en-text">Luminous SVG radial progress rings paired with celebratory confetti bursts on milestone reach.</div>
+                    </div>
+                </div>
+
+                <!-- Live Interactive Tasbeeh Demo Widget -->
+                <div class="demo-widget-container">
+                    <div>
+                        <div style="font-weight: 700; color: var(--gold-light);" class="ar-text">تجربة السبحة التفاعلية الحية:</div>
+                        <div style="font-weight: 700; color: var(--gold-light);" class="en-text">Live Interactive Tasbeeh Demo:</div>
+                        <div style="font-size: 0.85rem; color: var(--text-secondary);" class="ar-text">انقر الزر للتسبيح وسماع النقرة اللمسية (الهدف: 33)</div>
+                        <div style="font-size: 0.85rem; color: var(--text-secondary);" class="en-text">Click button to count with sound/haptics (Target: 33)</div>
+                    </div>
+                    <button class="tasbeeh-circle-btn" id="demoTasbeehBtn">
+                        <span id="demoTasbeehCount">0</span>
+                        <span style="font-size: 0.65rem; color: var(--gold-light); font-weight: 600;">/ 33</span>
+                    </button>
+                    <button class="btn-action" id="demoTasbeehReset" style="font-size: 0.75rem;">
+                        <span class="ar-text">تصفير</span>
+                        <span class="en-text">Reset</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- SLIDE 8: Feature 4 - Sensor-Fused Qibla + Interactive Demo                -->
+        <!-- ========================================================================= -->
+        <section class="slide" id="slide-8">
+            <div class="slide-content">
+                <div class="badge badge-gold">
+                    <span class="ar-text">🧭 الميزة 4: بوصلة القبلة الذكية (Qibla Compass)</span>
+                    <span class="en-text">🧭 Feature 4: Sensor-Fused Qibla Compass</span>
+                </div>
+
+                <h2 class="title-sub">
+                    <span class="ar-text">محاذاة كروية دقيقة نحو الكعبة المشرفة</span>
+                    <span class="en-text">Sensor Fusion & Great-Circle Alignment</span>
+                </h2>
+
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+                            </svg>
+                        </div>
+                        <div class="card-title ar-text">دمج المستشعرات المتقدم</div>
+                        <div class="card-title en-text">Advanced Sensor Fusion</div>
+                        <div class="card-text ar-text">دمج بيانات الجيروسكوب ومقياس التسارع والبوصلة الرقمية عبر واجهة DeviceOrientation القياسية.</div>
+                        <div class="card-text en-text">Combines hardware magnetometer, gyroscope, and accelerometer data for jitter-free orientation.</div>
+                    </div>
+
+                    <div class="card card-gold">
+                        <div class="card-icon gold">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="2" y1="12" x2="22" y2="12"></line>
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                            </svg>
+                        </div>
+                        <div class="card-title ar-text">تصحيح الانحراف المغناطيسي</div>
+                        <div class="card-title en-text">True North & Declination</div>
+                        <div class="card-text ar-text">حساب الفرق بين الشمال المغناطيسي والشمال الجغرافي الحقيقي لمنع أخطاء الانحراف الشائعة.</div>
+                        <div class="card-text en-text">Compensates for magnetic declination to align with geographic True North rather than Magnetic North.</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                <path d="m9 12 2 2 4-4"></path>
+                            </svg>
+                        </div>
+                        <div class="card-title ar-text">قفل القبلة اللمسي (±3°)</div>
+                        <div class="card-title en-text">Haptic Snap-Lock (±3°)</div>
+                        <div class="card-text ar-text">توهج زمردي مشع مع اهتزاز لمسي هادئ عند المحاذاة الدقيقة مع القبلة لتأكيد الاتجاه الصحيح.</div>
+                        <div class="card-text en-text">Luminous green lock-in state with haptic confirmation when device aligns within ±3° of the Kaaba.</div>
+                    </div>
+                </div>
+
+                <!-- Live Interactive Qibla Compass Demo -->
+                <div class="demo-widget-container">
+                    <div class="compass-disc" id="demoCompassDisc">
+                        <div class="compass-pointer"></div>
+                    </div>
+                    <div>
+                        <div style="font-weight: 700; color: var(--emerald-light);" id="demoCompassStatus" class="ar-text">زاوية القبلة: 136° (مكة المكرمة)</div>
+                        <div style="font-weight: 700; color: var(--emerald-light);" id="demoCompassStatusEn" class="en-text">Qibla Bearing: 136° (Holy Makkah)</div>
+                        <div style="font-size: 0.85rem; color: var(--text-secondary);" class="ar-text">انقر زر المحاكاة لاختبار محاذاة القفل المغناطيسي</div>
+                        <div style="font-size: 0.85rem; color: var(--text-secondary);" class="en-text">Click below to simulate precise magnetic lock-in</div>
+                    </div>
+                    <button class="btn-action" id="demoCompassSnapBtn">
+                        <span class="ar-text">محاذاة القبلة</span>
+                        <span class="en-text">Align Kaaba</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- SLIDE 9: Architecture & Performance (Bar Chart)                           -->
+        <!-- ========================================================================= -->
+        <section class="slide" id="slide-9">
+            <div class="slide-content">
+                <div class="badge">
+                    <span class="ar-text">⚙️ المعمارية التقنية وكفاءة الأداء (Architecture & Performance)</span>
+                    <span class="en-text">⚙️ Technical Architecture & Performance</span>
+                </div>
+
+                <h2 class="title-sub">
+                    <span class="ar-text">معمارية خفيفة بدون أي حمل زائد</span>
+                    <span class="en-text">Clean Offline Architecture & Zero-Overhead</span>
+                </h2>
+
+                <div class="grid-2" style="align-items: center;">
+                    <div class="chart-box">
+                        <canvas id="perfChart"></canvas>
+                    </div>
+
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <div class="feature-bullet"></div>
+                            <div>
+                                <strong style="color: var(--emerald-light);">Frontend Layer:</strong>
+                                <span class="ar-text" style="color: var(--text-secondary); font-size: 0.9rem;"> React 19 + Vite 6 مع Vanilla CSS Tokens بدون مكتبات ثقيلة، لضمان استجابة 60fps.</span>
+                                <span class="en-text" style="color: var(--text-secondary); font-size: 0.9rem;"> React 19 + Vite 6 with pure CSS tokens—zero Tailwind/heavy CSS bloat.</span>
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-bullet gold"></div>
+                            <div>
+                                <strong style="color: var(--gold-light);">Offline Storage Hierarchy:</strong>
+                                <span class="ar-text" style="color: var(--text-secondary); font-size: 0.9rem;"> طبقتان محليتان: LocalStorage للإعدادات الفورية، و IndexedDB للأصوات والبيانات الكبيرة.</span>
+                                <span class="en-text" style="color: var(--text-secondary); font-size: 0.9rem;"> Two-tier local storage: LocalStorage for instant keys, IndexedDB for audio blobs.</span>
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-bullet"></div>
+                            <div>
+                                <strong style="color: var(--emerald-light);">Native Android Bridge:</strong>
+                                <span class="ar-text" style="color: var(--text-secondary); font-size: 0.9rem;"> Capacitor 8 مع Android Java Native Widgets و Local Notifications للتشغيل في الخلفية.</span>
+                                <span class="en-text" style="color: var(--text-secondary); font-size: 0.9rem;"> Capacitor 8 with native Java home-screen widgets and background notifications.</span>
+                            </div>
+                        </div>
+
+                        <div class="feature-item">
+                            <div class="feature-bullet gold"></div>
+                            <div>
+                                <strong style="color: var(--gold-light);">Network Isolation:</strong>
+                                <span class="ar-text" style="color: var(--text-secondary); font-size: 0.9rem;"> صفر طلبات شبكة يومياً، مما يحافظ على عمر البطارية بنسبة تصل إلى 4 أضعاف.</span>
+                                <span class="en-text" style="color: var(--text-secondary); font-size: 0.9rem;"> Exactly zero network calls per day, prolonging battery life up to 4x.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- SLIDE 10: Luxury Design System & UX                                       -->
+        <!-- ========================================================================= -->
+        <section class="slide" id="slide-10">
+            <div class="slide-content">
+                <div class="badge badge-gold">
+                    <span class="ar-text">🎨 نظام التصميم الفاخر (Islamic Design System)</span>
+                    <span class="en-text">🎨 Multi-Theme Luxury Islamic UX</span>
+                </div>
+
+                <h2 class="title-sub">
+                    <span class="ar-text">أناقة إسلامية وتصميم عصري يحترم راحة العين</span>
+                    <span class="en-text">Islamic Elegance Meets Accessible Modern UX</span>
+                </h2>
+
+                <p class="description">
+                    <span class="ar-text">منظومة تصميمية متكاملة تدعم 5 سمات بصرية راقية مع دعم كامل للغة العربية ومراعاة حواف ونوتش الهواتف الحديثة.</span>
+                    <span class="en-text">A comprehensive multi-theme architecture supporting 5 dark/light palettes with native Arabic typography and notch safe-area handling.</span>
+                </p>
+
+                <div class="grid-4">
+                    <div class="card" style="border-color: var(--emerald-primary);">
+                        <div class="card-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                            </svg>
+                        </div>
+                        <div class="card-title ar-text">الزمرد والذهب (Emerald & Gold)</div>
+                        <div class="card-title en-text">Luxury Emerald & Gold</div>
+                        <div class="card-text ar-text">السمة الافتراضية الفاخرة المستوحاة من العمارة الإسلامية التاريخية.</div>
+                        <div class="card-text en-text">Default royal theme inspired by classical Andalusian and Ottoman mosques.</div>
+                    </div>
+
+                    <div class="card" style="border-color: #38BDF8;">
+                        <div class="card-icon" style="color: #38BDF8; background: rgba(56, 189, 248, 0.15);">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                            </svg>
+                        </div>
+                        <div class="card-title ar-text">الياقوت الملكي (Sapphire Royal)</div>
+                        <div class="card-title en-text">Royal Sapphire & Silver</div>
+                        <div class="card-text ar-text">أزرق داكن هادئ مع لمسات فضية باردة مريحة للقراءة الليلية.</div>
+                        <div class="card-text en-text">Deep royal blue with silver accents engineered for calm midnight reading.</div>
+                    </div>
+
+                    <div class="card" style="border-color: rgba(255, 255, 255, 0.3);">
+                        <div class="card-icon" style="color: #FFFFFF; background: rgba(255, 255, 255, 0.1);">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                            </svg>
+                        </div>
+                        <div class="card-title ar-text">سواد OLED الحقيقي (Midnight OLED)</div>
+                        <div class="card-title en-text">True OLED Midnight</div>
+                        <div class="card-text ar-text">أسود نقي بنسبة 100% لإطفاء بكسلات الشاشة وتوفير أقصى قدر من الطاقة.</div>
+                        <div class="card-text en-text">Pure #000000 black surface to completely turn off OLED pixels and save battery.</div>
+                    </div>
+
+                    <div class="card" style="border-color: var(--gold-primary);">
+                        <div class="card-icon gold">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="5"></circle>
+                                <line x1="12" y1="1" x2="12" y2="3"></line>
+                                <line x1="12" y1="21" x2="12" y2="23"></line>
+                            </svg>
+                        </div>
+                        <div class="card-title ar-text">شفق الصحراء والنهار النقي</div>
+                        <div class="card-title en-text">Desert Twilight & Light</div>
+                        <div class="card-text ar-text">سمات نهارية واضحة وعالية التباين للقراءة تحت أشعة الشمس المباشرة.</div>
+                        <div class="card-text en-text">High-contrast daytime themes optimized for outdoor daylight readability.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- SLIDE 11: Roadmap & Expansion                                             -->
+        <!-- ========================================================================= -->
+        <section class="slide" id="slide-11">
+            <div class="slide-content">
+                <div class="badge">
+                    <span class="ar-text">🚀 الرؤية وخارطة الطريق (Future Roadmap)</span>
+                    <span class="en-text">🚀 Future Roadmap & Next Milestones</span>
+                </div>
+
+                <h2 class="title-sub">
+                    <span class="ar-text">التطوير المستمر: ما هو قادم في التحديثات القادمة؟</span>
+                    <span class="en-text">Continuous Evolution: What's Coming Next?</span>
+                </h2>
+
+                <p class="description">
+                    <span class="ar-text">نواصل بناء وتوسيع النظام البيئي لصلاتي وأذكاري لتقديم أفضل تجربة إسلامية متكاملة على جميع الأجهزة.</span>
+                    <span class="en-text">Continuing to expand the Prayer & Athkar ecosystem across wearables, lock screens, and native ecosystems.</span>
+                </p>
+
+                <div class="grid-4">
+                    <div class="card">
+                        <div class="card-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="7"></circle>
+                                <polyline points="12 9 12 12 13.5 13.5"></polyline>
+                                <path d="M16.51 17.35l-.35 3.83a2 2 0 0 1-2 1.82H9.83a2 2 0 0 1-2-1.82l-.35-3.83m.01-10.7l.35-3.83A2 2 0 0 1 9.83 1h4.34a2 2 0 0 1 2 1.82l.35 3.83"></path>
+                            </svg>
+                        </div>
+                        <div class="card-title ar-text">1. تطبيق لساعات Wear OS</div>
+                        <div class="card-title en-text">1. Wear OS Smartwatch App</div>
+                        <div class="card-text ar-text">ودجات سريعة لمعرفة وقت الصلاة والتسبيح من معصمك مع اهتزازات لمسية مباشرة دون الحاجة لفتح الهاتف.</div>
+                        <div class="card-text en-text">Standalone smartwatch tiles for glanceable prayer countdowns and wrist-based Tasbeeh haptics.</div>
+                    </div>
+
+                    <div class="card card-gold">
+                        <div class="card-icon gold">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                                <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                            </svg>
+                        </div>
+                        <div class="card-title ar-text">2. ودجات شاشة القفل التفاعلية</div>
+                        <div class="card-title en-text">2. Interactive Lock Screen Widgets</div>
+                        <div class="card-text ar-text">بطاقات حية بنظام Android 15 Glance Framework تعرض الوقت المتبقي للصلاة التالية مباشرة على الشاشة المقفلة.</div>
+                        <div class="card-text en-text">Android 15 Glance interactive widgets delivering live prayer countdowns right on your lock screen.</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                            </svg>
+                        </div>
+                        <div class="card-title ar-text">3. المصحف الشريف المدمج</div>
+                        <div class="card-title en-text">3. Offline Quran Reader</div>
+                        <div class="card-text ar-text">قراءة وتدبر المصحف الشريف بخط مجمع الملك فهد بالمدينة المنورة أوفلاين مع علامات مرجعية وتفسير الآيات.</div>
+                        <div class="card-text en-text">Built-in King Fahd Uthmanic script Quran with offline Ayah tafsir and personal reading bookmarks.</div>
+                    </div>
+
+                    <div class="card card-gold">
+                        <div class="card-icon gold">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                        </div>
+                        <div class="card-title ar-text">4. نسخ احتياطي محلي مشفر</div>
+                        <div class="card-title en-text">4. Encrypted Local Backup</div>
+                        <div class="card-text ar-text">تصدير واستيراد سجلات التسبيح والأذكار المخصصة بصيغة JSON آمنة للاحتفاظ ببياناتك عند تغيير الهاتف.</div>
+                        <div class="card-text en-text">Encrypted single-click JSON export & import to seamlessly transfer your custom Athkar to a new device.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- SLIDE 12: Conclusion & Call to Action                                     -->
+        <!-- ========================================================================= -->
+        <section class="slide" id="slide-12">
+            <div class="slide-content">
+                <div class="badge badge-gold">
+                    <span class="ar-text">✨ صدقة جارية • عمل خالص لوجه الله</span>
+                    <span class="en-text">✨ Open Source & Continuous Charity</span>
+                </div>
+
+                <h1 class="title-main" style="margin-top: 4px;">
+                    <span class="ar-text">صلاتي وأذكاري</span>
+                    <span class="en-text">Prayer & Athkar</span>
+                </h1>
+
+                <p class="subtitle-en" style="color: var(--gold-light); font-size: 1.25rem;">
+                    <span class="ar-text">"أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ"</span>
+                    <span class="en-text">"Unquestionably, by the remembrance of Allah hearts are assured."</span>
+                </p>
+
+                <p class="description" style="max-width: 760px;">
+                    <span class="ar-text">مشروع مجاني ومفتوح المصدر بالكامل، صُمم بإحسان لخدمة كل مسلم حول العالم دون أي مقابل مادي أو إعلاني. ساهم معنا، شارك التطبيق، أو ابنِ ميزتك الخاصة!</span>
+                    <span class="en-text">A 100% free and open-source initiative engineered with excellence (Ihsan) for the global Muslim Ummah. Zero ads, zero tracking, zero profit motive.</span>
+                </p>
+
+                <div style="display: flex; gap: 14px; margin-top: 10px; flex-wrap: wrap; justify-content: center;">
+                    <a href="https://github.com/Mohamed-Mohamed-Hozien/Prayer-Azkar" target="_blank" class="btn-cta">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+                        </svg>
+                        <span class="ar-text">مستودع المشروع على GitHub</span>
+                        <span class="en-text">Project on GitHub</span>
+                    </a>
+
+                    <button id="celebrateBtn" class="btn-secondary" style="border-color: var(--emerald-primary);">
+                        <span>🎉</span>
+                        <span class="ar-text">احتفل بإطلاق المشروع</span>
+                        <span class="en-text">Celebrate Launch</span>
+                    </button>
+
+                    <button onclick="goToSlide(1)" class="btn-secondary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="1 4 1 10 7 10"></polyline>
+                            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                        </svg>
+                        <span class="ar-text">إعادة العرض</span>
+                        <span class="en-text">Restart Deck</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================================================= -->
+        <!-- BOTTOM NAVIGATION CONTROLS                                                -->
+        <!-- ========================================================================= -->
+        <nav class="nav-controls">
+            <button class="nav-btn" id="prevBtn" title="Previous Slide (← / PageUp / ↑)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
+            <div class="slide-counter">
+                <span id="current">1</span> / <span id="total">12</span>
+            </div>
+            <button class="nav-btn" id="nextBtn" title="Next Slide (→ / Space / PageDown / ↓)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </button>
+        </nav>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- SLIDES OVERVIEW MODAL (QUICK JUMP DRAWER)                                  -->
+    <!-- ========================================================================= -->
+    <div class="modal-overlay" id="slidesModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <div style="font-weight: 700; font-size: 1.15rem; color: #FFFFFF;" class="ar-text">فهرس جميع الشرائح (12 شريحة)</div>
+                <div style="font-weight: 700; font-size: 1.15rem; color: #FFFFFF;" class="en-text">All Presentation Slides (12 Slides)</div>
+                <button class="btn-action" id="closeModalBtn" style="width: 32px; height: 32px; justify-content: center; padding: 0;">✕</button>
+            </div>
+            <div class="modal-grid" id="modalGridContainer">
+                <!-- Generated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- KEYBOARD SHORTCUTS MODAL                                                  -->
+    <!-- ========================================================================= -->
+    <div class="modal-overlay" id="helpModal">
+        <div class="modal-box" style="max-width: 500px;">
+            <div class="modal-header">
+                <div style="font-weight: 700; font-size: 1.15rem; color: #FFFFFF;" class="ar-text">اختصارات لوحة المفاتيح</div>
+                <div style="font-weight: 700; font-size: 1.15rem; color: #FFFFFF;" class="en-text">Keyboard Shortcuts</div>
+                <button class="btn-action" id="closeHelpBtn" style="width: 32px; height: 32px; justify-content: center; padding: 0;">✕</button>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 12px; font-size: 0.95rem; line-height: 1.6;">
+                <div><span class="shortcut-badge">→</span> أو <span class="shortcut-badge">Space</span> أو <span class="shortcut-badge">↓</span>: الشريحة التالية (Next)</div>
+                <div><span class="shortcut-badge">←</span> أو <span class="shortcut-badge">↑</span>: الشريحة السابقة (Previous)</div>
+                <div><span class="shortcut-badge">G</span>: فتح فهرس الشرائح السريع (Slide Grid)</div>
+                <div><span class="shortcut-badge">L</span>: تبديل اللغة فوري (AR / EN)</div>
+                <div><span class="shortcut-badge">F</span>: وضع ملء الشاشة (Fullscreen)</div>
+                <div><span class="shortcut-badge">Home</span> / <span class="shortcut-badge">End</span>: الانتقال للشريحة الأولى / الأخيرة</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- INTERACTIVE JAVASCRIPT CONTROLLERS                                        -->
+    <!-- ========================================================================= -->
+    <script>
+        let currentSlide = 1;
+        const totalSlides = document.querySelectorAll('section.slide').length;
+        let radarChartInstance = null;
+        let perfChartInstance = null;
+        let currentLang = 'ar';
+        let audioCtx = null;
+
+        document.getElementById('total').textContent = totalSlides;
+
+        // Slide metadata for Quick Jump Drawer
+        const slideMeta = [
+            { id: 1, ar: 'غلاف العرض والمقدمة', en: 'Title & Hook' },
+            { id: 2, ar: 'المشكلة في التطبيقات', en: 'Pain Points' },
+            { id: 3, ar: 'فلسفة الحل الأوفلاين', en: 'Solution Blueprint' },
+            { id: 4, ar: 'رادار المقارنة الشامل', en: 'Radar Benchmark' },
+            { id: 5, ar: 'محرك المواقيت الفلكي', en: 'Prayer Engine' },
+            { id: 6, ar: 'موسوعة الأذكار الموثقة', en: 'Authentic Athkar' },
+            { id: 7, ar: 'السبحة الذكية والاهتزاز', en: 'Digital Tasbeeh' },
+            { id: 8, ar: 'بوصلة القبلة والمستشعرات', en: 'Qibla Compass' },
+            { id: 9, ar: 'المعمارية التقنية والأداء', en: 'Tech Architecture' },
+            { id: 10, ar: 'نظام التصميم والـ UX', en: 'Luxury Design' },
+            { id: 11, ar: 'خارطة الطريق المستقبلية', en: 'Future Roadmap' },
+            { id: 12, ar: 'الختام والدعوة للمشاركة', en: 'Conclusion & CTA' }
+        ];
+
+        // Synthesize native subtle audio feedback via Web Audio API
+        function playChime(freq = 660, type = 'sine', duration = 0.08) {
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {
+                // Audio autoplay might be blocked before first user interaction
+            }
+        }
+
+        function triggerConfetti() {
+            if (window.confetti) {
+                window.confetti({
+                    particleCount: 70,
+                    spread: 60,
+                    origin: { y: 0.7 },
+                    colors: ['#10B981', '#F59E0B', '#34D399', '#FCD34D', '#FFFFFF']
+                });
+            }
+        }
+
+        // Render Quick Jump Drawer
+        function buildModalGrid() {
+            const container = document.getElementById('modalGridContainer');
+            container.innerHTML = '';
+            slideMeta.forEach((item) => {
+                const card = document.createElement('div');
+                card.className = 'modal-slide-card' + (item.id === currentSlide ? ' active' : '');
+                card.innerHTML = `
+                    <div class="modal-slide-num">#${item.id}</div>
+                    <div class="modal-slide-title ${currentLang === 'ar' ? 'ar-text' : 'en-text'}">${currentLang === 'ar' ? item.ar : item.en}</div>
+                `;
+                card.onclick = () => {
+                    goToSlide(item.id);
+                    closeModal();
+                };
+                container.appendChild(card);
+            });
+        }
+
+        function openModal() {
+            buildModalGrid();
+            document.getElementById('slidesModal').classList.add('open');
+        }
+
+        function closeModal() {
+            document.getElementById('slidesModal').classList.remove('open');
+        }
+
+        function openHelp() {
+            document.getElementById('helpModal').classList.add('open');
+        }
+
+        function closeHelp() {
+            document.getElementById('helpModal').classList.remove('open');
+        }
+
+        document.getElementById('gridBtn').onclick = openModal;
+        document.getElementById('closeModalBtn').onclick = closeModal;
+        document.getElementById('helpBtn').onclick = openHelp;
+        document.getElementById('closeHelpBtn').onclick = closeHelp;
+
+        // Slide Transitions
+        function updateDeckState(n) {
+            document.querySelectorAll('section.slide').forEach((s, idx) => {
+                s.classList.toggle('active', idx === n - 1);
+            });
+            document.getElementById('current').textContent = n;
+            const progress = (n / totalSlides) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+
+            if (n === 4) {
+                setTimeout(initRadarChart, 150);
+            } else if (n === 9) {
+                setTimeout(initPerfChart, 150);
+            }
+        }
+
+        function showSlide(n) {
+            if (n < 1) n = 1;
+            if (n > totalSlides) n = totalSlides;
+            currentSlide = n;
+            updateDeckState(currentSlide);
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                playChime(440, 'triangle', 0.05);
+                showSlide(currentSlide + 1);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) {
+                playChime(380, 'triangle', 0.05);
+                showSlide(currentSlide - 1);
+            }
+        }
+
+        function goToSlide(n) {
+            showSlide(n);
+        }
+
+        document.getElementById('nextBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            nextSlide();
+        });
+
+        document.getElementById('prevBtn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            prevSlide();
+        });
+
+        // Keyboard Shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+                closeHelp();
+                return;
+            }
+            if (e.key === 'g' || e.key === 'G') {
+                const modal = document.getElementById('slidesModal');
+                if (modal.classList.contains('open')) closeModal();
+                else openModal();
+                return;
+            }
+            if (e.key === '?' || e.key === '/') {
+                const help = document.getElementById('helpModal');
+                if (help.classList.contains('open')) closeHelp();
+                else openHelp();
+                return;
+            }
+            if (e.key === 'l' || e.key === 'L') {
+                toggleLanguage();
+                return;
+            }
+
+            if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown' || e.key === 'ArrowDown') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft' || e.key === 'PageUp' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                prevSlide();
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                goToSlide(1);
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                goToSlide(totalSlides);
+            } else if (e.key === 'f' || e.key === 'F') {
+                toggleFullscreen();
+            }
+        });
+
+        // Touch Gestures
+        let touchStartX = 0;
+        let touchEndX = 0;
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            const threshold = 40;
+            if (touchEndX < touchStartX - threshold) nextSlide();
+            if (touchEndX > touchStartX + threshold) prevSlide();
+        }, { passive: true });
+
+        // Fullscreen
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
+            }
+        }
+        document.getElementById('fullscreenBtn').addEventListener('click', toggleFullscreen);
+
+        // Language Switcher
+        function toggleLanguage() {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            applyLanguage(currentLang);
+        }
+
+        function applyLanguage(lang) {
+            document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+            document.documentElement.setAttribute('lang', lang);
+            document.documentElement.setAttribute('data-lang', lang);
+            document.getElementById('langLabel').textContent = lang === 'ar' ? 'English' : 'العربية';
+
+            document.querySelectorAll('.ar-text').forEach(el => {
+                el.style.display = lang === 'ar' ? '' : 'none';
+            });
+            document.querySelectorAll('.en-text').forEach(el => {
+                el.style.display = lang === 'en' ? '' : 'none';
+            });
+
+            if (currentSlide === 4 && radarChartInstance) initRadarChart();
+            if (currentSlide === 9 && perfChartInstance) initPerfChart();
+        }
+
+        document.getElementById('langToggleBtn').addEventListener('click', toggleLanguage);
+
+        // Slide 7: Interactive Tasbeeh Demo
+        let demoCount = 0;
+        const tasbeehBtn = document.getElementById('demoTasbeehBtn');
+        const tasbeehCountEl = document.getElementById('demoTasbeehCount');
+        const tasbeehResetBtn = document.getElementById('demoTasbeehReset');
+
+        tasbeehBtn.onclick = (e) => {
+            e.stopPropagation();
+            demoCount++;
+            tasbeehCountEl.textContent = demoCount;
+            playChime(520 + (demoCount * 10), 'sine', 0.06);
+
+            if (demoCount === 33) {
+                triggerConfetti();
+                playChime(880, 'triangle', 0.2);
+            }
+        };
+
+        tasbeehResetBtn.onclick = (e) => {
+            e.stopPropagation();
+            demoCount = 0;
+            tasbeehCountEl.textContent = 0;
+        };
+
+        // Slide 8: Interactive Qibla Compass Demo
+        const compassDisc = document.getElementById('demoCompassDisc');
+        const compassSnapBtn = document.getElementById('demoCompassSnapBtn');
+        let compassAngle = 45;
+
+        compassSnapBtn.onclick = (e) => {
+            e.stopPropagation();
+            compassAngle = 136; // Aligned to Kaaba
+            compassDisc.style.transform = `rotate(${compassAngle}deg)`;
+            compassDisc.style.borderColor = 'var(--emerald-light)';
+            compassDisc.style.boxShadow = '0 0 30px var(--emerald-glow)';
+            playChime(640, 'triangle', 0.15);
+            triggerConfetti();
+        };
+
+        // Slide 12: Celebrate Launch Button
+        document.getElementById('celebrateBtn').onclick = (e) => {
+            e.stopPropagation();
+            triggerConfetti();
+            playChime(523, 'sine', 0.1);
+            setTimeout(() => playChime(659, 'sine', 0.1), 100);
+            setTimeout(() => playChime(784, 'triangle', 0.25), 200);
+        };
+
+        // Chart.js Radar (Slide 4)
+        function initRadarChart() {
+            const canvas = document.getElementById('radarChart');
+            if (!canvas || !window.Chart) return;
+            if (radarChartInstance) radarChartInstance.destroy();
+
+            const isAr = currentLang === 'ar';
+            const labels = isAr ? [
+                'الاستقلالية دون إنترنت',
+                'الخصوصية وعدم التتبع',
+                'توفير طاقة البطارية',
+                'خلو تام من الإعلانات',
+                'الدقة الفلكية المعتمدة'
+            ] : [
+                'Offline Autonomy',
+                'Privacy & Zero Tracking',
+                'Battery Efficiency',
+                'Zero Commercial Ads',
+                'Astronomical Precision'
+            ];
+
+            radarChartInstance = new Chart(canvas, {
+                type: 'radar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: isAr ? 'صلاتي وأذكاري' : 'Prayer & Athkar',
+                            data: [100, 100, 95, 100, 98],
+                            fill: true,
+                            backgroundColor: 'rgba(16, 185, 129, 0.25)',
+                            borderColor: '#10B981',
+                            pointBackgroundColor: '#34D399',
+                            pointBorderColor: '#FFFFFF',
+                            borderWidth: 2.5
+                        },
+                        {
+                            label: isAr ? 'التطبيقات التجارية الشائعة' : 'Commercial Apps',
+                            data: [40, 20, 45, 15, 80],
+                            fill: true,
+                            backgroundColor: 'rgba(239, 68, 68, 0.15)',
+                            borderColor: '#EF4444',
+                            pointBackgroundColor: '#F87171',
+                            pointBorderColor: '#FFFFFF',
+                            borderWidth: 1.8,
+                            borderDash: [4, 4]
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: { duration: 750, easing: 'easeOutQuart' },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#F8FAFC',
+                                font: { family: isAr ? 'Noto Naskh Arabic' : 'Outfit', size: 12 }
+                            }
+                        }
+                    },
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(255, 255, 255, 0.08)' },
+                            grid: { color: 'rgba(255, 255, 255, 0.08)' },
+                            pointLabels: {
+                                color: '#94A3B8',
+                                font: { family: isAr ? 'Noto Naskh Arabic' : 'Outfit', size: 11, weight: '600' }
+                            },
+                            ticks: { display: false, backdropColor: 'transparent' },
+                            suggestedMin: 0,
+                            suggestedMax: 100
+                        }
+                    }
+                }
+            });
+        }
+
+        // Chart.js Bar (Slide 9)
+        function initPerfChart() {
+            const canvas = document.getElementById('perfChart');
+            if (!canvas || !window.Chart) return;
+            if (perfChartInstance) perfChartInstance.destroy();
+
+            const isAr = currentLang === 'ar';
+            const labels = isAr ? [
+                'حجم الحزمة (MB)',
+                'استهلاك الذاكرة (RAM MB)',
+                'طلبات الشبكة اليومية'
+            ] : [
+                'Bundle Size (MB)',
+                'RAM Usage (MB)',
+                'Daily Network Requests'
+            ];
+
+            perfChartInstance = new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: isAr ? 'صلاتي وأذكاري' : 'Prayer & Athkar',
+                            data: [2.8, 38, 0],
+                            backgroundColor: '#10B981',
+                            borderColor: '#34D399',
+                            borderWidth: 1,
+                            borderRadius: 6
+                        },
+                        {
+                            label: isAr ? 'التطبيقات الشائعة' : 'Conventional Apps',
+                            data: [36, 185, 142],
+                            backgroundColor: 'rgba(239, 68, 68, 0.65)',
+                            borderColor: '#EF4444',
+                            borderWidth: 1,
+                            borderRadius: 6
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: { duration: 750, easing: 'easeOutQuart' },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#F8FAFC',
+                                font: { family: isAr ? 'Noto Naskh Arabic' : 'Outfit', size: 12 }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { color: '#94A3B8', font: { family: isAr ? 'Noto Naskh Arabic' : 'Outfit', size: 11 } }
+                        },
+                        y: {
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { color: '#94A3B8', font: { family: 'Outfit', size: 11 } }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize state
+        applyLanguage('ar');
+        showSlide(1);
+    </script>
+</body>
+</html>

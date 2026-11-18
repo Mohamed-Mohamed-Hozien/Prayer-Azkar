@@ -5,7 +5,9 @@ const STORAGE_KEYS = {
   CUSTOM_ATHKAR: 'prayer_app_custom_athkar_v2',
   ATHKAR_PROGRESS: 'prayer_app_athkar_progress_v2',
   TASBEEH_DATA: 'prayer_app_tasbeeh_v2',
-  WIDGET_CONFIG: 'prayer_app_widget_config_v2'
+  WIDGET_CONFIG: 'prayer_app_widget_config_v2',
+  PRAYER_HABITS: 'prayer_app_habits_log_v1',
+  QADA_COUNTS: 'prayer_app_qada_counts_v1'
 };
 
 export const DEFAULT_SETTINGS = {
@@ -192,6 +194,67 @@ export const saveStoredTasbeeh = (data) => {
   try {
     localStorage.setItem(STORAGE_KEYS.TASBEEH_DATA, JSON.stringify(data));
   } catch (e) {}
+};
+
+// Prayer Habits & Qada Persistence
+export const DEFAULT_QADA_COUNTS = {
+  fajr: 0,
+  dhuhr: 0,
+  asr: 0,
+  maghrib: 0,
+  isha: 0
+};
+
+export const DEFAULT_PRAYER_DAY_RECORD = {
+  fajr: 'none',
+  dhuhr: 'none',
+  asr: 'none',
+  maghrib: 'none',
+  isha: 'none'
+};
+
+export const getStoredPrayerHabits = () => {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.PRAYER_HABITS);
+    return raw ? JSON.parse(raw) : {};
+  } catch (err) {
+    console.error('Error loading prayer habits:', err);
+    return {};
+  }
+};
+
+export const saveStoredPrayerHabits = (data) => {
+  try {
+    localStorage.setItem(STORAGE_KEYS.PRAYER_HABITS, JSON.stringify(data));
+  } catch (err) {
+    console.error('Error saving prayer habits:', err);
+  }
+};
+
+export const getStoredQadaCounts = () => {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.QADA_COUNTS);
+    if (!raw) return { ...DEFAULT_QADA_COUNTS };
+    const parsed = JSON.parse(raw);
+    return {
+      fajr: Math.max(0, Math.floor(Number(parsed.fajr)) || 0),
+      dhuhr: Math.max(0, Math.floor(Number(parsed.dhuhr)) || 0),
+      asr: Math.max(0, Math.floor(Number(parsed.asr)) || 0),
+      maghrib: Math.max(0, Math.floor(Number(parsed.maghrib)) || 0),
+      isha: Math.max(0, Math.floor(Number(parsed.isha)) || 0)
+    };
+  } catch (err) {
+    console.error('Error loading qada counts:', err);
+    return { ...DEFAULT_QADA_COUNTS };
+  }
+};
+
+export const saveStoredQadaCounts = (data) => {
+  try {
+    localStorage.setItem(STORAGE_KEYS.QADA_COUNTS, JSON.stringify(data));
+  } catch (err) {
+    console.error('Error saving qada counts:', err);
+  }
 };
 
 // IndexedDB for storing custom user-uploaded Azan MP3 audio files

@@ -19,9 +19,11 @@ import { BottomNav } from './components/BottomNav';
 import { PrayerView } from './components/PrayerView';
 import { QiblaCompassView } from './components/QiblaCompassView';
 import { AthkarView } from './components/AthkarView';
+import { QuranView } from './components/QuranView';
 import { SettingsView } from './components/SettingsView';
 import { FloatingAzanBanner } from './components/FloatingAzanBanner';
 import { LocationModal } from './components/LocationModal';
+import { PrayerHabitTracker } from './components/PrayerHabitTracker';
 
 export function App() {
   // State
@@ -38,6 +40,7 @@ export function App() {
     volume: 0.9
   });
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
+  const [isHabitTrackerOpen, setIsHabitTrackerOpen] = useState(false);
   const [settingsInitialSubTab, setSettingsInitialSubTab] = useState('timings');
 
   // Triggered alert trackers to avoid duplicate firing in the same minute
@@ -270,6 +273,7 @@ export function App() {
             onOpenLocationModal={() => setIsLocationModalOpen(true)}
             onOpenTimingSettings={handleOpenTimingSettings}
             onOpenAudioSettings={handleOpenAudioSettings}
+            onOpenHabitTracker={() => setIsHabitTrackerOpen(true)}
           />
         )}
 
@@ -278,6 +282,10 @@ export function App() {
             settings={settings}
             onOpenLocationModal={() => setIsLocationModalOpen(true)}
           />
+        )}
+
+        {activeTab === 'quran' && (
+          <QuranView />
         )}
 
         {activeTab === 'athkar' && (
@@ -306,6 +314,12 @@ export function App() {
         onClose={() => setIsLocationModalOpen(false)}
         settings={settings}
         onUpdateSettings={handleUpdateSettings}
+      />
+
+      {/* Prayer Habit & Qada Tracker Drawer */}
+      <PrayerHabitTracker
+        isOpen={isHabitTrackerOpen}
+        onClose={() => setIsHabitTrackerOpen(false)}
       />
 
       {/* Bottom Android Navigation (4 Tabs) */}

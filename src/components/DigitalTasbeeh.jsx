@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   RotateCcw,
   Volume2,
+  Volume1,
   VolumeX,
   Vibrate,
   Sparkles,
@@ -11,7 +12,8 @@ import {
   Award,
   CheckCircle,
   HelpCircle,
-  Repeat
+  Repeat,
+  Touchpad
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { audioEngine } from '../services/audioEngine';
@@ -38,10 +40,13 @@ export const DigitalTasbeeh = () => {
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [hapticEnabled, setHapticEnabled] = useState(true);
   const [autoAdvance, setAutoAdvance] = useState(true);
+  const [fullScreenTapMode, setFullScreenTapMode] = useState(false);
+  const [volumeKeysEnabled, setVolumeKeysEnabled] = useState(true);
   const [isPressing, setIsPressing] = useState(false);
   const [showVirtue, setShowVirtue] = useState(false);
   const lastTapTimeRef = useRef(0);
   const autoAdvanceTimerRef = useRef(null);
+  const handleTapBeadRef = useRef(null);
 
   const activeZikr = TASBEEH_PRESETS.find((p) => p.id === tasbeehState.currentZikrId) || TASBEEH_PRESETS[0];
 
@@ -85,11 +90,11 @@ export const DigitalTasbeeh = () => {
   };
 
   const handleTapBead = (e) => {
-    if (e) {
+    if (e && typeof e.stopPropagation === 'function') {
       e.stopPropagation();
     }
     const now = Date.now();
-    if (now - lastTapTimeRef.current < 50) return; // Prevent ghost duplicate triggers
+    if (now - lastTapTimeRef.current < 70) return; // Prevent ghost duplicate triggers (70ms debounce)
     lastTapTimeRef.current = now;
 
     setIsPressing(true);
@@ -148,10 +153,52 @@ export const DigitalTasbeeh = () => {
     });
   };
 
-  const handleSelectZikr = (zikr) => {
+  handleTapBeadRef.current = handleTapBead;
+
+  // Hardware Volume Keys Tasbeeh (AudioVolumeUp, AudioVolumeDown, VolumeUp, VolumeDown, ArrowUp, Space)
+  useEffect(() => {
+    if (!volumeKeysEnabled) return;
+
+    const handleKeyDown = (e) => {
+      // Do not intercept if user is typing in form inputs/editable elements
+      const isInput =
+        e.target &&
+        (e.target.tagName === 'INPUT' ||
+          e.target.tagName === 'TEXTAREA' ||
+          e.target.isContentEditable);
+      if (isInput) return;
+
+      const isVolumeOrKey =
+        e.code === 'AudioVolumeUp' ||
+        e.code === 'AudioVolumeDown' ||
+        e.key === 'VolumeUp' ||
+        e.key === 'VolumeDown' ||
+        e.key === 'ArrowUp' ||
+        e.key === ' ';
+
+      if (isVolumeOrKey) {
+        if (typeof e.preventDefault === 'function') {
+          e.preventDefault();
+        }
+        if (handleTapBeadRef.current) {
+          handleTapBeadRef.current();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown, { passive: false });
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [volumeKeysEnabled]);
+
+  const handleSelectZikr = (zikr, e) => {
+    if (e && typeof e.stopPropagation === 'function') {
+      e.stopPropagation();
+    }
     try {
       hapticEngine.tap();
-    } catch (e) {}
+    } catch (err) {}
     setTasbeehState((prev) => ({
       ...prev,
       currentZikrId: zikr.id,
@@ -160,28 +207,37 @@ export const DigitalTasbeeh = () => {
     }));
   };
 
-  const handleSetTarget = (target) => {
+  const handleSetTarget = (target, e) => {
+    if (e && typeof e.stopPropagation === 'function') {
+      e.stopPropagation();
+    }
     try {
       hapticEngine.tap();
-    } catch (e) {}
+    } catch (err) {}
     setTasbeehState((prev) => ({
       ...prev,
       target
     }));
   };
 
-  const handleReset = () => {
+  const handleReset = (e) => {
+    if (e && typeof e.stopPropagation === 'function') {
+      e.stopPropagation();
+    }
     try {
       hapticEngine.tap();
-    } catch (e) {}
+    } catch (err) {}
     setTasbeehState((prev) => ({
       ...prev,
       currentCount: 0
     }));
   };
 
-  const handleResetDailyTotal = () => {
-    try { hapticEngine.tap(); } catch (e) {}
+  const handleResetDailyTotal = (e) => {
+    if (e && typeof e.stopPropagation === 'function') {
+      e.stopPropagation();
+    }
+    try { hapticEngine.tap(); } catch (err) {}
     setTasbeehState((prev) => ({
       ...prev,
       dailyTotal: 0,
@@ -194,7 +250,14 @@ export const DigitalTasbeeh = () => {
   const strokeDashoffset = 565 - (565 * (target > 0 ? Math.min(1, (tasbeehState.currentCount || 0) / target) : 1));
 
   return (
-    <div className="tasbeeh-container">
+    <div
+      className={`tasbeeh-container ${fullScreenTapMode ? 'blind-tap-active' : ''}`}
+      onClick={fullScreenTapMode ? handleTapBead : undefined}
+      style={{
+        cursor: fullScreenTapMode ? 'pointer' : 'default',
+        touchAction: 'manipulation'
+      }}
+    >
       {/* Top Stats Banner */}
       <div className="tasbeeh-stats-bar">
         <div className="tasbeeh-stat-item">
@@ -213,23 +276,92 @@ export const DigitalTasbeeh = () => {
           </button>
         </div>
 
-        <div style={{ display: 'flex', gap: '8px' }}>
+        <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+          <button
+            className={`icon-circle-btn ${volumeKeysEnabled ? 'active' : ''}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              try { hapticEngine.tap(); } catch (err) {}
+              setVolumeKeysEnabled(!volumeKeysEnabled);
+            }}
+            title={volumeKeysEnabled ? 'تعطيل التسبيح بأزرار الصوت' : 'تفعيل التسبيح بأزرار الصوت'}
+            aria-label="التسبيح بأزرار الصوت"
+          >
+            <Volume1 size={16} />
+          </button>
+          <button
+            className={`icon-circle-btn ${fullScreenTapMode ? 'active' : ''}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              try { hapticEngine.tap(); } catch (err) {}
+              setFullScreenTapMode(!fullScreenTapMode);
+            }}
+            title={fullScreenTapMode ? 'إلغاء وضع اللمس في أي مكان' : 'وضع اللمس في أي مكان (اللمس الأعمى)'}
+            aria-label="وضع اللمس في أي مكان"
+          >
+            <Touchpad size={16} />
+          </button>
           <button
             className={`icon-circle-btn ${soundEnabled ? 'active' : ''}`}
-            onClick={() => setSoundEnabled(!soundEnabled)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setSoundEnabled(!soundEnabled);
+            }}
             title={soundEnabled ? 'كتم الصوت' : 'تفعيل صوت النقرة'}
+            aria-label="صوت النقرة"
           >
             {soundEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
           </button>
           <button
             className={`icon-circle-btn ${hapticEnabled ? 'active' : ''}`}
-            onClick={() => setHapticEnabled(!hapticEnabled)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setHapticEnabled(!hapticEnabled);
+            }}
             title={hapticEnabled ? 'تعطيل الاهتزاز' : 'تفعيل الاهتزاز'}
+            aria-label="الاهتزاز"
           >
             <Vibrate size={16} />
           </button>
         </div>
       </div>
+
+      {/* Full-Screen Blind Tap Indicator Banner */}
+      {fullScreenTapMode && (
+        <div
+          className="tasbeeh-blind-banner"
+          style={{
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px',
+            padding: '8px 14px',
+            background: 'rgba(16, 185, 129, 0.12)',
+            border: '1px solid rgba(16, 185, 129, 0.35)',
+            borderRadius: '12px',
+            color: 'var(--emerald-light, #34d399)',
+            fontSize: '0.84rem',
+            fontWeight: '600',
+            textAlign: 'center',
+            userSelect: 'none',
+            boxShadow: '0 2px 10px rgba(16, 185, 129, 0.12)'
+          }}
+        >
+          <span
+            style={{
+              display: 'inline-block',
+              width: '8px',
+              height: '8px',
+              borderRadius: '50%',
+              background: 'var(--emerald-light, #34d399)',
+              boxShadow: '0 0 8px var(--emerald-light, #34d399)'
+            }}
+          />
+          <Touchpad size={15} />
+          <span>المس في أي مكان على الشاشة للتسبيح باللمس الأعمى</span>
+        </div>
+      )}
 
       {/* Responsive Content Layout (Dual Pane on Wide Screens / Tablet) */}
       <div className="tasbeeh-content-layout">
@@ -241,7 +373,10 @@ export const DigitalTasbeeh = () => {
               <span className="tasbeeh-badge">الذكر الحالي</span>
               <button
                 className="tasbeeh-virtue-btn"
-                onClick={() => setShowVirtue(!showVirtue)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowVirtue(!showVirtue);
+                }}
                 title="فضل هذا الذكر"
               >
                 <Sparkles size={13} />
@@ -253,7 +388,10 @@ export const DigitalTasbeeh = () => {
             <p className="tasbeeh-zikr-subtitle">{activeZikr.subtitle}</p>
 
             {showVirtue && (
-              <div className="tasbeeh-virtue-popup">
+              <div
+                className="tasbeeh-virtue-popup"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <span style={{ fontSize: '0.82rem', color: 'var(--gold-light)', lineHeight: '1.5', display: 'block' }}>
                   ✨ {activeZikr.virtue}
                 </span>
@@ -294,6 +432,7 @@ export const DigitalTasbeeh = () => {
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();
+                  e.stopPropagation();
                   handleTapBead(e);
                 }
               }}
@@ -311,21 +450,24 @@ export const DigitalTasbeeh = () => {
           </div>
 
           {/* Target Goal Selector */}
-          <div className="tasbeeh-controls-row">
+          <div
+            className="tasbeeh-controls-row"
+            onClick={(e) => e.stopPropagation()}
+          >
             <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>الهدف:</span>
             <div className="tasbeeh-target-pills">
               {TARGET_OPTIONS.map((t) => (
                 <button
                   key={t}
                   className={`tasbeeh-target-pill ${tasbeehState.target === t ? 'active' : ''}`}
-                  onClick={() => handleSetTarget(t)}
+                  onClick={(e) => handleSetTarget(t, e)}
                 >
                   {t === 0 ? 'حر ∞' : t}
                 </button>
               ))}
               <button
                 className="tasbeeh-target-pill"
-                onClick={handleReset}
+                onClick={(e) => handleReset(e)}
                 title="تصفير العداد الحالي"
                 style={{ background: 'rgba(239, 68, 68, 0.15)', borderColor: 'rgba(239, 68, 68, 0.3)', color: '#f87171', display: 'flex', alignItems: 'center', gap: '4px' }}
               >
@@ -336,7 +478,10 @@ export const DigitalTasbeeh = () => {
           </div>
 
           {/* Auto Advance Toggle */}
-          <div style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '12px' }}>
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: '12px' }}
+          >
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Repeat size={15} color="var(--emerald-light)" />
               <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
@@ -346,6 +491,7 @@ export const DigitalTasbeeh = () => {
             <input
               type="checkbox"
               checked={autoAdvance}
+              onClick={(e) => e.stopPropagation()}
               onChange={(e) => setAutoAdvance(e.target.checked)}
               style={{ accentColor: 'var(--emerald-primary)', width: '18px', height: '18px', cursor: 'pointer' }}
             />
@@ -365,7 +511,7 @@ export const DigitalTasbeeh = () => {
                   <button
                     key={p.id}
                     className={`tasbeeh-preset-chip ${isSel ? 'active' : ''}`}
-                    onClick={() => handleSelectZikr(p)}
+                    onClick={(e) => handleSelectZikr(p, e)}
                   >
                     <div style={{ textAlign: 'right' }}>
                       <span style={{ fontSize: '0.92rem', fontWeight: '700', display: 'block' }}>{p.title}</span>
