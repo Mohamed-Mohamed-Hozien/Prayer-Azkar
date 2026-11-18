@@ -27,6 +27,16 @@ export const AudioSettings = ({ settings, onUpdateSettings }) => {
 
   useEffect(() => {
     loadCustomAudiosList();
+
+    const unsubscribe = audioEngine.subscribe((state) => {
+      if (!state.isPlaying) {
+        setPlayingReciter(null);
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   const loadCustomAudiosList = async () => {
