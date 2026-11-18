@@ -39,6 +39,88 @@ const DEFAULT_PLAN = {
   lastReadDate: new Date().toDateString()
 };
 
+// Authentic Islamic Quran Ayah End Medallion with centered Eastern Arabic digits
+const AyahEndSymbol = ({ number }) => {
+  const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+  const arabicNumber = String(number).replace(/[0-9]/g, (d) => arabicDigits[d]);
+  const len = arabicNumber.length;
+  const fontSize = len === 1 ? '14' : len === 2 ? '11.5' : '9.5';
+
+  return (
+    <span
+      className="ayah-end-symbol"
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        verticalAlign: 'middle',
+        margin: '0 5px',
+        width: '1.45em',
+        height: '1.45em',
+        position: 'relative',
+        userSelect: 'none',
+        flexShrink: 0
+      }}
+      aria-label={`آية ${number}`}
+    >
+      <svg
+        viewBox="0 0 40 40"
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'block',
+          color: 'var(--gold-light, #f59e0b)'
+        }}
+      >
+        {/* Outer decorative ring */}
+        <circle
+          cx="20"
+          cy="20"
+          r="16.5"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.4"
+          opacity="0.9"
+        />
+        {/* Inner subtle dotted accent ring */}
+        <circle
+          cx="20"
+          cy="20"
+          r="18.2"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="0.6"
+          strokeDasharray="1.5 2"
+          opacity="0.6"
+        />
+        {/* 4 Cardinal Finials */}
+        <path d="M20,1.5 L22.5,4.5 L20,7 L17.5,4.5 Z" fill="currentColor" />
+        <path d="M20,38.5 L22.5,35.5 L20,33 L17.5,35.5 Z" fill="currentColor" />
+        <path d="M1.5,20 L4.5,22.5 L7,20 L4.5,17.5 Z" fill="currentColor" />
+        <path d="M38.5,20 L35.5,22.5 L33,20 L35.5,17.5 Z" fill="currentColor" />
+        {/* 4 Corner Decorative Dots */}
+        <circle cx="7" cy="7" r="1.1" fill="currentColor" opacity="0.8" />
+        <circle cx="33" cy="7" r="1.1" fill="currentColor" opacity="0.8" />
+        <circle cx="7" cy="33" r="1.1" fill="currentColor" opacity="0.8" />
+        <circle cx="33" cy="33" r="1.1" fill="currentColor" opacity="0.8" />
+        {/* Centered Arabic Ayah Number */}
+        <text
+          x="20"
+          y="20.5"
+          textAnchor="middle"
+          dominantBaseline="central"
+          fill="currentColor"
+          fontSize={fontSize}
+          fontFamily="'Amiri', 'Noto Naskh Arabic', serif"
+          fontWeight="bold"
+        >
+          {arabicNumber}
+        </text>
+      </svg>
+    </span>
+  );
+};
+
 export const QuranView = () => {
   const [activeSubTab, setActiveSubTab] = useState('index'); // 'index' | 'khatmah' | 'bookmarks'
   const [searchQuery, setSearchQuery] = useState('');
@@ -445,19 +527,7 @@ export const QuranView = () => {
                     }}
                   >
                     <span>{ayah.text} </span>
-                    <span
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'var(--gold-light)',
-                        margin: '0 4px',
-                        fontSize: '0.85em',
-                        userSelect: 'none'
-                      }}
-                    >
-                      ۝{ayah.numberInSurah}
-                    </span>
+                    <AyahEndSymbol number={ayah.numberInSurah} />
                   </span>
                 ))}
               </div>
