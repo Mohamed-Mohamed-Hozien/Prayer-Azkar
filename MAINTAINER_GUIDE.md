@@ -8,8 +8,8 @@
 
 ```mermaid
 graph TD
-    A["استلام PR جديد"] --> B{"هل نجح فحص GitHub Actions CI؟"}
-    B -- لا ❌ --> C["طلب تصحيح الأخطاء من المساهم"]
+    A["استلام PR جديد"] --> B{"هل تم اجتياز الفحص والتحقق المحلي؟"}
+    B -- لا ❌ --> C["طلب تشغيل سكربتات التحقق وتصحيح الأخطاء"]
     B -- نعم ✅ --> D{"هل التعديل يمس بيانات إسلامية أو أحاديث؟"}
     D -- نعم --> E["التحقق من التخريج والتشكيل والمصادر"]
     D -- لا --> F{"هل التعديل بصري UI؟"}
@@ -26,14 +26,14 @@ graph TD
 
 ## 📋 قائمة المراجعة السريعة (Review Checklist)
 
-### 1. الفحص الآلي (CI Checks)
+### 1. الفحص والتحقق المحلي (Local Verification)
 
-- تأكد أن شارة **GitHub Actions CI** خضراء `All checks have passed`.
-- الفحص الآلي يقوم تلقائياً بـ:
+- التحقق من نجاح بناء المشروع وسكربتات التحقق محلياً:
   1. التحقق من بناء المشروع بالكامل (`npm run build`).
-  2. فحص معادلات المواقيت الـ 12 والأذكار.
-  3. فحص البوصلة والـ Service Worker.
-  4. فحص اتساق الـ RTL والخطوط.
+  2. فحص معادلات المواقيت الـ 12 والأذكار (`node .agents/skills/islamic-data-verifier/scripts/verify-calculations.mjs`).
+  3. فحص البوصلة والـ Service Worker (`node .agents/skills/mobile-sensors-testing/scripts/simulate-sensors.mjs`).
+  4. فحص اتساق الـ RTL والخطوط (`node .agents/skills/rtl-arabic-ux-linter/scripts/lint-arabic-rtl.mjs`).
+  5. فحص حجم ملفات الصوتيات (`node .agents/skills/audio-asset-optimizer/scripts/compress-audio.mjs`).
 
 ### 2. مراجعة التغييرات في الكود (Files Changed)
 

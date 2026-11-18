@@ -1,6 +1,6 @@
-﻿# 🧪 Automated Skills Suite & CI/CD Pipeline
+﻿# 🧪 Automated Skills Suite & Verification Engine
 
-> **File Reference**: [`.agents/skills/`](file:///C:/Users/midoh/.gemini/antigravity/worktrees/Prayer%20times/create_comprehensive_project_docs/.agents/skills/) | [`.github/workflows/ci.yml`](file:///C:/Users/midoh/.gemini/antigravity/worktrees/Prayer%20times/create_comprehensive_project_docs/.github/workflows/ci.yml)
+> **File Reference**: [`.agents/skills/`](file:///C:/Users/midoh/.gemini/antigravity/worktrees/Prayer%20times/create_comprehensive_project_docs/.agents/skills/)
 > **Master Index**: [README.md](file:///C:/Users/midoh/.gemini/antigravity/worktrees/Prayer%20times/create_comprehensive_project_docs/docs/README.md)
 
 ---
@@ -9,18 +9,18 @@
 
 In an Islamic Super App, calculations for prayer times and religious texts must be **100% verifiably accurate**. A calculation bug or corrupted Hadith diacritic mark cannot simply be brushed off as a minor visual defect.
 
-To protect code quality and Islamic integrity, the project defines a multi-layered verification system powered by **custom workspace skills** in `.agents/skills/` and automated **GitHub Actions CI**.
+To protect code quality and Islamic integrity, the project defines a multi-layered verification system powered by **custom workspace skills** in `.agents/skills/` and local automated test runners.
 
 ```mermaid
 graph TD
-    PR["Developer / Agent Creates Pull Request"] --> CI["GitHub Actions CI Pipeline (.github/workflows/ci.yml)"]
+    PR["Developer / Contributor Pre-Commit & Verification"] --> Runner["Local Test Suite (CLI)"]
 
     subgraph Test_Suite ["Automated Verification Runners"]
-        CI --> S1["1. islamic-data-verifier<br/>(Calculations & Hadith Tashkeel)"]
-        CI --> S2["2. mobile-sensors-testing<br/>(Qibla Azimuth & Sensor Smoothing)"]
-        CI --> S3["3. rtl-arabic-ux-linter<br/>(RTL Direction, Notches & Fonts)"]
-        CI --> S4["4. audio-asset-optimizer<br/>(Audio Bitrate & Size Auditing)"]
-        CI --> S5["5. npm run build<br/>(Vite Production Compilation)"]
+        Runner --> S1["1. islamic-data-verifier<br/>(Calculations & Hadith Tashkeel)"]
+        Runner --> S2["2. mobile-sensors-testing<br/>(Qibla Azimuth & Sensor Smoothing)"]
+        Runner --> S3["3. rtl-arabic-ux-linter<br/>(RTL Direction, Notches & Fonts)"]
+        Runner --> S4["4. audio-asset-optimizer<br/>(Audio Bitrate & Size Auditing)"]
+        Runner --> S5["5. npm run build<br/>(Vite Production Compilation)"]
     end
 
     S1 --> Gate{"All Checks Pass?"}
@@ -29,8 +29,8 @@ graph TD
     S4 --> Gate
     S5 --> Gate
 
-    Gate -- Yes ✅ --> Merge["Approved for Merge 🚀"]
-    Gate -- No ❌ --> Block["Block PR with Diagnostic Report 🛑"]
+    Gate -- Yes ✅ --> Merge["Ready to Commit & Merge 🚀"]
+    Gate -- No ❌ --> Block["Fix Issues & Re-verify 🛑"]
 ```
 
 ---
@@ -106,46 +106,28 @@ node .agents/skills/audio-asset-optimizer/scripts/compress-audio.mjs
 
 ---
 
-## 🚀 6. GitHub Actions Continuous Integration (`ci.yml`)
+## 🚀 6. Local Pre-Commit & Verification Workflow
 
-The repository includes an automated CI pipeline in [`.github/workflows/ci.yml`](file:///C:/Users/midoh/.gemini/antigravity/worktrees/Prayer%20times/create_comprehensive_project_docs/.github/workflows/ci.yml) running on **Node.js 22**:
+The verification suite runs locally and offline without requiring external CI or cloud build credits:
 
-```yaml
-name: CI Verification
+```bash
+# 1. Verify Production Build
+npm run build
 
-on:
-  push:
-    branches: [ main, develop ]
-  pull_request:
-    branches: [ main ]
+# 2. Run Islamic Calculations & Data Verifier
+node .agents/skills/islamic-data-verifier/scripts/verify-calculations.mjs
 
-jobs:
-  verify:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: 'npm'
+# 3. Run Engine State & Memory Verifier
+node .agents/skills/islamic-data-verifier/scripts/verify-engine-state.mjs
 
-      - name: Install Dependencies
-        run: npm ci
+# 4. Run Mobile Sensors & Offline Cache Simulation
+node .agents/skills/mobile-sensors-testing/scripts/simulate-sensors.mjs
 
-      - name: Production Web Build
-        run: npm run build
+# 5. Run Arabic RTL & Typography UX Linter
+node .agents/skills/rtl-arabic-ux-linter/scripts/lint-arabic-rtl.mjs
 
-      - name: Run Islamic Calculations Verifier
-        run: node .agents/skills/islamic-data-verifier/scripts/verify-calculations.mjs
-
-      - name: Run Engine State Verifier
-        run: node .agents/skills/islamic-data-verifier/scripts/verify-engine-state.mjs
-
-      - name: Run Mobile Sensors & Compass Simulator
-        run: node .agents/skills/mobile-sensors-testing/scripts/simulate-sensors.mjs
-
-      - name: Run Arabic RTL & UX Linter
-        run: node .agents/skills/rtl-arabic-ux-linter/scripts/lint-arabic-rtl.mjs
+# 6. Run Audio Asset Footprint Audit
+node .agents/skills/audio-asset-optimizer/scripts/compress-audio.mjs
 ```
 
-Every Pull Request must pass all 5 gates before code can be merged into `main`.
+All verification checks can be run directly on any development machine before committing or pushing changes.

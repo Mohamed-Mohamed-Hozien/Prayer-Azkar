@@ -1,6 +1,5 @@
 # 🕌 تطبيق صلاتي وأذكاري (Prayer Times & Athkar)
 
-[![CI - Build & Verification](https://github.com/Mohamed-Mohamed-Hozien/Prayer-Azkar/actions/workflows/ci.yml/badge.svg)](https://github.com/Mohamed-Mohamed-Hozien/Prayer-Azkar/actions/workflows/ci.yml)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-gold.svg)](LICENSE)
 [![Offline First](https://img.shields.io/badge/100%25-Offline--First-emerald.svg)](ARCHITECTURE.md)
