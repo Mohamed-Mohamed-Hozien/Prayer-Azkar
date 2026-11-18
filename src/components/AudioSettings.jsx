@@ -217,12 +217,12 @@ export const AudioSettings = ({ settings, onUpdateSettings }) => {
       <div className="settings-section-card">
         <div className="settings-section-title">
           <Sparkles size={20} color="var(--gold-light)" />
-          <span>أذان صلاة الفجر (مع جملة "الصلاة خير من النوم")</span>
+          <span>مؤذن صلاة الفجر المخصص</span>
         </div>
 
         <div className="audio-reciters-list">
-          {reciters.filter((r) => r.isFajr).map((r) => {
-            const isSelected = settings.fajrReciter === r.id;
+          {reciters.map((r) => {
+            const isSelected = (settings.fajrReciter || 'makkah') === r.id;
             const isPlaying = playingReciter === r.id;
 
             return (

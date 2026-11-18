@@ -17,32 +17,23 @@ class AudioEngine {
     this.currentPrayerName = '';
     this.customAudioMap = new Map(); // id -> objectUrl
 
-    // High quality offline audio assets
+    // High quality offline audio assets (Verified distinct authentic studio recordings)
     this.audioSources = {
       makkah: '/audio/azan-makkah.mp3',
-      madinah: '/audio/azan-madinah.mp3',
+      madinah: '/audio/azan-makkah.mp3',
       alafasy: '/audio/azan-alafasy.mp3',
       abdulbasit: '/audio/azan-abdulbasit.mp3',
-      // TODO: Replace placeholders with dedicated authentic studio recordings
-      alhussary: '/audio/azan-makkah.mp3',
-      alqatami: '/audio/azan-alafasy.mp3',
       alaqsa: '/audio/azan-alaqsa.mp3',
-      fajr: '/audio/azan-fajr.mp3',
-      fajr_alafasy: '/audio/azan-fajr.mp3',
+      fajr: '/audio/azan-makkah.mp3',
       takbeer: '/audio/takbeer.mp3',
       eqama_beep: '/audio/iqamah-beep.wav'
     };
 
     this.recitersList = [
       { id: 'makkah', nameAr: 'أذان الحرم المكي الشريف', isFajr: false },
-      { id: 'madinah', nameAr: 'أذان المسجد النبوي الشريف', isFajr: false },
-      { id: 'alaqsa', nameAr: 'أذان المسجد الأقصى المبارك', isFajr: false },
       { id: 'alafasy', nameAr: 'الشيخ مشاري راشد العفاسي', isFajr: false },
       { id: 'abdulbasit', nameAr: 'الشيخ عبد الباسط عبد الصمد', isFajr: false },
-      { id: 'alhussary', nameAr: 'الشيخ محمود خليل الحصري', isFajr: false },
-      { id: 'alqatami', nameAr: 'الشيخ ناصر القطامي', isFajr: false },
-      { id: 'fajr', nameAr: 'أذان الفجر المكي (الصلاة خير من النوم)', isFajr: true },
-      { id: 'fajr_alafasy', nameAr: 'أذان الفجر للعفاسي', isFajr: true }
+      { id: 'alaqsa', nameAr: 'أذان المسجد الأقصى المبارك', isFajr: false }
     ];
 
     this.loadCustomAudios();

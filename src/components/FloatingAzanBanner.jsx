@@ -28,7 +28,7 @@ export const FloatingAzanBanner = ({ audioState, eqamaState, onDismiss }) => {
             {isAzan ? `حان الآن أذان ${audioState.prayerName}` : `حان وقت إقامة ${audioState.prayerName}`}
           </span>
           <span className="banner-subtitle">
-            {isAzan ? 'يُرفع الأذان الآن • تقبل الله طاعتكم' : 'استووا واعتدلوا للصلاة'}
+            {isAzan ? 'يُرفع الأذان الآن • اضغط إيقاف أو أي زر صوت لإيقافه' : 'استووا واعتدلوا للصلاة • تقبل الله'}
           </span>
         </div>
       </div>

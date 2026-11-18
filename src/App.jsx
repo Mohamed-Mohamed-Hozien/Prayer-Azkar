@@ -75,6 +75,40 @@ export function App() {
     };
   }, []);
 
+  // Global Volume Keys / Hardware listener to immediately stop active Azan
+  useEffect(() => {
+    if (!audioState.isPlaying) return;
+
+    const handleKeyDown = (e) => {
+      const isVolumeOrStopKey =
+        e.code === 'AudioVolumeDown' ||
+        e.code === 'AudioVolumeUp' ||
+        e.key === 'VolumeDown' ||
+        e.key === 'VolumeUp' ||
+        e.key === 'Escape' ||
+        e.key === ' ';
+
+      if (isVolumeOrStopKey) {
+        e.preventDefault();
+        audioEngine.stopAll();
+        hapticEngine.tap();
+        console.log('🔇 [الأذان]: تم إيقاف صوت الأذان فوراً عبر أزرار الصوت / لوحة المفاتيح');
+      }
+    };
+
+    window.__stopAzanFromHardware = () => {
+      audioEngine.stopAll();
+      hapticEngine.tap();
+      console.log('🔇 [الأذان]: تم إيقاف صوت الأذان فوراً عبر زر الصوت بالهاتف (Android Hardware Key)');
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.__stopAzanFromHardware = null;
+    };
+  }, [audioState.isPlaying]);
+
   // Save settings when changed
   const handleUpdateSettings = (newSettings) => {
     setSettings(newSettings);
