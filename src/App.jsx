@@ -67,6 +67,8 @@ export function App() {
       setAudioState(state);
     });
 
+    console.log(`📍 [صلاتي وأذكاري] يعمل الآن - الموقع: ${settings.location.nameAr} (${settings.location.countryAr})`);
+
     return () => {
       unsubscribeAudio();
       wakeLockEngine.release();
@@ -322,11 +324,13 @@ export function App() {
         onClose={() => setIsHabitTrackerOpen(false)}
       />
 
-      {/* Bottom Android Navigation (4 Tabs) */}
+      {/* Bottom Android Navigation (5 Tabs) */}
       <BottomNav
         activeTab={activeTab}
         onTabChange={(tab) => {
           hapticEngine.tap();
+          const tabNames = { prayer: 'الصلاة والمواقيت', quran: 'المصحف والختمات', athkar: 'الأذكار والسبحة', qibla: 'بوصلة القبلة', settings: 'الإعدادات والودجت' };
+          console.log(`📱 [التنقل]: تم الانتقال إلى تبويب [${tabNames[tab] || tab}]`);
           setActiveTab(tab);
         }}
       />
