@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   Clock,
   Compass,
@@ -6,6 +7,7 @@ import {
   BookMarked,
   Settings
 } from 'lucide-react';
+import { hapticEngine } from '../services/hapticEngine';
 
 export const NAV_ITEMS = [
   { id: 'prayer', label: 'الصلاة', icon: Clock },
@@ -15,7 +17,30 @@ export const NAV_ITEMS = [
   { id: 'settings', label: 'الإعدادات', icon: Settings }
 ];
 
-export const BottomNav = ({ activeTab, onTabChange }) => {
+export const BottomNav = ({ activeTab: propActiveTab, onTabChange }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const getActiveTabFromLocation = () => {
+    const path = location.pathname;
+    if (path.startsWith('/quran')) return 'quran';
+    if (path.startsWith('/athkar')) return 'athkar';
+    if (path.startsWith('/qibla')) return 'qibla';
+    if (path.startsWith('/settings')) return 'settings';
+    return 'prayer';
+  };
+
+  const activeTab = propActiveTab || getActiveTabFromLocation();
+
+  const handleSelectTab = (tabId) => {
+    hapticEngine.tap();
+    if (onTabChange) {
+      onTabChange(tabId);
+    } else {
+      navigate('/' + tabId);
+    }
+  };
+
   return (
     <nav className="bottom-nav-bar" aria-label="التنقل الرئيسي">
       {NAV_ITEMS.map((item) => {
@@ -26,7 +51,7 @@ export const BottomNav = ({ activeTab, onTabChange }) => {
           <button
             key={item.id}
             className={`bottom-nav-item ${isActive ? 'active' : ''}`}
-            onClick={() => onTabChange(item.id)}
+            onClick={() => handleSelectTab(item.id)}
             aria-current={isActive ? 'page' : undefined}
           >
             <div className="nav-icon-wrapper">

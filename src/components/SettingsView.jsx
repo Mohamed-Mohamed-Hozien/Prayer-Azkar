@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   Clock,
   Volume2,
@@ -66,11 +67,21 @@ export const THEMES_LIST = [
 ];
 
 export const SettingsView = ({ settings, onUpdateSettings, prayerState, initialSubTab = 'timings' }) => {
-  const [activeSubTab, setActiveSubTab] = useState(initialSubTab);
+  const { subtab } = useParams();
+  const navigate = useNavigate();
+
+  const [activeSubTab, setActiveSubTab] = useState(subtab || initialSubTab);
+
+  useEffect(() => {
+    if (subtab && subtab !== activeSubTab) {
+      setActiveSubTab(subtab);
+    }
+  }, [subtab]);
 
   const handleSubTabChange = (tabId) => {
     hapticEngine.tap();
     setActiveSubTab(tabId);
+    navigate('/settings/' + tabId, { replace: true });
   };
 
   const handleThemeChange = (themeId) => {

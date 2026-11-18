@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   BookOpen,
   Search,
@@ -122,12 +123,35 @@ const AyahEndSymbol = ({ number }) => {
 };
 
 export const QuranView = () => {
+  const { surahId } = useParams();
+  const navigate = useNavigate();
+
   const [activeSubTab, setActiveSubTab] = useState('index'); // 'index' | 'khatmah' | 'bookmarks'
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState('all'); // 'all' | 'meccan' | 'medinan'
-  const [selectedSurah, setSelectedSurah] = useState(null); // Surah object when reading
+  const [selectedSurah, setSelectedSurah] = useState(() => {
+    if (surahId) {
+      const parsed = parseInt(surahId, 10);
+      return SURAHS_METADATA.find((s) => s.id === parsed) || null;
+    }
+    return null;
+  });
   const [surahAyahs, setSurahAyahs] = useState([]);
   const [isLoadingAyahs, setIsLoadingAyahs] = useState(false);
+
+  // Sync selectedSurah with route param /quran/:surahId
+  useEffect(() => {
+    if (surahId) {
+      const parsed = parseInt(surahId, 10);
+      const found = SURAHS_METADATA.find((s) => s.id === parsed);
+      if (found) {
+        setSelectedSurah(found);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    } else {
+      setSelectedSurah(null);
+    }
+  }, [surahId]);
   const [fontSize, setFontSize] = useState(() => {
     try {
       return parseInt(localStorage.getItem(STORAGE_KEYS.QURAN_FONT_SIZE) || '22', 10);
@@ -292,8 +316,7 @@ export const QuranView = () => {
 
   const handleOpenSurah = (surah) => {
     hapticEngine.tap();
-    setSelectedSurah(surah);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    navigate('/quran/' + surah.id);
   };
 
   const handleNextSurah = () => {
@@ -374,7 +397,7 @@ export const QuranView = () => {
             <button
               onClick={() => {
                 hapticEngine.tap();
-                setSelectedSurah(null);
+                navigate('/quran');
               }}
               style={{
                 display: 'flex',

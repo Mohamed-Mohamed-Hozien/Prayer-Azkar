@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense, lazy } from 'react';
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import { App as CapacitorApp } from '@capacitor/app';
 import { getActivePrayerState, formatPrayerTime } from './services/prayerEngine';
 import {
   getStoredSettings,
@@ -17,20 +19,24 @@ import { notificationEngine } from './services/notificationEngine';
 
 import { BottomNav } from './components/BottomNav';
 import { PrayerView } from './components/PrayerView';
-import { QiblaCompassView } from './components/QiblaCompassView';
-import { AthkarView } from './components/AthkarView';
-import { QuranView } from './components/QuranView';
-import { SettingsView } from './components/SettingsView';
 import { FloatingAzanBanner } from './components/FloatingAzanBanner';
 import { LocationModal } from './components/LocationModal';
 import { PrayerHabitTracker } from './components/PrayerHabitTracker';
 
+// Lazy-loaded secondary route chunks for fast initial mobile launch
+const QiblaCompassView = lazy(() => import('./components/QiblaCompassView').then((m) => ({ default: m.QiblaCompassView })));
+const QuranView = lazy(() => import('./components/QuranView').then((m) => ({ default: m.QuranView })));
+const AthkarView = lazy(() => import('./components/AthkarView').then((m) => ({ default: m.AthkarView })));
+const SettingsView = lazy(() => import('./components/SettingsView').then((m) => ({ default: m.SettingsView })));
+
 export function App() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   // State
   const [settings, setSettings] = useState(() => getStoredSettings());
   const [customAthkar, setCustomAthkar] = useState(() => getStoredCustomAthkar());
   const [athkarProgress, setAthkarProgress] = useState(() => getStoredAthkarProgress());
-  const [activeTab, setActiveTab] = useState('prayer');
   const [now, setNow] = useState(new Date());
   const [audioState, setAudioState] = useState({
     isPlaying: false,
@@ -41,7 +47,60 @@ export function App() {
   });
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const [isHabitTrackerOpen, setIsHabitTrackerOpen] = useState(false);
-  const [settingsInitialSubTab, setSettingsInitialSubTab] = useState('timings');
+
+  // Hardware Back Button listener for Android
+  useEffect(() => {
+    let backListener = null;
+
+    const setupBackListener = async () => {
+      try {
+        backListener = await CapacitorApp.addListener('backButton', () => {
+          // 1. Close open modals first
+          if (isLocationModalOpen) {
+            setIsLocationModalOpen(false);
+            return;
+          }
+          if (isHabitTrackerOpen) {
+            setIsHabitTrackerOpen(false);
+            return;
+          }
+
+          const path = location.pathname;
+
+          // 2. Sub-routes back navigation
+          if (path.startsWith('/quran/') && path !== '/quran') {
+            navigate('/quran');
+            return;
+          }
+          if (path.startsWith('/settings/') && path !== '/settings') {
+            navigate('/settings');
+            return;
+          }
+          if (path.startsWith('/athkar/') && path !== '/athkar') {
+            navigate('/athkar');
+            return;
+          }
+
+          // 3. Secondary tabs return to home (/prayer)
+          if (path !== '/' && path !== '/prayer') {
+            navigate('/prayer');
+            return;
+          }
+
+          // 4. If already on home, exit app
+          CapacitorApp.exitApp();
+        });
+      } catch (e) {}
+    };
+
+    setupBackListener();
+
+    return () => {
+      if (backListener) {
+        backListener.remove();
+      }
+    };
+  }, [location.pathname, isLocationModalOpen, isHabitTrackerOpen]);
 
   // Triggered alert trackers to avoid duplicate firing in the same minute
   const firedAzansRef = useRef(new Set());
@@ -281,16 +340,6 @@ export function App() {
   // Compute active state for current frame
   const currentPrayerState = getActivePrayerState(now, settings);
 
-  const handleOpenTimingSettings = () => {
-    setSettingsInitialSubTab('timings');
-    setActiveTab('settings');
-  };
-
-  const handleOpenAudioSettings = () => {
-    setSettingsInitialSubTab('audio');
-    setActiveTab('settings');
-  };
-
   return (
     <div className="app-container">
       {/* Floating Azan Player Banner (Dismissible on Azan playback) */}
@@ -300,48 +349,110 @@ export function App() {
         onDismiss={() => audioEngine.stopAll()}
       />
 
-      {/* Main Tab Views */}
+      {/* Main Declarative Routes with Suspense Fallback */}
       <main style={{ flex: 1 }}>
-        {activeTab === 'prayer' && (
-          <PrayerView
-            prayerState={currentPrayerState}
-            settings={settings}
-            onOpenLocationModal={() => setIsLocationModalOpen(true)}
-            onOpenTimingSettings={handleOpenTimingSettings}
-            onOpenAudioSettings={handleOpenAudioSettings}
-            onOpenHabitTracker={() => setIsHabitTrackerOpen(true)}
-          />
-        )}
-
-        {activeTab === 'qibla' && (
-          <QiblaCompassView
-            settings={settings}
-            onOpenLocationModal={() => setIsLocationModalOpen(true)}
-          />
-        )}
-
-        {activeTab === 'quran' && (
-          <QuranView />
-        )}
-
-        {activeTab === 'athkar' && (
-          <AthkarView
-            customAthkar={customAthkar}
-            onSaveCustomZikr={handleSaveCustomZikr}
-            athkarProgress={athkarProgress}
-            onUpdateAthkarProgress={handleUpdateAthkarProgress}
-            onResetCategoryProgress={handleResetCategoryProgress}
-          />
-        )}
-
-        {activeTab === 'settings' && (
-          <SettingsView
-            settings={settings}
-            onUpdateSettings={handleUpdateSettings}
-            prayerState={currentPrayerState}
-            initialSubTab={settingsInitialSubTab}
-          />
-        )}
+        <Suspense
+          fallback={
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minHeight: '60vh',
+                color: 'var(--emerald-light, #10b981)',
+                gap: '8px',
+                fontSize: '0.92rem',
+                fontWeight: '600'
+              }}
+            >
+              <div
+                style={{
+                  width: '18px',
+                  height: '18px',
+                  border: '2px solid var(--border-emerald, #10b981)',
+                  borderTopColor: 'transparent',
+                  borderRadius: '50%',
+                  animation: 'spin 0.8s linear infinite'
+                }}
+              />
+              <span>جاري تحميل الصفحة...</span>
+            </div>
+          }
+        >
+          <Routes>
+            <Route path="/" element={<Navigate to="/prayer" replace />} />
+            <Route
+              path="/prayer"
+              element={
+                <PrayerView
+                  prayerState={currentPrayerState}
+                  settings={settings}
+                  onOpenLocationModal={() => setIsLocationModalOpen(true)}
+                  onOpenTimingSettings={() => navigate('/settings/timings')}
+                  onOpenAudioSettings={() => navigate('/settings/audio')}
+                  onOpenHabitTracker={() => setIsHabitTrackerOpen(true)}
+                />
+              }
+            />
+            <Route
+              path="/qibla"
+              element={
+                <QiblaCompassView
+                  settings={settings}
+                  onOpenLocationModal={() => setIsLocationModalOpen(true)}
+                />
+              }
+            />
+            <Route path="/quran" element={<QuranView />} />
+            <Route path="/quran/:surahId" element={<QuranView />} />
+            <Route
+              path="/athkar"
+              element={
+                <AthkarView
+                  customAthkar={customAthkar}
+                  onSaveCustomZikr={handleSaveCustomZikr}
+                  athkarProgress={athkarProgress}
+                  onUpdateAthkarProgress={handleUpdateAthkarProgress}
+                  onResetCategoryProgress={handleResetCategoryProgress}
+                />
+              }
+            />
+            <Route
+              path="/athkar/:sectionOrCategory"
+              element={
+                <AthkarView
+                  customAthkar={customAthkar}
+                  onSaveCustomZikr={handleSaveCustomZikr}
+                  athkarProgress={athkarProgress}
+                  onUpdateAthkarProgress={handleUpdateAthkarProgress}
+                  onResetCategoryProgress={handleResetCategoryProgress}
+                />
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <SettingsView
+                  settings={settings}
+                  onUpdateSettings={handleUpdateSettings}
+                  prayerState={currentPrayerState}
+                  initialSubTab="timings"
+                />
+              }
+            />
+            <Route
+              path="/settings/:subtab"
+              element={
+                <SettingsView
+                  settings={settings}
+                  onUpdateSettings={handleUpdateSettings}
+                  prayerState={currentPrayerState}
+                />
+              }
+            />
+            <Route path="*" element={<Navigate to="/prayer" replace />} />
+          </Routes>
+        </Suspense>
       </main>
 
       {/* Location Modal */}
@@ -359,15 +470,7 @@ export function App() {
       />
 
       {/* Bottom Android Navigation (5 Tabs) */}
-      <BottomNav
-        activeTab={activeTab}
-        onTabChange={(tab) => {
-          hapticEngine.tap();
-          const tabNames = { prayer: 'الصلاة والمواقيت', quran: 'المصحف والختمات', athkar: 'الأذكار والسبحة', qibla: 'بوصلة القبلة', settings: 'الإعدادات والودجت' };
-          console.log(`📱 [التنقل]: تم الانتقال إلى تبويب [${tabNames[tab] || tab}]`);
-          setActiveTab(tab);
-        }}
-      />
+      <BottomNav />
     </div>
   );
 }

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
   Sun,
   Moon,
@@ -36,11 +37,28 @@ export const AthkarView = ({
   onUpdateAthkarProgress,
   onResetCategoryProgress
 }) => {
-  const [activeMainSection, setActiveMainSection] = useState('athkar'); // 'athkar' | 'tasbeeh'
-  const [activeCategory, setActiveCategory] = useState('morning');
+  const { sectionOrCategory } = useParams();
+  const navigate = useNavigate();
+
+  const [activeMainSection, setActiveMainSection] = useState(
+    sectionOrCategory === 'tasbeeh' ? 'tasbeeh' : 'athkar'
+  );
+  const [activeCategory, setActiveCategory] = useState(
+    sectionOrCategory && sectionOrCategory !== 'tasbeeh' ? sectionOrCategory : 'morning'
+  );
   const [viewMode, setViewMode] = useState('focus'); // 'focus' | 'list'
   const [focusIndex, setFocusIndex] = useState(0);
   const [isCustomModalOpen, setIsCustomModalOpen] = useState(false);
+
+  // Sync state when route parameter changes
+  useEffect(() => {
+    if (sectionOrCategory === 'tasbeeh') {
+      setActiveMainSection('tasbeeh');
+    } else if (sectionOrCategory) {
+      setActiveMainSection('athkar');
+      setActiveCategory(sectionOrCategory);
+    }
+  }, [sectionOrCategory]);
 
   // Combine initial database with custom added Athkar
   const currentList =
@@ -51,12 +69,14 @@ export const AthkarView = ({
   const handleSectionSwitch = (section) => {
     hapticEngine.tap();
     setActiveMainSection(section);
+    navigate('/athkar/' + section, { replace: true });
   };
 
   const handleCategoryChange = (catId) => {
     setActiveCategory(catId);
     setFocusIndex(0);
     hapticEngine.tap();
+    navigate('/athkar/' + catId, { replace: true });
   };
 
   const handleUpdateCount = (itemId, count) => {
