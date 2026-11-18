@@ -22,6 +22,7 @@ import { PrayerView } from './components/PrayerView';
 import { FloatingAzanBanner } from './components/FloatingAzanBanner';
 import { LocationModal } from './components/LocationModal';
 import { PrayerHabitTracker } from './components/PrayerHabitTracker';
+import { syncPrayerAlarms, isNativeAzanPlaying, getNativePlayingPrayer, stopNativeAzan } from './services/alarmScheduler';
 
 // Lazy-loaded secondary route chunks for fast initial mobile launch
 const QiblaCompassView = lazy(() => import('./components/QiblaCompassView').then((m) => ({ default: m.QiblaCompassView })));
@@ -126,6 +127,20 @@ export function App() {
       setAudioState(state);
     });
 
+    // Check if Native Android Service is currently playing Azan
+    if (isNativeAzanPlaying()) {
+      setAudioState({
+        isPlaying: true,
+        isMuted: false,
+        trackType: 'azan',
+        prayerName: getNativePlayingPrayer() || 'الصلاة',
+        volume: 0.9
+      });
+    }
+
+    // Initial sync of exact alarms to Native Android AlarmManager (7 days ahead)
+    syncPrayerAlarms(settings);
+
     console.log(`📍 [صلاتي وأذكاري] يعمل الآن - الموقع: ${settings.location.nameAr} (${settings.location.countryAr})`);
 
     return () => {
@@ -157,6 +172,7 @@ export function App() {
 
     window.__stopAzanFromHardware = () => {
       audioEngine.stopAll();
+      stopNativeAzan();
       hapticEngine.tap();
       console.log('🔇 [الأذان]: تم إيقاف صوت الأذان فوراً عبر زر الصوت بالهاتف (Android Hardware Key)');
     };
@@ -173,6 +189,7 @@ export function App() {
     setSettings(newSettings);
     saveStoredSettings(newSettings);
     hapticEngine.setEnabled(newSettings.hapticEnabled);
+    syncPrayerAlarms(newSettings);
   };
 
   // Custom Athkar handlers
@@ -221,6 +238,23 @@ export function App() {
             lastResetDate: todayStr
           });
         }
+
+        // Reschedule next 7 days of exact background alarms at midnight
+        syncPrayerAlarms(settings);
+      }
+
+      // Sync native background Azan service state with React UI
+      const nativePlaying = isNativeAzanPlaying();
+      if (nativePlaying && !audioState.isPlaying) {
+        setAudioState({
+          isPlaying: true,
+          isMuted: false,
+          trackType: 'azan',
+          prayerName: getNativePlayingPrayer() || 'الصلاة',
+          volume: 0.9
+        });
+      } else if (!nativePlaying && audioState.isPlaying && audioState.trackType === 'azan' && !audioEngine.isPlaying) {
+        setAudioState((prev) => ({ ...prev, isPlaying: false, trackType: null, prayerName: '' }));
       }
 
       setNow(currentTime);

@@ -117,6 +117,16 @@ class AudioEngine {
     this.currentTrackType = null;
     this.currentPrayerName = '';
     this.notifyState();
+
+    // Also stop Native Android Background Azan if playing
+    if (typeof window !== 'undefined') {
+      const bridge = window.AndroidPrayerAlarmBridge || window.AndroidWidgetBridge;
+      if (bridge && typeof bridge.stopAzan === 'function') {
+        try {
+          bridge.stopAzan();
+        } catch (e) {}
+      }
+    }
   }
 
   scheduleTimeout(fn, delayMs) {

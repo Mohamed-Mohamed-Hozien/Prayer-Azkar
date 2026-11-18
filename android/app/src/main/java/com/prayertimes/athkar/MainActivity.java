@@ -14,10 +14,12 @@ public class MainActivity extends BridgeActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Expose Native Android Widget Bridge to WebView JavaScript
+        // Expose Native Android Widget & Prayer Alarm Bridges to WebView JavaScript
         try {
             WebView webView = this.getBridge().getWebView();
-            webView.addJavascriptInterface(new AndroidWidgetBridge(this), "AndroidWidgetBridge");
+            AndroidBridge bridge = new AndroidBridge(this);
+            webView.addJavascriptInterface(bridge, "AndroidWidgetBridge");
+            webView.addJavascriptInterface(bridge, "AndroidPrayerAlarmBridge");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -29,6 +31,9 @@ public class MainActivity extends BridgeActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            if (PrayerAudioService.isPlaying) {
+                PrayerAudioService.stop(this);
+            }
             try {
                 WebView webView = this.getBridge().getWebView();
                 if (webView != null) {
@@ -38,14 +43,15 @@ public class MainActivity extends BridgeActivity {
                     );
                 }
             } catch (Exception ignored) {}
+            return true;
         }
         return super.onKeyDown(keyCode, event);
     }
 
-    public static class AndroidWidgetBridge {
+    public static class AndroidBridge {
         private final Context context;
 
-        public AndroidWidgetBridge(Context context) {
+        public AndroidBridge(Context context) {
             this.context = context;
         }
 
@@ -58,6 +64,34 @@ public class MainActivity extends BridgeActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+
+        @JavascriptInterface
+        public void schedulePrayerAlarms(String alarmsJson) {
+            try {
+                PrayerAlarmScheduler.scheduleAlarms(context, alarmsJson);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @JavascriptInterface
+        public void stopAzan() {
+            try {
+                PrayerAudioService.stop(context);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @JavascriptInterface
+        public boolean isAzanPlaying() {
+            return PrayerAudioService.isPlaying;
+        }
+
+        @JavascriptInterface
+        public String getCurrentPlayingPrayer() {
+            return PrayerAudioService.currentPrayerNameAr != null ? PrayerAudioService.currentPrayerNameAr : "";
         }
     }
 }

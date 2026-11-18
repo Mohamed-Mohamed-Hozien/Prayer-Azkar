@@ -46,6 +46,32 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/prayer_widget_info" />
         </receiver>
+
+        <!-- Prayer Audio Foreground Service for Background Azan -->
+        <service
+            android:name=".PrayerAudioService"
+            android:foregroundServiceType="mediaPlayback"
+            android:exported="false" />
+
+        <!-- Prayer Exact Alarm Receiver -->
+        <receiver
+            android:name=".PrayerAlarmReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.prayertimes.athkar.ACTION_PRAYER_ALARM" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Boot Receiver to reschedule alarms after phone reboot -->
+        <receiver
+            android:name=".PrayerBootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
     </application>
 
     <!-- Permissions for 100% Offline Standalone Android App -->
@@ -58,4 +84,6 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
 </manifest>
