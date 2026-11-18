@@ -224,7 +224,6 @@ export const QuranView = () => {
   });
 
   const [currentSurahPageIndex, setCurrentSurahPageIndex] = useState(0);
-  const touchStartXRef = useRef(null);
 
   // Group current surah ayahs into authentic Mushaf pages
   const surahPages = useMemo(() => {
@@ -448,26 +447,6 @@ export const QuranView = () => {
     }
   };
 
-  const handleTouchStart = (e) => {
-    if (readerMode !== 'pages') return;
-    touchStartXRef.current = e.touches[0].clientX;
-  };
-
-  const handleTouchEnd = (e) => {
-    if (readerMode !== 'pages' || touchStartXRef.current === null) return;
-    const touchEndX = e.changedTouches[0].clientX;
-    const diff = touchEndX - touchStartXRef.current;
-    touchStartXRef.current = null;
-
-    if (diff > 55) {
-      // Swiped Right -> in RTL Arabic = Previous Page
-      handlePrevPage();
-    } else if (diff < -55) {
-      // Swiped Left -> in RTL Arabic = Next Page
-      handleNextPage();
-    }
-  };
-
   const handleMarkPageInKhatmah = (pageNum) => {
     hapticEngine.azanAlert();
     setKhatmahPlan((prev) => ({
@@ -533,11 +512,11 @@ export const QuranView = () => {
               justifyContent: 'space-between',
               background: 'var(--card-bg)',
               border: '1px solid var(--border-color)',
-              borderRadius: '16px',
-              padding: '10px 14px',
-              marginBottom: '16px',
+              borderRadius: '12px',
+              padding: '6px 12px',
+              marginBottom: '10px',
               position: 'sticky',
-              top: 'max(10px, var(--safe-top))',
+              top: 'max(6px, var(--safe-top))',
               zIndex: 30,
               backdropFilter: 'blur(12px)'
             }}
@@ -658,17 +637,19 @@ export const QuranView = () => {
             </div>
           </div>
 
-          {/* Reader Content Box (With Touch Swipe Support for Pages Mode) */}
+          {/* Reader Content Box (All-in-One Mushaf Page Frame) */}
           <div
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
             style={{
               background: 'var(--card-bg)',
               border: '1px solid var(--border-color)',
-              borderRadius: '20px',
-              padding: '22px 18px',
+              borderRadius: '16px',
+              padding: readerMode === 'pages' ? '12px 14px' : '20px 16px',
               boxShadow: '0 6px 24px rgba(0,0,0,0.2)',
-              position: 'relative'
+              position: 'relative',
+              minHeight: readerMode === 'pages' ? 'calc(100dvh - var(--safe-top, 0px) - var(--safe-bottom, 0px) - 130px)' : 'auto',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between'
             }}
           >
             {/* Loading Indicator */}
@@ -682,83 +663,183 @@ export const QuranView = () => {
                 تعذر تحميل آيات هذه السورة.
               </div>
             ) : readerMode === 'pages' ? (
-              /* ================== DISPLAY MODE A: PAGE-BY-PAGE ================== */
-              <div>
-                {/* Top Mushaf Header Margin */}
+              /* ================== DISPLAY MODE A: PAGE-BY-PAGE (FULL SCREEN FIT) ================== */
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  flex: 1,
+                  justifyContent: 'space-between'
+                }}
+              >
+                <div>
+                  {/* Top Mushaf Header Margin */}
+                  {surahPages[currentSurahPageIndex] && (
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        paddingBottom: '8px',
+                        marginBottom: '10px',
+                        borderBottom: '1px solid var(--border-color)',
+                        fontSize: '0.8rem',
+                        color: 'var(--gold-light)',
+                        fontFamily: 'Amiri, serif'
+                      }}
+                    >
+                      <span>الجزء {surahPages[currentSurahPageIndex].juz}</span>
+                      <span style={{ fontWeight: '800', fontSize: '0.95rem' }}>سُورَةُ {selectedSurah.nameAr}</span>
+                      <span>الحزب {Math.ceil(surahPages[currentSurahPageIndex].hizbQuarter / 4)}</span>
+                    </div>
+                  )}
+
+                  {/* Basmalah (Only on Page 1 of the Surah, except At-Tawbah and Al-Fatihah) */}
+                  {currentSurahPageIndex === 0 && selectedSurah.id !== 9 && selectedSurah.id !== 1 && (
+                    <div
+                      style={{
+                        textAlign: 'center',
+                        marginBottom: '10px',
+                        paddingBottom: '8px',
+                        borderBottom: '1px dashed var(--border-color)'
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: `${Math.round(fontSize * 1.05)}px`,
+                          fontFamily: 'Amiri, serif',
+                          color: 'var(--gold-light)',
+                          display: 'inline-block'
+                        }}
+                      >
+                        بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Ayahs of Current Mushaf Page */}
+                  <div
+                    style={{
+                      fontSize: `${fontSize}px`,
+                      lineHeight: '1.95',
+                      fontFamily: 'Amiri, "Noto Naskh Arabic", serif',
+                      textAlign: 'justify',
+                      direction: 'rtl',
+                      color: 'var(--text-primary)'
+                    }}
+                  >
+                    {(surahPages[currentSurahPageIndex]?.ayahs || []).map((ayah) =>
+                      renderAyahContent(ayah, selectedSurah.id, handleCopyAyah)
+                    )}
+                  </div>
+                </div>
+
+                {/* Integrated Bottom Mushaf Page Navigation Frame */}
                 {surahPages[currentSurahPageIndex] && (
                   <div
                     style={{
                       display: 'flex',
-                      justifyContent: 'space-between',
                       alignItems: 'center',
-                      paddingBottom: '12px',
-                      marginBottom: '18px',
-                      borderBottom: '1px solid var(--border-color)',
-                      fontSize: '0.82rem',
-                      color: 'var(--gold-light)',
-                      fontFamily: 'Amiri, serif'
-                    }}
-                  >
-                    <span>الجزء {surahPages[currentSurahPageIndex].juz}</span>
-                    <span style={{ fontWeight: '800', fontSize: '1rem' }}>سُورَةُ {selectedSurah.nameAr}</span>
-                    <span>الحزب {Math.ceil(surahPages[currentSurahPageIndex].hizbQuarter / 4)}</span>
-                  </div>
-                )}
-
-                {/* Basmalah (Only on Page 1 of the Surah, except At-Tawbah and Al-Fatihah) */}
-                {currentSurahPageIndex === 0 && selectedSurah.id !== 9 && selectedSurah.id !== 1 && (
-                  <div
-                    style={{
-                      textAlign: 'center',
-                      marginBottom: '24px',
-                      paddingBottom: '16px',
-                      borderBottom: '1px dashed var(--border-color)'
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontSize: `${Math.round(fontSize * 1.15)}px`,
-                        fontFamily: 'Amiri, serif',
-                        color: 'var(--gold-light)',
-                        display: 'inline-block'
-                      }}
-                    >
-                      بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
-                    </span>
-                  </div>
-                )}
-
-                {/* Ayahs of Current Mushaf Page */}
-                <div
-                  style={{
-                    fontSize: `${fontSize}px`,
-                    lineHeight: '2.5',
-                    fontFamily: 'Amiri, "Noto Naskh Arabic", serif',
-                    textAlign: 'justify',
-                    direction: 'rtl',
-                    color: 'var(--text-primary)'
-                  }}
-                >
-                  {(surahPages[currentSurahPageIndex]?.ayahs || []).map((ayah) =>
-                    renderAyahContent(ayah, selectedSurah.id, handleCopyAyah)
-                  )}
-                </div>
-
-                {/* Bottom Mushaf Page Frame */}
-                {surahPages[currentSurahPageIndex] && (
-                  <div
-                    style={{
-                      textAlign: 'center',
-                      marginTop: '24px',
-                      paddingTop: '14px',
+                      justifyContent: 'space-between',
+                      marginTop: '14px',
+                      paddingTop: '10px',
                       borderTop: '1px solid var(--border-color)',
                       color: 'var(--gold-light)',
-                      fontFamily: 'Amiri, serif',
-                      fontSize: '1.05rem',
-                      fontWeight: '700'
+                      gap: '8px'
                     }}
                   >
-                    — صـَفْحـَة {surahPages[currentSurahPageIndex].pageNumber} —
+                    <button
+                      onClick={handlePrevPage}
+                      disabled={currentSurahPageIndex === 0 && selectedSurah.id === 1}
+                      title="الصفحة السابقة"
+                      style={{
+                        padding: '6px 14px',
+                        borderRadius: '8px',
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        border: '1px solid var(--border-color)',
+                        color: 'var(--text-primary)',
+                        fontSize: '0.8rem',
+                        fontWeight: '700',
+                        cursor: (currentSurahPageIndex === 0 && selectedSurah.id === 1) ? 'not-allowed' : 'pointer',
+                        opacity: (currentSurahPageIndex === 0 && selectedSurah.id === 1) ? 0.35 : 1,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                      }}
+                    >
+                      <ChevronRight size={15} />
+                      <span>السابقة</span>
+                    </button>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <select
+                        value={currentSurahPageIndex}
+                        onChange={(e) => {
+                          hapticEngine.tap();
+                          setCurrentSurahPageIndex(parseInt(e.target.value, 10));
+                        }}
+                        style={{
+                          background: 'rgba(16, 185, 129, 0.12)',
+                          border: '1px solid var(--border-emerald, #10b981)',
+                          color: 'var(--emerald-light, #10b981)',
+                          padding: '5px 8px',
+                          borderRadius: '8px',
+                          fontWeight: '800',
+                          fontSize: '0.8rem',
+                          outline: 'none',
+                          cursor: 'pointer',
+                          fontFamily: 'Amiri, serif'
+                        }}
+                      >
+                        {surahPages.map((p, idx) => (
+                          <option key={p.pageNumber} value={idx} style={{ background: '#022c22', color: '#fff' }}>
+                            — صـَفْحـَة {p.pageNumber} ({idx + 1} من {surahPages.length}) —
+                          </option>
+                        ))}
+                      </select>
+
+                      <button
+                        onClick={() => handleMarkPageInKhatmah(surahPages[currentSurahPageIndex].pageNumber)}
+                        title="تحديد هذه الصفحة كورد اليوم في الختمة"
+                        style={{
+                          background: khatmahPlan.currentPage === surahPages[currentSurahPageIndex].pageNumber
+                            ? 'rgba(16, 185, 129, 0.2)'
+                            : 'transparent',
+                          border: '1px solid var(--border-color)',
+                          borderRadius: '8px',
+                          color: khatmahPlan.currentPage === surahPages[currentSurahPageIndex].pageNumber
+                            ? 'var(--emerald-light, #10b981)'
+                            : 'var(--gold-light)',
+                          cursor: 'pointer',
+                          padding: '5px 7px',
+                          display: 'flex',
+                          alignItems: 'center'
+                        }}
+                      >
+                        <CheckCircle size={15} />
+                      </button>
+                    </div>
+
+                    <button
+                      onClick={handleNextPage}
+                      title="الصفحة التالية"
+                      style={{
+                        padding: '6px 14px',
+                        borderRadius: '8px',
+                        background: 'var(--emerald-light, #10b981)',
+                        border: 'none',
+                        color: '#042f22',
+                        fontSize: '0.8rem',
+                        fontWeight: '800',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px'
+                      }}
+                    >
+                      <span>التالية</span>
+                      <ChevronLeft size={15} />
+                    </button>
                   </div>
                 )}
               </div>
@@ -839,123 +920,8 @@ export const QuranView = () => {
             )}
           </div>
 
-          {/* Reader Footer Controls: Page Flip Bar (in Pages Mode) OR Surah Navigation (in Continuous Mode) */}
-          {readerMode === 'pages' && surahPages.length > 0 ? (
-            <div
-              style={{
-                marginTop: '16px',
-                background: 'var(--card-bg)',
-                border: '1px solid var(--border-color)',
-                borderRadius: '16px',
-                padding: '12px 14px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '12px'
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
-                <button
-                  onClick={handlePrevPage}
-                  disabled={currentSurahPageIndex === 0 && selectedSurah.id === 1}
-                  style={{
-                    flex: 1,
-                    padding: '9px 12px',
-                    borderRadius: '10px',
-                    background: 'rgba(255, 255, 255, 0.05)',
-                    border: '1px solid var(--border-color)',
-                    color: 'var(--text-primary)',
-                    fontSize: '0.82rem',
-                    fontWeight: '700',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '4px'
-                  }}
-                >
-                  <ChevronRight size={16} />
-                  <span>السابقة</span>
-                </button>
-
-                {/* Page Jump Selector Dropdown */}
-                <div>
-                  <select
-                    value={currentSurahPageIndex}
-                    onChange={(e) => {
-                      hapticEngine.tap();
-                      setCurrentSurahPageIndex(parseInt(e.target.value, 10));
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }}
-                    style={{
-                      background: 'var(--emerald-deep, rgba(16, 185, 129, 0.18))',
-                      border: '1px solid var(--border-emerald, #10b981)',
-                      color: 'var(--emerald-light, #10b981)',
-                      padding: '8px 12px',
-                      borderRadius: '10px',
-                      fontWeight: '800',
-                      fontSize: '0.82rem',
-                      outline: 'none',
-                      cursor: 'pointer',
-                      fontFamily: 'inherit'
-                    }}
-                  >
-                    {surahPages.map((p, idx) => (
-                      <option key={p.pageNumber} value={idx} style={{ background: '#022c22', color: '#fff' }}>
-                        ص {p.pageNumber} ({idx + 1} من {surahPages.length})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <button
-                  onClick={handleNextPage}
-                  style={{
-                    flex: 1,
-                    padding: '9px 12px',
-                    borderRadius: '10px',
-                    background: 'var(--emerald-light, #10b981)',
-                    border: 'none',
-                    color: '#042f22',
-                    fontSize: '0.82rem',
-                    fontWeight: '800',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '4px'
-                  }}
-                >
-                  <span>التالية</span>
-                  <ChevronLeft size={16} />
-                </button>
-              </div>
-
-              {/* Fast Khatmah Bookmark Action */}
-              {surahPages[currentSurahPageIndex] && (
-                <button
-                  onClick={() => handleMarkPageInKhatmah(surahPages[currentSurahPageIndex].pageNumber)}
-                  style={{
-                    width: '100%',
-                    padding: '8px 12px',
-                    borderRadius: '10px',
-                    background: 'rgba(245, 158, 11, 0.1)',
-                    border: '1px solid rgba(245, 158, 11, 0.25)',
-                    color: 'var(--gold-light, #f59e0b)',
-                    fontSize: '0.78rem',
-                    fontWeight: '700',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '6px'
-                  }}
-                >
-                  <CheckCircle size={14} />
-                  <span>تعيين صفحة ({surahPages[currentSurahPageIndex].pageNumber}) كورد اليوم في الختمة</span>
-                </button>
-              )}
-            </div>
-          ) : (
+          {/* Continuous Mode Bottom Nav between Surahs (Only in Continuous Mode) */}
+          {readerMode === 'continuous' && (
             /* Continuous Mode Bottom Nav between Surahs */
             <div
               style={{
