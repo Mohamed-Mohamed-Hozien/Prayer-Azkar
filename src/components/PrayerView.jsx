@@ -14,7 +14,8 @@ import {
   Calendar,
   BookOpen,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  CheckCircle
 } from 'lucide-react';
 import { formatPrayerTime, getHijriDate, calculateIslamicNightTimes } from '../services/prayerEngine';
 import { getSunnahFastingInfo } from '../data/islamicCalendar';
