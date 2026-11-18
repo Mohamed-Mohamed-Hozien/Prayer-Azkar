@@ -17,32 +17,25 @@ class AudioEngine {
     this.currentPrayerName = '';
     this.customAudioMap = new Map(); // id -> objectUrl
 
-    // High quality offline audio assets
+    // High quality offline audio assets (Verified distinct authentic studio recordings)
     this.audioSources = {
       makkah: '/audio/azan-makkah.mp3',
       madinah: '/audio/azan-madinah.mp3',
       alafasy: '/audio/azan-alafasy.mp3',
       abdulbasit: '/audio/azan-abdulbasit.mp3',
-      // TODO: Replace placeholders with dedicated authentic studio recordings
-      alhussary: '/audio/azan-makkah.mp3',
-      alqatami: '/audio/azan-alafasy.mp3',
       alaqsa: '/audio/azan-alaqsa.mp3',
       fajr: '/audio/azan-fajr.mp3',
-      fajr_alafasy: '/audio/azan-fajr.mp3',
       takbeer: '/audio/takbeer.mp3',
       eqama_beep: '/audio/iqamah-beep.wav'
     };
 
     this.recitersList = [
       { id: 'makkah', nameAr: 'أذان الحرم المكي الشريف', isFajr: false },
-      { id: 'madinah', nameAr: 'أذان المسجد النبوي الشريف', isFajr: false },
-      { id: 'alaqsa', nameAr: 'أذان المسجد الأقصى المبارك', isFajr: false },
+      { id: 'madinah', nameAr: 'أذان المسجد النبوي الشريف (المدينة)', isFajr: false },
       { id: 'alafasy', nameAr: 'الشيخ مشاري راشد العفاسي', isFajr: false },
       { id: 'abdulbasit', nameAr: 'الشيخ عبد الباسط عبد الصمد', isFajr: false },
-      { id: 'alhussary', nameAr: 'الشيخ محمود خليل الحصري', isFajr: false },
-      { id: 'alqatami', nameAr: 'الشيخ ناصر القطامي', isFajr: false },
-      { id: 'fajr', nameAr: 'أذان الفجر المكي (الصلاة خير من النوم)', isFajr: true },
-      { id: 'fajr_alafasy', nameAr: 'أذان الفجر للعفاسي', isFajr: true }
+      { id: 'alaqsa', nameAr: 'أذان المسجد الأقصى المبارك', isFajr: false },
+      { id: 'fajr', nameAr: 'أذان الفجر (الصلاة خير من النوم)', isFajr: true }
     ];
 
     this.loadCustomAudios();
@@ -178,6 +171,17 @@ class AudioEngine {
     audio.volume = this.isMuted ? 0 : this.volume;
     this.currentAudio = audio;
 
+    // Helper to safely reset playing state and notify listeners
+    const cleanUpEnded = () => {
+      if (this.currentAudio === audio) {
+        this.isPlaying = false;
+        this.currentAudio = null;
+        this.currentTrackType = null;
+        this.currentPrayerName = '';
+        this.notifyState();
+      }
+    };
+
     // If Takbeer-only mode, stop after 18 seconds
     if (alertMode === 'takbeer') {
       this.scheduleTimeout(() => {
@@ -187,14 +191,37 @@ class AudioEngine {
       }, 18000);
     }
 
-    audio.onended = () => {
-      this.isPlaying = false;
-      this.currentAudio = null;
-      this.notifyState();
+    audio.onended = cleanUpEnded;
+
+    // Handle background suspend or pause near end
+    audio.onpause = () => {
+      if (audio.ended || (audio.duration && audio.currentTime >= audio.duration - 0.5)) {
+        cleanUpEnded();
+      }
+    };
+
+    // Timeupdate boundary check
+    audio.ontimeupdate = () => {
+      if (audio.duration && audio.currentTime >= audio.duration - 0.25) {
+        cleanUpEnded();
+      }
+    };
+
+    // Watchdog timer based on audio duration to guarantee dismissal
+    audio.onloadedmetadata = () => {
+      if (audio.duration && isFinite(audio.duration) && alertMode !== 'takbeer') {
+        const timeoutMs = Math.ceil((audio.duration + 1.5) * 1000);
+        this.scheduleTimeout(() => {
+          if (this.currentAudio === audio) {
+            cleanUpEnded();
+          }
+        }, timeoutMs);
+      }
     };
 
     audio.onerror = (err) => {
       console.warn('Audio playback fallback to synthesizer:', err);
+      cleanUpEnded();
       this.playHarmonicChimeSequence();
     };
 
@@ -202,6 +229,7 @@ class AudioEngine {
     if (playPromise !== undefined) {
       playPromise.catch((err) => {
         console.warn('Autoplay restriction or missing file fallback:', err);
+        cleanUpEnded();
         this.playHarmonicChimeSequence();
       });
     }
@@ -278,6 +306,8 @@ class AudioEngine {
       audio.onended = () => {
         this.isPlaying = false;
         this.currentAudio = null;
+        this.currentTrackType = null;
+        this.currentPrayerName = '';
         this.notifyState();
       };
       audio.play().catch(() => this.playMosqueDoubleBeep());
@@ -416,6 +446,8 @@ class AudioEngine {
 
     this.scheduleTimeout(() => {
       this.isPlaying = false;
+      this.currentTrackType = null;
+      this.currentPrayerName = '';
       this.notifyState();
     }, 3000);
   }

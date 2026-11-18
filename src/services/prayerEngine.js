@@ -71,9 +71,69 @@ export const getMethodParams = (methodKey) => {
 };
 
 /**
+ * Calculates Islamic Midnight, Last Third of the Night, and Duha timings
+ */
+export const calculateIslamicNightTimes = (date = new Date(), settings = {}, precalculatedToday = null) => {
+  const targetDate = date instanceof Date ? date : new Date(date);
+  
+  // Get today's prayer times (without recursive nightTimes calculation)
+  const todayTimes = precalculatedToday || calculatePrayerTimes(targetDate, settings, { includeNightTimes: false });
+  
+  // Calculate tomorrow's prayer times for next Fajr
+  const tomorrowDate = new Date(targetDate.getTime() + 24 * 60 * 60 * 1000);
+  const tomorrowTimes = calculatePrayerTimes(tomorrowDate, settings, { includeNightTimes: false });
+
+  const maghrib = todayTimes.maghrib;
+  const nextFajr = tomorrowTimes.fajr;
+  const sunrise = todayTimes.sunrise;
+  const dhuhr = todayTimes.dhuhr;
+
+  if (!maghrib || !nextFajr || !sunrise || !dhuhr) {
+    return null;
+  }
+
+  // Night duration between Maghrib and next Fajr
+  const nightDurationMs = nextFajr.getTime() - maghrib.getTime();
+  
+  // Islamic midnight = maghrib + (nextFajr - maghrib) / 2
+  const midnight = new Date(maghrib.getTime() + Math.round(nightDurationMs / 2));
+  
+  // Last third of night = maghrib + 2 * (nextFajr - maghrib) / 3
+  const lastThird = new Date(maghrib.getTime() + Math.round((2 * nightDurationMs) / 3));
+  
+  // Duha: start = sunrise + 15 mins, end = dhuhr - 15 mins
+  const duhaStart = new Date(sunrise.getTime() + 15 * 60 * 1000);
+  const duhaEnd = new Date(dhuhr.getTime() - 15 * 60 * 1000);
+
+  const timeFormat = settings?.timeFormat || '12h';
+  const midnightFormatted = formatPrayerTime(midnight, timeFormat);
+  const lastThirdFormatted = formatPrayerTime(lastThird, timeFormat);
+  const duhaStartFormatted = formatPrayerTime(duhaStart, timeFormat);
+  const duhaEndFormatted = formatPrayerTime(duhaEnd, timeFormat);
+
+  return {
+    midnight,
+    midnightFormatted,
+    lastThird,
+    lastThirdFormatted,
+    duhaStart,
+    duhaStartFormatted,
+    duhaEnd,
+    duhaEndFormatted,
+    duha: {
+      start: duhaStart,
+      end: duhaEnd,
+      startFormatted: duhaStartFormatted,
+      endFormatted: duhaEndFormatted,
+      formatted: `${duhaStartFormatted} - ${duhaEndFormatted}`
+    }
+  };
+};
+
+/**
  * Computes prayer times for a specific date with all user custom offsets and Iqamah timings
  */
-export const calculatePrayerTimes = (date, settings) => {
+export const calculatePrayerTimes = (date, settings, options = { includeNightTimes: true }) => {
   const { location, calculationMethod, madhab, prayerOffsets, eqamaOffsets } = settings;
   const coordinates = new Coordinates(location.lat, location.lng);
   
@@ -117,7 +177,7 @@ export const calculatePrayerTimes = (date, settings) => {
     { id: 'isha', nameAr: 'العِشَاء', time: ishaTime, eqamaTime: ishaEqama, eqamaOffset: eqamaOffsets?.isha ?? 15, hasIqamah: true }
   ];
 
-  return {
+  const result = {
     raw: prayerTimesObj,
     prayers,
     fajr: fajrTime,
@@ -127,6 +187,12 @@ export const calculatePrayerTimes = (date, settings) => {
     maghrib: maghribTime,
     isha: ishaTime
   };
+
+  if (options?.includeNightTimes) {
+    result.nightTimes = calculateIslamicNightTimes(date, settings, result);
+  }
+
+  return result;
 };
 
 /**
@@ -135,9 +201,9 @@ export const calculatePrayerTimes = (date, settings) => {
 export const getActivePrayerState = (now, settings) => {
   const todayTimes = calculatePrayerTimes(now, settings);
   const tomorrowDate = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-  const tomorrowTimes = calculatePrayerTimes(tomorrowDate, settings);
+  const tomorrowTimes = calculatePrayerTimes(tomorrowDate, settings, { includeNightTimes: false });
   const yesterdayDate = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-  const yesterdayTimes = calculatePrayerTimes(yesterdayDate, settings);
+  const yesterdayTimes = calculatePrayerTimes(yesterdayDate, settings, { includeNightTimes: false });
 
   const nowMs = now.getTime();
   const prayers = todayTimes.prayers;
@@ -203,6 +269,7 @@ export const getActivePrayerState = (now, settings) => {
 
   return {
     todayTimes,
+    nightTimes: todayTimes.nightTimes,
     currentPrayer,
     nextPrayer,
     countdown: {

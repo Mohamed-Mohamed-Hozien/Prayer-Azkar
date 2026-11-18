@@ -3,6 +3,7 @@ package com.prayertimes.athkar;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import com.getcapacitor.BridgeActivity;
@@ -20,6 +21,25 @@ public class MainActivity extends BridgeActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Intercept hardware volume keys to immediately stop active Azan playback
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+            try {
+                WebView webView = this.getBridge().getWebView();
+                if (webView != null) {
+                    webView.evaluateJavascript(
+                        "if (typeof window.__stopAzanFromHardware === 'function') { window.__stopAzanFromHardware(); }",
+                        null
+                    );
+                }
+            } catch (Exception ignored) {}
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     public static class AndroidWidgetBridge {

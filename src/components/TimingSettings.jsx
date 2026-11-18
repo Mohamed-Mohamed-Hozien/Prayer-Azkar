@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Clock,
   Globe,
@@ -9,12 +9,26 @@ import {
   Plus,
   Minus,
   Sparkles,
-  Heart
+  Heart,
+  VolumeX,
+  BellOff,
+  ShieldCheck
 } from 'lucide-react';
 import { CALCULATION_METHODS, PRAYER_NAMES } from '../services/prayerEngine';
 import { hapticEngine } from '../services/hapticEngine';
+import { getMosqueSilenceSettings, saveMosqueSilenceSettings } from '../services/silenceEngine';
 
 export const TimingSettings = ({ settings, onUpdateSettings }) => {
+  const [silenceSettings, setSilenceSettings] = useState(() => getMosqueSilenceSettings());
+
+  const handleSilenceChange = (partial) => {
+    hapticEngine.tap();
+    const updated = saveMosqueSilenceSettings(partial);
+    setSilenceSettings(updated);
+    if (onUpdateSettings && settings) {
+      onUpdateSettings({ ...settings, mosqueSilence: updated });
+    }
+  };
   const handleMethodChange = (methodId) => {
     hapticEngine.tap();
     onUpdateSettings({ ...settings, calculationMethod: methodId });
@@ -257,6 +271,162 @@ export const TimingSettings = ({ settings, onUpdateSettings }) => {
               </div>
             );
           })}
+        </div>
+      </div>
+
+      {/* 6. Auto Mosque Silence */}
+      <div className="settings-section-card" style={{ borderColor: silenceSettings.enabled ? 'rgba(16, 185, 129, 0.25)' : undefined }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+          <div className="settings-section-title" style={{ margin: 0 }}>
+            <VolumeX size={20} color="var(--emerald-light)" />
+            <span>وضع صامت المسجد التلقائي (Auto Mosque Silence)</span>
+          </div>
+
+          <label
+            style={{
+              position: 'relative',
+              display: 'inline-flex',
+              alignItems: 'center',
+              cursor: 'pointer'
+            }}
+          >
+            <input
+              type="checkbox"
+              checked={silenceSettings.enabled}
+              onChange={(e) => handleSilenceChange({ enabled: e.target.checked })}
+              style={{
+                accentColor: 'var(--emerald-primary)',
+                width: '18px',
+                height: '18px',
+                cursor: 'pointer'
+              }}
+            />
+          </label>
+        </div>
+
+        <div style={{ opacity: silenceSettings.enabled ? 1 : 0.45, transition: 'opacity 0.2s ease', pointerEvents: silenceSettings.enabled ? 'auto' : 'none' }}>
+          {/* Trigger point selection */}
+          <div style={{ marginBottom: '14px' }}>
+            <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '8px' }}>
+              توقيت تفعيل وضع الصامت:
+            </span>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+              <button
+                type="button"
+                className={`subtab-pill ${silenceSettings.triggerAt === 'iqamah' ? 'active' : ''}`}
+                onClick={() => handleSilenceChange({ triggerAt: 'iqamah' })}
+                style={{
+                  padding: '9px 12px',
+                  fontSize: '0.84rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '6px'
+                }}
+              >
+                <BellOff size={15} />
+                <span>عند موعد الإقامة</span>
+              </button>
+              <button
+                type="button"
+                className={`subtab-pill ${silenceSettings.triggerAt === 'azan' ? 'active' : ''}`}
+                onClick={() => handleSilenceChange({ triggerAt: 'azan' })}
+                style={{
+                  padding: '9px 12px',
+                  fontSize: '0.84rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '6px'
+                }}
+              >
+                <VolumeX size={15} />
+                <span>عند رفع الأذان</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Regular prayers silence duration */}
+          <div style={{ marginBottom: '14px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
+                مدة الصامت للصلوات الخمس (الصلوات اليومية):
+              </span>
+              <span style={{ fontSize: '0.82rem', fontWeight: '700', color: 'var(--emerald-light)', fontFamily: 'var(--font-num)' }}>
+                {silenceSettings.duration} دقيقة
+              </span>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px' }}>
+              {[15, 20, 25, 30].map((mins) => (
+                <button
+                  key={mins}
+                  type="button"
+                  className={`subtab-pill ${silenceSettings.duration === mins ? 'active' : ''}`}
+                  onClick={() => handleSilenceChange({ duration: mins })}
+                  style={{
+                    padding: '8px 4px',
+                    fontSize: '0.82rem',
+                    textAlign: 'center',
+                    fontFamily: 'var(--font-num)'
+                  }}
+                >
+                  {mins} د
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Friday (Jumu'ah) silence duration */}
+          <div style={{ marginBottom: '14px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
+                مدة الصامت الخاصة بصلاة الجمعة (خطبة + صلاة):
+              </span>
+              <span style={{ fontSize: '0.82rem', fontWeight: '700', color: 'var(--gold-light)', fontFamily: 'var(--font-num)' }}>
+                {silenceSettings.fridayDuration} دقيقة
+              </span>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
+              {[35, 45].map((mins) => (
+                <button
+                  key={mins}
+                  type="button"
+                  className={`subtab-pill ${silenceSettings.fridayDuration === mins ? 'active' : ''}`}
+                  onClick={() => handleSilenceChange({ fridayDuration: mins })}
+                  style={{
+                    padding: '8px 8px',
+                    fontSize: '0.82rem',
+                    textAlign: 'center',
+                    fontFamily: 'var(--font-num)'
+                  }}
+                >
+                  {mins} دقيقة {mins === 35 ? '(قياسي)' : '(خطبة مطوّلة)'}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Informative / protective hint */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '10px',
+            marginTop: '12px',
+            padding: '10px 12px',
+            background: 'rgba(16, 185, 129, 0.08)',
+            border: '1px solid rgba(16, 185, 129, 0.18)',
+            borderRadius: '10px',
+            color: 'var(--text-secondary)',
+            fontSize: '0.78rem',
+            lineHeight: '1.6'
+          }}
+        >
+          <ShieldCheck size={18} color="var(--emerald-light)" style={{ flexShrink: 0, marginTop: '2px' }} />
+          <span>
+            يمنع إحراج رنين الهاتف أثناء صلاة الجماعة في المسجد بكتم الصوت تلقائياً، ويعيد تشغيل الصوت المعتاد فور انتهاء وقت الصلاة دون الحاجة لتذكره يدوياً.
+          </span>
         </div>
       </div>
     </div>
