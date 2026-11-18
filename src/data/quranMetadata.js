@@ -158,3 +158,16 @@ export const KHATMAH_GOALS = [
   { id: 'ramadan', label: 'ختمة مكثفة (١٥ يوماً)', pagesPerDay: 40, desc: '٨ صفحات بعد كل صلاة مفروضة' },
   { id: 'free', label: 'قراءة حرة بدون قيود', pagesPerDay: 0, desc: 'تتبع تقدمك في صفحات المصحف الشريف' }
 ];
+
+/**
+ * Returns the Surah containing the given Mushaf page number (1-604)
+ */
+export const getSurahByPage = (pageNum) => {
+  const p = Math.max(1, Math.min(604, pageNum));
+  for (let i = SURAHS_METADATA.length - 1; i >= 0; i--) {
+    if (p >= SURAHS_METADATA[i].page) {
+      return SURAHS_METADATA[i];
+    }
+  }
+  return SURAHS_METADATA[0];
+};
