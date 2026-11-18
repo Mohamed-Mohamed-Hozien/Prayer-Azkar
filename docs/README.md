@@ -1,4 +1,4 @@
-﻿# 📚 Documentation Hub — صلاتي وأذكاري (Prayer-Azkar)
+# 📚 Documentation Hub — صلاتي وأذكاري (Prayer-Azkar)
 
 > **Welcome to the definitive architectural, engineering, and operational documentation suite for "صلاتي وأذكاري" (Prayer Times & Athkar).**
 > This directory documents the entire system from **A to Z**, covering architectural choices, data integrity guarantees, native Android bridges, sensor mathematics, audio synthesis, and an exhaustive breakdown of every quirk, edge case, and workaround ("the shenanigans") discovered during the evolution of this project.

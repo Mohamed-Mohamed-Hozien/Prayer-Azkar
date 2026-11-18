@@ -1,4 +1,4 @@
-﻿# 🧪 Automated Skills Suite & Verification Engine
+# 🧪 Automated Skills Suite & Verification Engine
 
 > **File Reference**: [`.agents/skills/`](file:///C:/Users/midoh/.gemini/antigravity/worktrees/Prayer%20times/create_comprehensive_project_docs/.agents/skills/)
 > **Master Index**: [README.md](file:///C:/Users/midoh/.gemini/antigravity/worktrees/Prayer%20times/create_comprehensive_project_docs/docs/README.md)
